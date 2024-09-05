@@ -19,7 +19,7 @@ return new class extends Migration
             $table->string('department');
             $table->string('job_title');
             $table->string('type_of_leave');
-            $table->integer('no_of_leave_requested');
+            $table->integer('no_of_leaves_requested');
             $table->integer('total_leaves_perYear');
             $table->integer('total_leaves_taken');
             $table->date('leave_commencement');
