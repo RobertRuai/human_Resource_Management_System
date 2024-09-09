@@ -18,6 +18,7 @@ return new class extends Migration
             $table->string('sponsored_by');
             $table->string('location');
             $table->date('commencement_date');
+            $table->date('end_date');
             $table->text('justification');
             $table->timestamps();
         });
