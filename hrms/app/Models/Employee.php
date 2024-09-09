@@ -15,9 +15,11 @@ class Employee extends Model
      * @var array<int, string>
      */
     protected $fillable = [
-        'name',
-        'email',
-        'password',
+        'personal_id_number', 'first_name', 'middle_name', 'last_name', 'date_of_birth', 
+        'phone', 'email', 'city', 'address', 'postal_code', 'qualification',
+        'current_experience', 'job_title', 'grade', 'date_of_employment',
+        'type_of_employment', 'division', 'department', 'location',
+        'gender', 'marital_status', 'next_of_kin'
     ];
 
     /**
@@ -42,5 +44,11 @@ class Employee extends Model
             'password' => 'hashed',
         ];
     }
+
+    public function leave_information() {
+        return $this->hasMany(leave_information::class);
+    }
+
+
 
 }
