@@ -14,20 +14,20 @@ return new class extends Migration
         Schema::create('leave_information', function (Blueprint $table) {
             $table->id('leave_id');
             $table->foreignId('employee_id_number')->constrained('employees');
-            $table->string('staff_name');
-            $table->string('division');
-            $table->string('department');
-            $table->string('job_title');
-            $table->string('type_of_leave');
+            $table->string('staff_name', 150);
+            $table->string('division', 50);
+            $table->string('department', 50);
+            $table->string('job_title', 50);
+            $table->string('type_of_leave', 50);
             $table->integer('no_of_leaves_requested');
             $table->integer('total_leaves_perYear');
             $table->integer('total_leaves_taken');
             $table->date('leave_commencement');
             $table->date('date_of_return');
             $table->date('date_requested');
-            $table->string('supervisor_approval');
+            $table->string('supervisor_approval', 50);
             $table->date('date_of_approval_SR');
-            $table->string('HR_approval');
+            $table->string('HR_approval', 50);
             $table->date('date_of_approval_HR');
             $table->timestamps();
         });

@@ -13,10 +13,10 @@ return new class extends Migration
     {
         Schema::create('trainings', function (Blueprint $table) {
             $table->id('training_id');
-            $table->string('training_category');
-            $table->string('course');
-            $table->string('sponsored_by');
-            $table->string('location');
+            $table->string('training_category', 20);
+            $table->string('course', 100);
+            $table->string('sponsored_by', 100);
+            $table->string('location', 100);
             $table->date('commencement_date');
             $table->date('end_date');
             $table->text('justification');
