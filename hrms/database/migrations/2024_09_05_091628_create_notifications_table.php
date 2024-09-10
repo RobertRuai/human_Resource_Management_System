@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id('notification_id');
             $table->foreignId('user_id')->constrained('users');
             $table->text('message');
-            $table->boolean('division');
+            $table->boolean('is_read');
             $table->timestamps('created_at');
         });
     }
