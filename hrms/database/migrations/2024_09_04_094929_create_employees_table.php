@@ -12,7 +12,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('employees', function (Blueprint $table) {
-            $table->id('employee_id');
+            $table->id('employee_id_number');
             $table->string('personal_id_number', 50);
             $table->string('first_name', 50);
             $table->string('middle_name', 50);
@@ -35,7 +35,6 @@ return new class extends Migration
             $table->string('gender', 10);
             $table->string('marital_status', 20);
             $table->string('next_of_kin', 100);
-            #$table->foreignId('department_id')->constrained('departments');  
             #$table->decimal('salary', 10, 2);           
             #$table->string('photo')->nullable();
             $table->timestamps();
