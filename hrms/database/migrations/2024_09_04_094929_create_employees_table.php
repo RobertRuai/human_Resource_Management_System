@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('employees', function (Blueprint $table) {
             $table->id('employee_id_number');
-            $table->string('personal_id_number', 50);
+            $table->unsignedBigInteger('user_id');
             $table->string('first_name', 50);
             $table->string('middle_name', 50);
             $table->string('last_name', 50);
@@ -38,6 +38,8 @@ return new class extends Migration
             #$table->decimal('salary', 10, 2);           
             #$table->string('photo')->nullable();
             $table->timestamps();
+
+            $table->foreign('user_id')->references('user_id')->on('users')->onDelete('cascade');
         });
     }
 

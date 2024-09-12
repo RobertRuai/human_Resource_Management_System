@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('leave_information', function (Blueprint $table) {
             $table->id('leave_id');
-            $table->foreignId('employee_id_number')->constrained('employees');
+            $table->unsignedBigInteger('employee_id_number');
             $table->string('staff_name', 150);
             $table->string('division', 50);
             $table->string('department', 50);
@@ -30,6 +30,8 @@ return new class extends Migration
             $table->string('HR_approval', 50);
             $table->date('date_of_approval_HR');
             $table->timestamps();
+
+            $table->foreign('employee_id_number')->references('employee_id_number')->on('employees')->onDelete('cascade');
         });
     }
 
