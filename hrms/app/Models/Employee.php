@@ -49,6 +49,18 @@ class Employee extends Model
         return $this->hasMany(leave_information::class);
     }
 
+    public function salary() {
+        return $this->hasOne(salary::class);
+    }
 
+    public function user () {
+        return $this->belongsTo(User::class);
+    }
 
+    public function training() {
+        return $this->hasMany(training::class);
+    }
+    public function getCount() {
+        return $this->count();
+    }
 }
