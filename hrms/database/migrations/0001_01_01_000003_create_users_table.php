@@ -12,8 +12,8 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('users', function (Blueprint $table) {
-            $table->id('user_id');
-            $table->string('username')->unique();
+            $table->id();
+            $table->string('username')->unique()->nullable()->default(null);
             $table->string('email')->unique();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
@@ -21,7 +21,7 @@ return new class extends Migration
             $table->rememberToken();
             $table->timestamps();
 
-            $table->foreign('role_id')->references('role_id')->on('roles')->onDelete('set null');
+            $table->foreign('role_id')->references('id')->on('roles')->onDelete('set null');
         });
 
         Schema::create('password_reset_tokens', function (Blueprint $table) {
