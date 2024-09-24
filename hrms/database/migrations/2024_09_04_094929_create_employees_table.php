@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::create('employees', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('user_id');
+            $table->unsignedBigInteger('department_id');
             $table->string('first_name', 50);
             $table->string('middle_name', 50);
             $table->string('last_name', 50);
@@ -30,7 +31,6 @@ return new class extends Migration
             $table->date('date_of_employment');
             $table->string('type_of_employment', 20);
             $table->string('division', 50);
-            $table->string('department', 50);
             $table->string('location', 50);
             $table->string('gender', 10);
             $table->string('marital_status', 20);
@@ -40,6 +40,7 @@ return new class extends Migration
             $table->timestamps();
 
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+            $table->foreign('department_id')->references('id')->on('departments')->onDelete('cascade');
         });
     }
 

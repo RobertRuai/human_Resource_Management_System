@@ -15,10 +15,10 @@ class Employee extends Model
      * @var array<int, string>
      */
     protected $fillable = [
-        'personal_id_number', 'first_name', 'middle_name', 'last_name', 'date_of_birth', 
+        'user_id', 'department_id', 'first_name', 'middle_name', 'last_name', 'date_of_birth', 
         'phone', 'email', 'city', 'address', 'postal_code', 'qualification',
         'current_experience', 'job_title', 'grade', 'date_of_employment',
-        'type_of_employment', 'division', 'department', 'location',
+        'type_of_employment', 'division', 'location',
         'gender', 'marital_status', 'next_of_kin'
     ];
 
@@ -47,6 +47,11 @@ class Employee extends Model
 
     public function leave_information() {
         return $this->hasMany(leave_information::class);
+    }
+
+    public function department()
+    {
+        return $this->belongsTo(Department::class);
     }
 
     public function salary() {
