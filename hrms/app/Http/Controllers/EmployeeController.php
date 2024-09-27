@@ -33,6 +33,7 @@ class EmployeeController extends Controller
     public function store(Request $request)
     {
         $validatedData = $request->validate([
+            'department_id' => 'required|exists:departments,id',
             'first_name' => 'required|string|max:50',
             'middle_name' => 'required|string|max:50',
             'last_name' => 'required|string|max:50',
@@ -82,12 +83,27 @@ class EmployeeController extends Controller
     public function update(Request $request, string $id)
     {
         $validatedData = $request->validate([
-            'first_name' => 'required|string|max:255',
-            'last_name' => 'required|string|max:255',
-            'email' => 'required|email|unique:employees,email,' . $employee->id,
             'department_id' => 'required|exists:departments,id',
-            'job_title' => 'required|string|max:255',
-            'salary' => 'required|numeric',
+            'first_name' => 'required|string|max:50',
+            'middle_name' => 'required|string|max:50',
+            'last_name' => 'required|string|max:50',
+            'date_of_birth' => 'required|date',
+            'phone' => 'required|string|max:15',
+            'email' => 'required|email|unique:employees,email,' . $employee->id,
+            'city' => 'required|string|max:50',
+            'address' => 'required|string|max:100',
+            'postal_code' => 'required|string|max:10',
+            'qualification' => 'required|string|max:50',
+            'current_experience' => 'required|text',
+            'job_title' => 'required|string|max:50',
+            'grade' => 'required|string|max:10',
+            'date_of_employment' => 'required|date',
+            'type_of_employment' => 'required|string|max:20',
+            'division' => 'required|string|max:50',
+            'location' => 'required|string|max:50',
+            'gender' => 'required|string|max:10',
+            'marital_status' => 'required|string|max:20',
+            'next_of_kin' => 'required|string|max:100',
         ]);
 
         $employee->update($validatedData);

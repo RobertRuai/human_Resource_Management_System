@@ -26,9 +26,17 @@ class SalaryController extends Controller
     public function store(Request $request)
     {
         $validatedData = $request->validate([
-            'employee_id' => 'required|exists:employees,id',
-            'amount' => 'required|numeric',
-            'pay_date' => 'required|date',
+            'employee_id_number' => 'required|exists:employees,id',
+            'monthly_basic_salary' => 'required|numeric',
+            'currency' => 'required|string',
+            'allowances' => 'required|numeric',
+            'gross_salary' => 'required|numeric',
+            'monthly_taxes' => 'required|numeric',
+            'monthly_deductions' => 'required|numeric',
+            'monthly_insurance' => 'required|numeric',
+            'net_salary' => 'required|numeric',
+            'salary_startDate' => 'required|date',
+            'salary_endDate' => 'required|date',
         ]);
 
         Salary::create($validatedData);
@@ -52,9 +60,17 @@ class SalaryController extends Controller
     public function update(Request $request, Salary $salary)
     {
         $validatedData = $request->validate([
-            'employee_id' => 'required|exists:employees,id',
-            'amount' => 'required|numeric',
-            'pay_date' => 'required|date',
+            'employee_id_number' => 'required|exists:employees,id',
+            'monthly_basic_salary' => 'required|numeric',
+            'currency' => 'required|string',
+            'allowances' => 'required|numeric',
+            'gross_salary' => 'required|numeric',
+            'monthly_taxes' => 'required|numeric',
+            'monthly_deductions' => 'required|numeric',
+            'monthly_insurance' => 'required|numeric',
+            'net_salary' => 'required|numeric',
+            'salary_startDate' => 'required|date',
+            'salary_endDate' => 'required|date',
         ]);
 
         $salary->update($validatedData);

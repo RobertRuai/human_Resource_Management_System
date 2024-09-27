@@ -25,7 +25,7 @@ class RoleController extends Controller
     {
         $validatedData = $request->validate([
             'name' => 'required|string|unique:roles',
-            'description' => 'nullable|string',
+            'guard_name' => 'nullable|string',
         ]);
 
         Role::create($validatedData);
@@ -49,7 +49,7 @@ class RoleController extends Controller
     {
         $validatedData = $request->validate([
             'name' => 'required|string|unique:roles,name,' . $role->id,
-            'description' => 'nullable|string',
+            'guard_name' => 'nullable|string',
         ]);
 
         $role->update($validatedData);

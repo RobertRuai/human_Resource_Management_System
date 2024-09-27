@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Notification;
+use App\Models\notification;
 use Illuminate\Http\Request;
 
 class NotificationController extends Controller
@@ -10,7 +10,7 @@ class NotificationController extends Controller
     // Display a listing of the notifications
     public function index()
     {
-        $notifications = Notification::all();
+        $notifications = notification::all();
         return view('notifications.index', compact('notifications'));
     }
 
@@ -24,32 +24,34 @@ class NotificationController extends Controller
     public function store(Request $request)
     {
         $validatedData = $request->validate([
-            'message' => 'required|string',
             'user_id' => 'required|exists:users,id',
+            'message' => 'required|string',
+            'is_read' => 'required|boolean',
         ]);
 
-        Notification::create($validatedData);
+        notification::create($validatedData);
         return redirect()->route('notifications.index')->with('success', 'Notification created successfully.');
     }
 
     // Display the specified notification
-    public function show(Notification $notification)
+    public function show(notification $notification)
     {
         return view('notifications.show', compact('notification'));
     }
 
     // Show the form for editing the specified notification
-    public function edit(Notification $notification)
+    public function edit(notification $notification)
     {
         return view('notifications.edit', compact('notification'));
     }
 
     // Update the specified notification in storage
-    public function update(Request $request, Notification $notification)
+    public function update(Request $request, notification $notification)
     {
         $validatedData = $request->validate([
-            'message' => 'required|string',
             'user_id' => 'required|exists:users,id',
+            'message' => 'required|string',
+            'is_read' => 'required|boolean',
         ]);
 
         $notification->update($validatedData);
@@ -57,7 +59,7 @@ class NotificationController extends Controller
     }
 
     // Remove the specified notification from storage
-    public function destroy(Notification $notification)
+    public function destroy(notification $notification)
     {
         $notification->delete();
         return redirect()->route('notifications.index')->with('success', 'Notification deleted successfully.');
