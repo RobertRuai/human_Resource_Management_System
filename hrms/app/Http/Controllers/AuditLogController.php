@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\AuditLog;
+use App\Models\audit_log;
 use Illuminate\Http\Request;
 
 class AuditLogController extends Controller
@@ -10,7 +10,7 @@ class AuditLogController extends Controller
     // Display a listing of the audit logs
     public function index()
     {
-        $auditLogs = AuditLog::all();
+        $auditLogs = audit_log::all();
         return view('audit_logs.index', compact('auditLogs'));
     }
 
@@ -24,34 +24,33 @@ class AuditLogController extends Controller
     public function store(Request $request)
     {
         $validatedData = $request->validate([
-            'action' => 'required|string',
             'user_id' => 'required|exists:users,id',
-            'description' => 'nullable|string',
+            'action' => 'required|string',
+            
         ]);
 
-        AuditLog::create($validatedData);
+        audit_log::create($validatedData);
         return redirect()->route('audit_logs.index')->with('success', 'Audit log created successfully.');
     }
 
     // Display the specified audit log
-    public function show(AuditLog $auditLog)
+    public function show(audit_log $auditLog)
     {
         return view('audit_logs.show', compact('auditLog'));
     }
 
     // Show the form for editing the specified audit log
-    public function edit(AuditLog $auditLog)
+    public function edit(audit_log $auditLog)
     {
         return view('audit_logs.edit', compact('auditLog'));
     }
 
     // Update the specified audit log in storage
-    public function update(Request $request, AuditLog $auditLog)
+    public function update(Request $request, audit_log $auditLog)
     {
         $validatedData = $request->validate([
-            'action' => 'required|string',
             'user_id' => 'required|exists:users,id',
-            'description' => 'nullable|string',
+            'action' => 'required|string',
         ]);
 
         $auditLog->update($validatedData);
@@ -59,7 +58,7 @@ class AuditLogController extends Controller
     }
 
     // Remove the specified audit log from storage
-    public function destroy(AuditLog $auditLog)
+    public function destroy(audit_log $auditLog)
     {
         $auditLog->delete();
         return redirect()->route('audit_logs.index')->with('success', 'Audit log deleted successfully.');
