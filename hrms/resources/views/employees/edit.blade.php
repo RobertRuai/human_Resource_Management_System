@@ -6,9 +6,32 @@
 <div class="container">
     <h2>Edit Employee</h2>
 
+    @if ($errors->any())
+        <div class="alert alert-danger">
+            <strong>Whoops!</strong> There were some problems with your input.<br><br>
+            <ul>
+                @foreach ($errors->all() as $error)
+                    <li>{{ $error }}</li>
+                @endforeach
+            </ul>
+        </div>
+    @endif
+
     <form action="{{ route('employees.update', $employee->id) }}" method="POST">
         @csrf
         @method('PUT')
+
+        <div class="form-group">
+            <label for="user_id">User</label>
+            <select name="user_id" id="user_id" class="form-control" required>
+                <option value="">-- Select User --</option>
+                @foreach($users as $user)
+                    <option value="{{ $user->id }}" {{ old('user_id') == $user->id ? 'selected' : '' }}>
+                        {{ $user->username }}
+                    </option>
+                @endforeach
+            </select>
+        </div>
 
         <div class="form-group">
             <label for="department_id">Department</label>

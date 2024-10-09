@@ -6,8 +6,32 @@
 <div class="container">
     <h2>Create Employee</h2>
 
+    @if ($errors->any())
+        <div class="alert alert-danger">
+            <strong>Whoops!</strong> There were some problems with your input.<br><br>
+            <ul>
+                @foreach ($errors->all() as $error)
+                    <li>{{ $error }}</li>
+                @endforeach
+            </ul>
+        </div>
+    @endif
+
     <form action="{{ route('employees.store') }}" method="POST">
         @csrf
+        
+        <div class="form-group">
+            <label for="user_id">User</label>
+            <select name="user_id" id="user_id" class="form-control" required>
+                <option value="">-- Select User --</option>
+                @foreach($users as $user)
+                    <option value="{{ $user->id }}" {{ old('user_id') == $user->id ? 'selected' : '' }}>
+                        {{ $user->username }}
+                    </option>
+                @endforeach
+            </select>
+        </div>
+
         <div class="form-group">
             <label for="department_id">Department</label>
             <select name="department_id" id="department_id" class="form-control">

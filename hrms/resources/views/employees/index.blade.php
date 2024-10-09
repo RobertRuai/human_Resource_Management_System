@@ -13,6 +13,7 @@
     <table class="table table-striped">
         <thead>
             <tr>
+                <th>User ID</th>
                 <th>Department</th>
                 <th>First Name</th>
                 <th>middle Name</th>
@@ -40,6 +41,7 @@
         <tbody>
             @foreach($employees as $employee)
             <tr>
+                <td>{{ $employee->user->username }}</td>
                 <td>{{ $employee->department->name }}</td>
                 <td>{{ $employee->first_name }}</td>
                 <td>{{ $employee->middle_name }}</td>

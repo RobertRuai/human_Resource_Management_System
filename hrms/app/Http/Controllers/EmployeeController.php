@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\User;
 use App\Models\Employee;
 use App\Models\Department;
 use Illuminate\Http\Request;
@@ -13,7 +14,7 @@ class EmployeeController extends Controller
      */
     public function index()
     {
-        $employees = Employee::with('department')->get();
+        $employees = Employee::with('users', 'departments')->get();
         $departments = Department::all();
         return view('employees.index', compact('employees', 'departments'));
     }
@@ -23,8 +24,9 @@ class EmployeeController extends Controller
      */
     public function create()
     {
+        $users = User::doesntHave('employee')->get();
         $departments = Department::all();
-        return view('employees.create', compact('departments'));
+        return view('employees.create', compact('departments', 'users'));
     }
 
     /**
@@ -32,7 +34,9 @@ class EmployeeController extends Controller
      */
     public function store(Request $request)
     {
+        $employees = Employee::with('users', 'departments')->get();
         $validatedData = $request->validate([
+            'user_id' => 'nullable|exists:users,id|unique:employees,user_id,' . $employees->id,
             'department_id' => 'required|exists:departments,id',
             'first_name' => 'required|string|max:50',
             'middle_name' => 'required|string|max:50',
@@ -65,7 +69,7 @@ class EmployeeController extends Controller
      */
     public function show(string $id)
     {
-        return view('employees.show', compact('employee'));
+        return view('employees.show', compact('employees'));
     }
 
     /**
@@ -73,8 +77,9 @@ class EmployeeController extends Controller
      */
     public function edit(string $id)
     {
+        $users = User::where('id', '!=', $employees->user_id)->doesntHave('employees')->orWhere('id', $employees->user_id)->get();
         $departments = Department::all();
-        return view('employees.edit', compact('employee', 'departments'));
+        return view('employees.edit', compact('employees', 'departments', 'users'));
     }
 
     /**
@@ -83,13 +88,14 @@ class EmployeeController extends Controller
     public function update(Request $request, string $id)
     {
         $validatedData = $request->validate([
+            'user_id' => 'nullable|exists:users,id|unique:employees,user_id,' . $employees->id,
             'department_id' => 'required|exists:departments,id',
             'first_name' => 'required|string|max:50',
             'middle_name' => 'required|string|max:50',
             'last_name' => 'required|string|max:50',
             'date_of_birth' => 'required|date',
             'phone' => 'required|string|max:15',
-            'email' => 'required|email|unique:employees,email,' . $employee->id,
+            'email' => 'required|email|unique:employees,email,' . $employees->id,
             'city' => 'required|string|max:50',
             'address' => 'required|string|max:100',
             'postal_code' => 'required|string|max:10',
@@ -106,7 +112,7 @@ class EmployeeController extends Controller
             'next_of_kin' => 'required|string|max:100',
         ]);
 
-        $employee->update($validatedData);
+        $employees->update($validatedData);
         return redirect()->route('employees.index')->with('success', 'Employee updated successfully.');
     }
 
@@ -115,7 +121,7 @@ class EmployeeController extends Controller
      */
     public function destroy(string $id)
     {
-        $employee->delete();
+        $employees->delete();
         return redirect()->route('employees.index')->with('success', 'Employee deleted successfully.');
     }
 }
