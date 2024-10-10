@@ -17,7 +17,7 @@
         </div>
     @endif
 
-    <form action="{{ route('employees.update', $employee->id) }}" method="POST">
+    <form action="{{ route('employees.update', $employees->id) }}" method="POST">
         @csrf
         @method('PUT')
 
@@ -27,7 +27,7 @@
                 <option value="">-- Select User --</option>
                 @foreach($users as $user)
                     <option value="{{ $user->id }}" {{ old('user_id') == $user->id ? 'selected' : '' }}>
-                        {{ $user->username }}
+                        {{ $user->id }}
                     </option>
                 @endforeach
             </select>

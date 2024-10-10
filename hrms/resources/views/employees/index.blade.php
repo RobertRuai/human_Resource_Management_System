@@ -41,7 +41,7 @@
         <tbody>
             @foreach($employees as $employee)
             <tr>
-                <td>{{ $employee->user->username }}</td>
+                <td>{{ $employee->user->id }}</td>
                 <td>{{ $employee->department->name }}</td>
                 <td>{{ $employee->first_name }}</td>
                 <td>{{ $employee->middle_name }}</td>

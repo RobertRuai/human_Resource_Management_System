@@ -14,7 +14,7 @@ class EmployeeController extends Controller
      */
     public function index()
     {
-        $employees = Employee::with('users', 'departments')->get();
+        $employees = Employee::with('user', 'department')->get();
         $departments = Department::all();
         return view('employees.index', compact('employees', 'departments'));
     }
@@ -34,16 +34,16 @@ class EmployeeController extends Controller
      */
     public function store(Request $request)
     {
-        $employees = Employee::with('users', 'departments')->get();
+        $employees = Employee::with('user', 'department')->get();
         $validatedData = $request->validate([
-            'user_id' => 'nullable|exists:users,id|unique:employees,user_id,' . $employees->id,
+            'user_id' => 'required|exists:users,id',
             'department_id' => 'required|exists:departments,id',
             'first_name' => 'required|string|max:50',
             'middle_name' => 'required|string|max:50',
             'last_name' => 'required|string|max:50',
             'date_of_birth' => 'required|date',
             'phone' => 'required|string|max:15',
-            'email' => 'required|email|unique:employees',
+            'email' => 'required|email|unique:users,email',
             'city' => 'required|string|max:50',
             'address' => 'required|string|max:100',
             'postal_code' => 'required|string|max:10',
@@ -67,7 +67,7 @@ class EmployeeController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+    public function show()
     {
         return view('employees.show', compact('employees'));
     }
@@ -75,9 +75,10 @@ class EmployeeController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(string $id)
+    public function edit()
     {
-        $users = User::where('id', '!=', $employees->user_id)->doesntHave('employees')->orWhere('id', $employees->user_id)->get();
+        $employees = Employee::with('user', 'department')->first();
+        $users = User::where('id', '!=', $employees->user_id)->doesntHave('employee')->orWhere('id', $employees->user_id)->get();
         $departments = Department::all();
         return view('employees.edit', compact('employees', 'departments', 'users'));
     }
@@ -85,17 +86,18 @@ class EmployeeController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(Request $request)
     {
+        $employees = Employee::with('user', 'department')->first();
         $validatedData = $request->validate([
-            'user_id' => 'nullable|exists:users,id|unique:employees,user_id,' . $employees->id,
+            'user_id' => 'nullable|exists:users,id',
             'department_id' => 'required|exists:departments,id',
             'first_name' => 'required|string|max:50',
             'middle_name' => 'required|string|max:50',
             'last_name' => 'required|string|max:50',
             'date_of_birth' => 'required|date',
             'phone' => 'required|string|max:15',
-            'email' => 'required|email|unique:employees,email,' . $employees->id,
+            'email' => 'required|email|unique:users,email',
             'city' => 'required|string|max:50',
             'address' => 'required|string|max:100',
             'postal_code' => 'required|string|max:10',
@@ -119,8 +121,9 @@ class EmployeeController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy()
     {
+        $employees = Employee::with('user', 'department')->first();
         $employees->delete();
         return redirect()->route('employees.index')->with('success', 'Employee deleted successfully.');
     }

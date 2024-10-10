@@ -1,71 +1,57 @@
+<!-- resources/views/users/edit.blade.php -->
 @extends('layouts.app')
 
-@section('title', 'Edit Employee')
+@section('title', 'Edit User')
 
 @section('content')
-<div class="container">
-    <h2>Edit Employee</h2>
-
-    <form action="{{ route('employees.update', $employee->id) }}" method="POST">
+    <h1>Edit User</h1>
+    <form action="{{ route('users.update', $user->id) }}" method="POST">
         @csrf
         @method('PUT')
 
-        <div class="form-group">
-            <label for="first_name">First Name</label>
-            <input type="text" name="first_name" id="first_name" class="form-control" value="{{ old('first_name', $employee->first_name) }}">
-            @error('first_name')
-                <div class="text-danger">{{ $message }}</div>
-            @enderror
+        <!-- Name -->
+        <div class="mb-3">
+            <label for="username" class="form-label">UserName <span class="text-danger">*</span></label>
+            <input type="text" name="username" id="username" class="form-control" 
+                   value="{{ old('name', $user->username) }}" required>
         </div>
 
-        <div class="form-group">
-            <label for="last_name">Last Name</label>
-            <input type="text" name="last_name" id="last_name" class="form-control" value="{{ old('last_name', $employee->last_name) }}">
-            @error('last_name')
-                <div class="text-danger">{{ $message }}</div>
-            @enderror
+        <!-- Email -->
+        <div class="mb-3">
+            <label for="email" class="form-label">Email <span class="text-danger">*</span></label>
+            <input type="email" name="email" id="email" class="form-control" 
+                   value="{{ old('email', $user->email) }}" required>
         </div>
 
-        <div class="form-group">
-            <label for="email">Email</label>
-            <input type="email" name="email" id="email" class="form-control" value="{{ old('email', $employee->email) }}">
-            @error('email')
-                <div class="text-danger">{{ $message }}</div>
-            @enderror
-        </div>
-
-        <div class="form-group">
-            <label for="department_id">Department</label>
-            <select name="department_id" id="department_id" class="form-control">
-                <option value="">Select Department</option>
-                @foreach ($departments as $department)
-                    <option value="{{ $department->id }}" {{ old('department_id', $employee->department_id) == $department->id ? 'selected' : '' }}>
-                        {{ $department->name }}
+        <!-- Role -->
+        <div class="mb-3">
+            <label for="role_id" class="form-label">Role <span class="text-danger">*</span></label>
+            <select name="role_id" id="role_id" class="form-select" required>
+                <option value="">-- Select Role --</option>
+                @foreach($roles as $role)
+                    <option value="{{ $role->id }}" 
+                        {{ (old('role_id', $user->role_id) == $role->id) ? 'selected' : '' }}>
+                        {{ $role->name }}
                     </option>
                 @endforeach
             </select>
-            @error('department_id')
-                <div class="text-danger">{{ $message }}</div>
-            @enderror
         </div>
 
-        <div class="form-group">
-            <label for="job_title">Job Title</label>
-            <input type="text" name="job_title" id="job_title" class="form-control" value="{{ old('job_title', $employee->job_title) }}">
-            @error('job_title')
-                <div class="text-danger">{{ $message }}</div>
-            @enderror
+        <!-- Password (optional) -->
+        <div class="mb-3">
+            <label for="password" class="form-label">Password <span class="text-muted">(Leave blank to keep current password)</span></label>
+            <input type="password" name="password" id="password" class="form-control">
         </div>
 
-        <div class="form-group">
-            <label for="salary">Salary</label>
-            <input type="text" name="salary" id="salary" class="form-control" value="{{ old('salary', $employee->salary) }}">
-            @error('salary')
-                <div class="text-danger">{{ $message }}</div>
-            @enderror
+        <!-- Confirm Password (optional) -->
+        <div class="mb-3">
+            <label for="password_confirmation" class="form-label">Confirm Password <span class="text-muted">(Leave blank to keep current password)</span></label>
+            <input type="password" name="password_confirmation" id="password_confirmation" 
+                   class="form-control">
         </div>
 
-        <button type="submit" class="btn btn-primary">Update Employee</button>
+        <!-- Submit Button -->
+        <button type="submit" class="btn btn-success">Update User</button>
+        <a href="{{ route('users.index') }}" class="btn btn-secondary">Cancel</a>
     </form>
-</div>
 @endsection
