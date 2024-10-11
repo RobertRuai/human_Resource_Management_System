@@ -12,8 +12,10 @@ class UserController extends Controller
     // Display a listing of the users
     public function index()
     {
-        $users = User::with('role')->get();
-        return view('users.index', compact('users'));
+        #$users = User::all();
+        $roles = Role::all();
+        $users = User::with('roles')->get();
+        return view('users.index', compact('users', 'roles'));
     }
 
     // Show the form for creating a new user
@@ -26,6 +28,7 @@ class UserController extends Controller
     // Store a newly created user in storage
     public function store(Request $request)
     {
+        #$User = User::with('roles')->get();
         $validatedData = $request->validate([
             'username' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users',

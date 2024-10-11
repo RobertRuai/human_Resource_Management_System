@@ -13,18 +13,28 @@ class AdminSeeder extends Seeder
      */
     public function run(): void
     {
-        #$user = User::create([
-        #    'username' => 'Admin',
-        #    'email' => 'admin1@gmail.com',
-        #    'email_verified_at' => now(),
-        #    'password' => '123456',
-        #]);
+        $user = User::create([
+            'username' => 'Admin1',
+            'email' => 'admin1@gmail.com',
+            'email_verified_at' => now(),
+            'password' => '123456',
+            'role_id' => '1',
+        ]);
 
         $user = User::create([
             'username' => 'HR1',
             'email' => 'hr1@gmail.com',
             'email_verified_at' => now(),
             'password' => '123456',
+            'role_id' => '2',
+        ]);
+
+        $user = User::create([
+            'username' => 'User1',
+            'email' => 'user1@gmail.com',
+            'email_verified_at' => now(),
+            'password' => '123456',
+            'role_id' => '3',
         ]);
 
 

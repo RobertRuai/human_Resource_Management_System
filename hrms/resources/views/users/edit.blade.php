@@ -5,6 +5,18 @@
 
 @section('content')
     <h1>Edit User</h1>
+
+    @if ($errors->any())
+        <div class="alert alert-danger">
+            <strong>Whoops!</strong> There were some problems with your input.<br><br>
+            <ul>
+                @foreach ($errors->all() as $error)
+                    <li>{{ $error }}</li>
+                @endforeach
+            </ul>
+        </div>
+    @endif
+
     <form action="{{ route('users.update', $user->id) }}" method="POST">
         @csrf
         @method('PUT')
@@ -13,7 +25,10 @@
         <div class="mb-3">
             <label for="username" class="form-label">UserName <span class="text-danger">*</span></label>
             <input type="text" name="username" id="username" class="form-control" 
-                   value="{{ old('name', $user->username) }}" required>
+                    value="{{ old('name', $user->username) }}" required>
+                    @error('username')
+                        <div class="text-danger">{{ $message }}</div>
+                    @enderror
         </div>
 
         <!-- Email -->

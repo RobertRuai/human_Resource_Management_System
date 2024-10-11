@@ -5,26 +5,14 @@
 @section('content')
 <div class="container">
     <h2>Edit Employee</h2>
-
-    @if ($errors->any())
-        <div class="alert alert-danger">
-            <strong>Whoops!</strong> There were some problems with your input.<br><br>
-            <ul>
-                @foreach ($errors->all() as $error)
-                    <li>{{ $error }}</li>
-                @endforeach
-            </ul>
-        </div>
-    @endif
-
     <form action="{{ route('employees.update', $employees->id) }}" method="POST">
         @csrf
         @method('PUT')
 
         <div class="form-group">
-            <label for="user_id">User</label>
+            <label for="user_id">User ID</label>
             <select name="user_id" id="user_id" class="form-control" required>
-                <option value="">-- Select User --</option>
+                <option value="">-- Select User ID --</option>
                 @foreach($users as $user)
                     <option value="{{ $user->id }}" {{ old('user_id') == $user->id ? 'selected' : '' }}>
                         {{ $user->id }}
@@ -48,12 +36,13 @@
             @enderror
         </div>
 
-        <div class="form-group">
-            <label for="first_name">First Name</label>
-            <input type="text" name="first_name" id="first_name" class="form-control" value="{{ old('first_name') }}">
-            @error('first_name')
-                <div class="text-danger">{{ $message }}</div>
-            @enderror
+        <div class="mb-3">
+            <label for="first_name" class="form-label">First Name <span class="text-danger">*</span></label>
+            <input type="text" name="first_name" id="first_name" class="form-control"
+                    value="{{ old('name, $employees->first_name') }}" required>
+                    @error('first_name')
+                        <div class="text-danger">{{ $message }}</div>
+                    @enderror
         </div>
 
         <div class="form-group">
@@ -209,6 +198,7 @@
         </div>
 
         <button type="submit" class="btn btn-primary">Update Employee</button>
+        <a href="{{ route('employees.index') }}" class="btn btn-secondary">Cancel</a>
     </form>
 </div>
 @endsection

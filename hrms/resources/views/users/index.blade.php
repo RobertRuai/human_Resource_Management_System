@@ -25,7 +25,7 @@
                     <tr>
                         <td>{{ $user->username }}</td>
                         <td>{{ $user->email }}</td>
-                        <td>{{ $user->role->name }}</td>
+                        <td>{{ $user->role_id }}</td>
                         <td>
                             <a href="{{ route('users.show', $user->id) }}" class="btn btn-info btn-sm">View</a>
                             <a href="{{ route('users.edit', $user->id) }}" class="btn btn-warning btn-sm">Edit</a>
