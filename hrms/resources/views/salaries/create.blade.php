@@ -1,69 +1,125 @@
+<!-- resources/views/users/create.blade.php -->
 @extends('layouts.app')
 
-@section('title', 'Create Employee')
+@section('title', 'New Salary')
 
 @section('content')
-<div class="container">
-    <h2>Create Employee</h2>
-
-    <form action="{{ route('employees.store') }}" method="POST">
+    <h1>Add  New Salary</h1>
+    <form action="{{ route('salaries.store') }}" method="POST">
         @csrf
-        <div class="form-group">
-            <label for="first_name">First Name</label>
-            <input type="text" name="first_name" id="first_name" class="form-control" value="{{ old('first_name') }}">
-            @error('first_name')
-                <div class="text-danger">{{ $message }}</div>
-            @enderror
+
+        <!-- Employee ID Number -->
+        <div class="mb-3">
+            <label for="employee_id_number" class="form-label">Employee ID Number<span class="text-danger">*</span></label>
+            <input type="text" name="employee_id_number" id="employee_id_number" class="form-control" 
+                    value="{{ old('employee_id_number', $salary->employee_id_number) }}" required>
+                    @error('employee_id_number')
+                        <div class="text-danger">{{ $message }}</div>
+                    @enderror
         </div>
 
-        <div class="form-group">
-            <label for="last_name">Last Name</label>
-            <input type="text" name="last_name" id="last_name" class="form-control" value="{{ old('last_name') }}">
-            @error('last_name')
-                <div class="text-danger">{{ $message }}</div>
-            @enderror
+        <!-- monthly_basic_salary -->
+        <div class="mb-3">
+            <label for="monthly_basic_salary" class="form-label">Monthly Basic Salary <span class="text-danger">*</span></label>
+            <input type="text" name="monthly_basic_salary" id="monthly_basic_salary" class="form-control" 
+                   value="{{ old('monthly_basic_salary', $salary->monthly_basic_salary) }}" required>
+                   @error('monthly_basic_salary')
+                        <div class="text-danger">{{ $message }}</div>
+                    @enderror
         </div>
 
-        <div class="form-group">
-            <label for="email">Email</label>
-            <input type="email" name="email" id="email" class="form-control" value="{{ old('email') }}">
-            @error('email')
-                <div class="text-danger">{{ $message }}</div>
-            @enderror
+        <!-- currency -->
+        <div class="mb-3">
+            <label for="currency" class="form-label">Currency<span class="text-danger">*</span></label>
+            <input type="text" name="currency" id="currency" class="form-control" 
+                   value="{{ old('currency', $salary->currency) }}" required>
+                   @error('currency')
+                        <div class="text-danger">{{ $message }}</div>
+                    @enderror
         </div>
 
-        <div class="form-group">
-            <label for="department_id">Department</label>
-            <select name="department_id" id="department_id" class="form-control">
-                <option value="">Select Department</option>
-                @foreach ($departments as $department)
-                    <option value="{{ $department->id }}" {{ old('department_id') == $department->id ? 'selected' : '' }}>
-                        {{ $department->name }}
-                    </option>
-                @endforeach
-            </select>
-            @error('department_id')
-                <div class="text-danger">{{ $message }}</div>
-            @enderror
+        <!-- allowances -->
+        <div class="mb-3">
+            <label for="allowances" class="form-label">Allowances <span class="text-danger">*</span></label>
+            <input type="text" name="allowances" id="allowances" class="form-control" 
+                   value="{{ old('allowances', $salary->allowances) }}" required>
+                   @error('allowances')
+                        <div class="text-danger">{{ $message }}</div>
+                    @enderror
         </div>
 
-        <div class="form-group">
-            <label for="job_title">Job Title</label>
-            <input type="text" name="job_title" id="job_title" class="form-control" value="{{ old('job_title') }}">
-            @error('job_title')
-                <div class="text-danger">{{ $message }}</div>
-            @enderror
+        <!-- gross_salary -->
+        <div class="mb-3">
+            <label for="gross_salary" class="form-label">Gross Salary <span class="text-danger">*</span></label>
+            <input type="text" name="gross_salary" id="gross_salary" class="form-control" 
+                   value="{{ old('gross_salary', $salary->gross_salary) }}" required>
+                   @error('gross_salary')
+                        <div class="text-danger">{{ $message }}</div>
+                    @enderror
         </div>
 
-        <div class="form-group">
-            <label for="salary">Salary</label>
-            <input type="text" name="salary" id="salary" class="form-control" value="{{ old('salary') }}">
-            @error('salary')
-                <div class="text-danger">{{ $message }}</div>
-            @enderror
+        <!-- monthly_taxes -->
+        <div class="mb-3">
+            <label for="monthly_taxes" class="form-label">Monthly Taxes <span class="text-danger">*</span></label>
+            <input type="text" name="monthly_taxes" id="monthly_taxes" class="form-control" 
+                   value="{{ old('monthly_taxes', $salary->monthly_taxes) }}" required>
+                   @error('monthly_taxes')
+                        <div class="text-danger">{{ $message }}</div>
+                    @enderror
         </div>
 
-        <button type="submit" class="btn btn-primary">Save Employee</button>
+        <!-- monthly_deductions -->
+        <div class="mb-3">
+            <label for="monthly_deductions" class="form-label">Monthly Deductions <span class="text-danger">*</span></label>
+            <input type="text" name="monthly_deductions" id="monthly_deductions" class="form-control" 
+                   value="{{ old('monthly_deductions', $salary->monthly_deductions) }}" required>
+                   @error('monthly_deductions')
+                        <div class="text-danger">{{ $message }}</div>
+                    @enderror
+        </div>
+
+        <!-- monthly_insurance -->
+        <div class="mb-3">
+            <label for="monthly_insurance" class="form-label">Monthly Insurance <span class="text-danger">*</span></label>
+            <input type="text" name="monthly_insurance" id="monthly_insurance" class="form-control" 
+                   value="{{ old('monthly_insurance', $salary->monthly_insurance) }}" required>
+                   @error('monthly_insurance')
+                        <div class="text-danger">{{ $message }}</div>
+                    @enderror
+        </div>
+
+        <!--net_salary -->
+        <div class="mb-3">
+            <label for="net_salary" class="form-label">Net Salary <span class="text-danger">*</span></label>
+            <input type="text" name="net_salary" id="net_salary" class="form-control" 
+                   value="{{ old('net_salary', $salary->net_salary) }}" required>
+                   @error('net_salary')
+                        <div class="text-danger">{{ $message }}</div>
+                    @enderror
+        </div>
+
+        <!--salary_startDate -->
+        <div class="mb-3">
+            <label for="salary_startDate" class="form-label">Salary StartDate <span class="text-danger">*</span></label>
+            <input type="text" name="salary_startDate" id="salary_startDate" class="form-control" 
+                   value="{{ old('salary_startDate', $salary->salary_startDate) }}" required>
+                   @error('salary_startDate')
+                        <div class="text-danger">{{ $message }}</div>
+                    @enderror
+        </div>
+        
+        <!--salary_endDate -->
+        <div class="mb-3">
+            <label for="salary_endDate" class="form-label">Salary EndtDate <span class="text-danger">*</span></label>
+            <input type="text" name="salary_endDate" id="salary_endDate" class="form-control" 
+                   value="{{ old('salary_endDate', $salary->salary_endDate) }}" required>
+                   @error('salary_endDate')
+                        <div class="text-danger">{{ $message }}</div>
+                    @enderror
+        </div>
+
+        <!-- Submit Button -->
+        <button type="submit" class="btn btn-success">Create Salaru</button>
+        <a href="{{ route('salary.index') }}" class="btn btn-secondary">Cancel</a>
     </form>
-</div>
 @endsection

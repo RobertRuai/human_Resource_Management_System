@@ -31,7 +31,7 @@
                             <a href="{{ route('roles.edit', $role->id) }}" class="btn btn-warning btn-sm">Edit</a>
                             <!-- Delete Button with Confirmation -->
                             <form action="{{ route('roles.destroy', $role->id) }}" method="POST" style="display:inline-block;" 
-                                  onsubmit="return confirm('Are you sure you want to delete this user?');">
+                                  onsubmit="return confirm('Are you sure you want to delete this role?');">
                                 @csrf
                                 @method('DELETE')
                                 <button type="submit" class="btn btn-danger btn-sm">Delete</button>

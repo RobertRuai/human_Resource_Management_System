@@ -18,8 +18,9 @@ class SalaryController extends Controller
     // Show the form for creating a new salary
     public function create()
     {
+        $salary = Salary::with('employee')->get();
         $employees = Employee::all();
-        return view('salaries.create', compact('employees'));
+        return view('salaries.create', compact('employees', 'salary'));
     }
 
     // Store a newly created salary in storage
