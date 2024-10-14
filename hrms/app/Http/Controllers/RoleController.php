@@ -15,9 +15,9 @@ class RoleController extends Controller
     }
 
     // Show the form for creating a new role
-    public function create()
+    public function create(Role $role)
     {
-        return view('roles.create');
+        return view('roles.create', compact('role'));
     }
 
     // Store a newly created role in storage
