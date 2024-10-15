@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\User;
 use App\Models\Salary;
 use App\Models\Employee;
 use Illuminate\Http\Request;
@@ -11,6 +12,7 @@ class SalaryController extends Controller
     // Display a listing of the salaries
     public function index()
     {
+        $employees = Employee::all();
         $salaries = Salary::with('employee')->get();
         return view('salaries.index', compact('salaries'));
     }
@@ -61,7 +63,7 @@ class SalaryController extends Controller
     public function update(Request $request, Salary $salary)
     {
         $validatedData = $request->validate([
-            'employee_id_number' => 'required|exists:employees,id',
+            'employee_id_number' => 'required|exists:employees,user_id',
             'monthly_basic_salary' => 'required|numeric',
             'currency' => 'required|string',
             'allowances' => 'required|numeric',

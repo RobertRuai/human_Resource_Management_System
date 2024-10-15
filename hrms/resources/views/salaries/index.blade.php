@@ -10,7 +10,7 @@
     </div>
 
     @if($salaries->isEmpty())
-        <p>No Salaries found.</p>
+        <p>No Salaries records found.</p>
     @else
         <table class="table table-bordered table-striped">
             <thead class="table-light">
@@ -47,7 +47,7 @@
                             <a href="{{ route('salaries.edit', $salary->id) }}" class="btn btn-warning btn-sm">Edit</a>
                             <!-- Delete Button with Confirmation -->
                             <form action="{{ route('salaries.destroy', $salary->id) }}" method="POST" style="display:inline-block;" 
-                                  onsubmit="return confirm('Are you sure you want to delete this salary?');">
+                                  onsubmit="return confirm('Are you sure you want to delete this salary record?');">
                                 @csrf
                                 @method('DELETE')
                                 <button type="submit" class="btn btn-danger btn-sm">Delete</button>

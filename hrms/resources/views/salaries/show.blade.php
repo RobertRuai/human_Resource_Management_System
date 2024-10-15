@@ -1,17 +1,25 @@
 <!-- resources/views/users/show.blade.php -->
 @extends('layouts.app')
 
-@section('title', 'Role Details')
+@section('title', 'Salary Details')
 
 @section('content')
-    <h1>Role Details</h1>
+    <h1>Salary Details</h1>
     <div class="card">
         <div class="card-body">
-            <h5 class="card-title">{{ $role->id }}</h5>
-            <p class="card-text"><strong>Email:</strong> {{ $role->name }}</p>
-            <p class="card-text"><strong>Role:</strong> {{ $role->guard_name }}</p>
-            <a href="{{ route('roles.index') }}" class="btn btn-secondary">Back to Roles</a>
-            <a href="{{ route('roles.edit', $role->id) }}" class="btn btn-warning">Edit Role</a>
+            <h5 class="card-title">{{  $salary->employee_id_number}}</h5>
+            <p class="card-text"><strong>Email:</strong> {{ $salary->monthly_basic_salary }}</p>
+            <p class="card-text"><strong>Email:</strong> {{ $salary->currency }}</p>
+            <p class="card-text"><strong>Email:</strong> {{ $salary->allowances }}</p>
+            <p class="card-text"><strong>Email:</strong> {{ $salary->gross_salary }}</p>
+            <p class="card-text"><strong>Email:</strong> {{ $salary->monthly_taxes }}</p>
+            <p class="card-text"><strong>Email:</strong> {{ $salary->monthly_deductions }}</p>
+            <p class="card-text"><strong>Email:</strong> {{ $salary->monthly_insurance }}</p>
+            <p class="card-text"><strong>Email:</strong> {{ $salary->net_salary }}</p>
+            <p class="card-text"><strong>salary:</strong> {{ $salary->salary_startDate }}</p>
+            <p class="card-text"><strong>salary:</strong> {{ $salary->salary_endDate }}</p>
+            <a href="{{ route('salaries.index') }}" class="btn btn-secondary">Back to salary</a>
+            <a href="{{ route('salaries.edit', $salary->id) }}" class="btn btn-warning">Edit salary</a>
         </div>
     </div>
 @endsection

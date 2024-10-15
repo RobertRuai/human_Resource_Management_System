@@ -6,24 +6,27 @@
 <div class="container">
     <h2>Edit Salary</h2>
 
-    <form action="{{ route('salaries.update', $role->id) }}" method="POST">
+    <form action="{{ route('salaries.update', $salary->id) }}" method="POST">
         @csrf
         @method('PUT')
 
         <!-- Employee ID Number -->
         <div class="mb-3">
-            <label for="employee_id_number" class="form-label">Employee ID Number<span class="text-danger">*</span></label>
-            <input type="text" name="employee_id_number" id="employee_id_number" class="form-control" 
-                    value="{{ old('employee_id_number', $salary->employee_id_number) }}" required>
-                    @error('employee_id_number')
-                        <div class="text-danger">{{ $message }}</div>
-                    @enderror
+            <label for="employee_id_number" class="form-label">Employee <span class="text-danger">*</span></label>
+            <select name="employee_id_number" id="employee_id_number" class="form-select" required>
+                <option value="">-- Select Employee --</option>
+                @foreach($employees as $employee)
+                    <option value="{{ $employee->id }}" {{ old('employee_id') == $employee->id ? 'selected' : '' }}>
+                        {{ $employee->id }}
+                    </option>
+                @endforeach
+            </select>
         </div>
 
         <!-- monthly_basic_salary -->
         <div class="mb-3">
             <label for="monthly_basic_salary" class="form-label">Monthly Basic Salary <span class="text-danger">*</span></label>
-            <input type="text" name="monthly_basic_salary" id="monthly_basic_salary" class="form-control" 
+            <input type="number" name="monthly_basic_salary" id="monthly_basic_salary" class="form-control" 
                    value="{{ old('monthly_basic_salary', $salary->monthly_basic_salary) }}" required>
                    @error('monthly_basic_salary')
                         <div class="text-danger">{{ $message }}</div>
@@ -43,7 +46,7 @@
         <!-- allowances -->
         <div class="mb-3">
             <label for="allowances" class="form-label">Allowances <span class="text-danger">*</span></label>
-            <input type="text" name="allowances" id="allowances" class="form-control" 
+            <input type="number" name="allowances" id="allowances" class="form-control" 
                    value="{{ old('allowances', $salary->allowances) }}" required>
                    @error('allowances')
                         <div class="text-danger">{{ $message }}</div>
@@ -53,7 +56,7 @@
         <!-- gross_salary -->
         <div class="mb-3">
             <label for="gross_salary" class="form-label">Gross Salary <span class="text-danger">*</span></label>
-            <input type="text" name="gross_salary" id="gross_salary" class="form-control" 
+            <input type="number" name="gross_salary" id="gross_salary" class="form-control" 
                    value="{{ old('gross_salary', $salary->gross_salary) }}" required>
                    @error('gross_salary')
                         <div class="text-danger">{{ $message }}</div>
@@ -63,7 +66,7 @@
         <!-- monthly_taxes -->
         <div class="mb-3">
             <label for="monthly_taxes" class="form-label">Monthly Taxes <span class="text-danger">*</span></label>
-            <input type="text" name="monthly_taxes" id="monthly_taxes" class="form-control" 
+            <input type="number" name="monthly_taxes" id="monthly_taxes" class="form-control" 
                    value="{{ old('monthly_taxes', $salary->monthly_taxes) }}" required>
                    @error('monthly_taxes')
                         <div class="text-danger">{{ $message }}</div>
@@ -73,7 +76,7 @@
         <!-- monthly_deductions -->
         <div class="mb-3">
             <label for="monthly_deductions" class="form-label">Monthly Deductions <span class="text-danger">*</span></label>
-            <input type="text" name="monthly_deductions" id="monthly_deductions" class="form-control" 
+            <input type="number" name="monthly_deductions" id="monthly_deductions" class="form-control" 
                    value="{{ old('monthly_deductions', $salary->monthly_deductions) }}" required>
                    @error('monthly_deductions')
                         <div class="text-danger">{{ $message }}</div>
@@ -83,7 +86,7 @@
         <!-- monthly_insurance -->
         <div class="mb-3">
             <label for="monthly_insurance" class="form-label">Monthly Insurance <span class="text-danger">*</span></label>
-            <input type="text" name="monthly_insurance" id="monthly_insurance" class="form-control" 
+            <input type="number" name="monthly_insurance" id="monthly_insurance" class="form-control" 
                    value="{{ old('monthly_insurance', $salary->monthly_insurance) }}" required>
                    @error('monthly_insurance')
                         <div class="text-danger">{{ $message }}</div>
@@ -93,7 +96,7 @@
         <!--net_salary -->
         <div class="mb-3">
             <label for="net_salary" class="form-label">Net Salary <span class="text-danger">*</span></label>
-            <input type="text" name="net_salary" id="net_salary" class="form-control" 
+            <input type="number" name="net_salary" id="net_salary" class="form-control" 
                    value="{{ old('net_salary', $salary->net_salary) }}" required>
                    @error('net_salary')
                         <div class="text-danger">{{ $message }}</div>
@@ -103,7 +106,7 @@
         <!--salary_startDate -->
         <div class="mb-3">
             <label for="salary_startDate" class="form-label">Salary StartDate <span class="text-danger">*</span></label>
-            <input type="text" name="salary_startDate" id="salary_startDate" class="form-control" 
+            <input type="date" name="salary_startDate" id="salary_startDate" class="form-control" 
                    value="{{ old('salary_startDate', $salary->salary_startDate) }}" required>
                    @error('salary_startDate')
                         <div class="text-danger">{{ $message }}</div>
@@ -113,7 +116,7 @@
         <!--salary_endDate -->
         <div class="mb-3">
             <label for="salary_endDate" class="form-label">Salary EndtDate <span class="text-danger">*</span></label>
-            <input type="text" name="salary_endDate" id="salary_endDate" class="form-control" 
+            <input type="date" name="salary_endDate" id="salary_endDate" class="form-control" 
                    value="{{ old('salary_endDate', $salary->salary_endDate) }}" required>
                    @error('salary_endDate')
                         <div class="text-danger">{{ $message }}</div>

@@ -13,7 +13,7 @@ class AdminSeeder extends Seeder
      */
     public function run(): void
     {
-        $user = User::create([
+        $user1 = User::create([
             'username' => 'Admin1',
             'email' => 'admin1@gmail.com',
             'email_verified_at' => now(),
@@ -21,7 +21,7 @@ class AdminSeeder extends Seeder
             'role_id' => '1',
         ]);
 
-        $user = User::create([
+        $user2 = User::create([
             'username' => 'HR1',
             'email' => 'hr1@gmail.com',
             'email_verified_at' => now(),
@@ -29,7 +29,7 @@ class AdminSeeder extends Seeder
             'role_id' => '2',
         ]);
 
-        $user = User::create([
+        $user3 = User::create([
             'username' => 'User1',
             'email' => 'user1@gmail.com',
             'email_verified_at' => now(),
@@ -38,6 +38,8 @@ class AdminSeeder extends Seeder
         ]);
 
 
-        $user->assignRole(['HR Manager']);
+        $user1->assignRole(['Admin']);
+        $user2->assignRole(['HR Manager']);
+        $user3->assignRole(['Employee']);
     }
 }
