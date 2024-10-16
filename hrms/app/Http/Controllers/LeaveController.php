@@ -42,6 +42,8 @@ class LeaveController extends Controller
             'date_of_approval_SR' => 'required|date',
             'HR_approval' => 'required|string',
             'date_of_approval_HR' => 'required|date',
+            'status' => 'required|string|in:Pending,Approved,Rejected',
+
         ]);
 
         leave_information::create($validatedData);
@@ -81,6 +83,8 @@ class LeaveController extends Controller
             'date_of_approval_SR' => 'required|date',
             'HR_approval' => 'required|string',
             'date_of_approval_HR' => 'required|date',
+            'status' => 'required|string|in:Pending,Approved,Rejected',
+
         ]);
 
         $leave->update($validatedData);

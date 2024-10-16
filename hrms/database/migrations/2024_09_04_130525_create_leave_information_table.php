@@ -29,6 +29,7 @@ return new class extends Migration
             $table->date('date_of_approval_SR');
             $table->string('HR_approval', 50);
             $table->date('date_of_approval_HR');
+            $table->string('status', 50);
             $table->timestamps();
 
             $table->foreign('employee_id_number')->references('id')->on('employees')->onDelete('cascade');
