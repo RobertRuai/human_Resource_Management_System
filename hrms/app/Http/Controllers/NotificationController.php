@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\User;
 use App\Models\notification;
 use Illuminate\Http\Request;
 
@@ -10,14 +11,16 @@ class NotificationController extends Controller
     // Display a listing of the notifications
     public function index()
     {
+        $users = User::all();
         $notifications = notification::all();
-        return view('notifications.index', compact('notifications'));
+        return view('notifications.index', compact('notifications', 'users'));
     }
 
     // Show the form for creating a new notification
     public function create()
     {
-        return view('notifications.create');
+        $users = User::all();
+        return view('notifications.create', compact('users'));
     }
 
     // Store a newly created notification in storage
@@ -26,7 +29,7 @@ class NotificationController extends Controller
         $validatedData = $request->validate([
             'user_id' => 'required|exists:users,id',
             'message' => 'required|string',
-            'is_read' => 'required|boolean',
+            'is_read' => 'boolean:0,1,true,false',
         ]);
 
         notification::create($validatedData);
@@ -36,6 +39,7 @@ class NotificationController extends Controller
     // Display the specified notification
     public function show(notification $notification)
     {
+        $user = User::all();
         return view('notifications.show', compact('notification'));
     }
 
@@ -51,7 +55,7 @@ class NotificationController extends Controller
         $validatedData = $request->validate([
             'user_id' => 'required|exists:users,id',
             'message' => 'required|string',
-            'is_read' => 'required|boolean',
+            'is_read' => 'boolean:0,1,true,false',
         ]);
 
         $notification->update($validatedData);
