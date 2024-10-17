@@ -8,10 +8,21 @@
     <div class="card">
         <div class="card-body">
             <h5 class="card-title">{{ $leave->employee->user->name }}</h5>
+            <p class="card-text"><strong>Leave Type:</strong> {{ $leave->staff_name }}</p>
+            <p class="card-text"><strong>Leave Type:</strong> {{ $leave->division }}</p>
             <p class="card-text"><strong>Department:</strong> {{ $leave->employee->department->name }}</p>
-            <p class="card-text"><strong>Leave Type:</strong> {{ $leave->leave_type }}</p>
-            <p class="card-text"><strong>Start Date:</strong> {{ $leave->start_date->format('Y-m-d') }}</p>
-            <p class="card-text"><strong>End Date:</strong> {{ $leave->end_date->format('Y-m-d') }}</p>
+            <p class="card-text"><strong>Leave Type:</strong> {{ $leave->job_title }}</p>
+            <p class="card-text"><strong>Leave Type:</strong> {{ $leave->type_of_leave }}</p>
+            <p class="card-text"><strong>Leave Type:</strong> {{ $leave->no_of_leaves_requested }}</p>
+            <p class="card-text"><strong>Leave Type:</strong> {{ $leave->total_leaves_perYear }}</p>
+            <p class="card-text"><strong>Leave Type:</strong> {{ $leave->total_leaves_taken }}</p>
+            <p class="card-text"><strong>Leave Type:</strong> {{ $leave->leave_commencement }}</p>
+            <p class="card-text"><strong>Leave Type:</strong> {{ $leave->date_of_return }}</p>
+            <p class="card-text"><strong>Leave Type:</strong> {{ $leave->date_requested }}</p>
+            <p class="card-text"><strong>Leave Type:</strong> {{ $leave->supervisor_approval }}</p>
+            <p class="card-text"><strong>Leave Type:</strong> {{ $leave->date_of_approval_SR }}</p>
+            <p class="card-text"><strong>Leave Type:</strong> {{ $leave->HR_approval }}</p>
+            <p class="card-text"><strong>Leave Type:</strong> {{ $leave->date_of_approval_HR }}</p>
             <p class="card-text"><strong>Reason:</strong> {{ $leave->reason }}</p>
             <p class="card-text"><strong>Status:</strong> 
                 @if($leave->status == 'Approved')

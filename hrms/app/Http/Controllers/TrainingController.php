@@ -29,8 +29,8 @@ class TrainingController extends Controller
             'sponsored_by' => 'required|string',
             'location' => 'required|string',
             'commencement_date' => 'required|date',
-            'end_date' => 'required|date|after_or_equal:start_date',
-            'justification' => 'required|text',
+            'end_date' => 'required|date|after_or_equal:commencement_date',
+            'justification' => 'required|string',
         ]);
 
         training::create($validatedData);
@@ -58,8 +58,8 @@ class TrainingController extends Controller
             'sponsored_by' => 'required|string',
             'location' => 'required|string',
             'commencement_date' => 'required|date',
-            'end_date' => 'required|date|after_or_equal:start_date',
-            'justification' => 'required|text',
+            'end_date' => 'required|date|after_or_equal:commencement_date',
+            'justification' => 'required|string',
         ]);
 
         $training->update($validatedData);

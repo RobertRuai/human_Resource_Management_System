@@ -14,7 +14,7 @@
             <select name="employee_id_number" id="employee_id_number" class="form-select" required>
                 <option value="">-- Select Employee --</option>
                 @foreach($employees as $employee)
-                    <option value="{{ $employee->id }}" {{ old('employee_id') == $employee->id ? 'selected' : '' }}>
+                    <option value="{{ $employee->id }}" {{ old('employee_id_number') == $employee->id ? 'selected' : '' }}>
                         {{ $employee->user->name }} ({{ $employee->department->name }})
                     </option>
                 @endforeach
@@ -28,7 +28,7 @@
                    value="{{ old('staff_name') }}" required>
         </div>
 
-         <!-- Staff Name -->
+         <!-- division -->
         
         <div class="mb-3">
             <label for="division" class="form-label">division <span class="text-danger">*</span></label>
@@ -36,15 +36,24 @@
                    value="{{ old('division') }}" required>
         </div>
 
-        <!-- Staff Name -->
+        <!-- department -->
         
-        <div class="mb-3">
-            <label for="department" class="form-label">department <span class="text-danger">*</span></label>
-            <input type="text" name="department" id="department" class="form-control" 
-                   value="{{ old('department') }}" required>
+        <div class="form-group">
+            <label for="department_id">Department</label>
+            <select name="department_id" id="department_id" class="form-control">
+                <option value="">Select Department</option>
+                @foreach ($departments as $department)
+                    <option value="{{ $department->id }}" {{ old('department_id') == $department->id ? 'selected' : '' }}>
+                        {{ $department->name }}
+                    </option>
+                @endforeach
+            </select>
+            @error('department_id')
+                <div class="text-danger">{{ $message }}</div>
+            @enderror
         </div>
 
-        <!-- Staff Name -->
+        <!-- job_title -->
         
         <div class="mb-3">
             <label for="job_title" class="form-label">job_title <span class="text-danger">*</span></label>
@@ -52,7 +61,7 @@
                    value="{{ old('job_title') }}" required>
         </div>
         
-        <!-- Leave Type -->
+        <!--type_of_leave -->
         <div class="mb-3">
             <label for="type_of_leave" class="form-label">Leave Type <span class="text-danger">*</span></label>
             <select name="type_of_leave" id="type_of_leave" class="form-select" required>
@@ -67,7 +76,7 @@
             </select>
         </div>
 
-        <!-- Staff Name -->
+        <!-- no_of_leaves_requested -->
         
         <div class="mb-3">
             <label for="no_of_leaves_requested" class="form-label">no_of_leaves_requested <span class="text-danger">*</span></label>
@@ -75,7 +84,7 @@
                    value="{{ old('no_of_leaves_requested') }}" required>
         </div>
 
-        <!-- Staff Name -->
+        <!-- total_leaves_perYear -->
         
         <div class="mb-3">
             <label for="total_leaves_perYear" class="form-label">total_leaves_perYear <span class="text-danger">*</span></label>
@@ -83,7 +92,7 @@
                    value="{{ old('total_leaves_perYear') }}" required>
         </div>
 
-        <!-- Staff Name -->
+        <!--total_leaves_taken -->
         
         <div class="mb-3">
             <label for="total_leaves_taken" class="form-label">total_leaves_taken <span class="text-danger">*</span></label>
@@ -91,31 +100,31 @@
                    value="{{ old('total_leaves_taken') }}" required>
         </div>
 
-        <!-- Staff Name -->
+        <!-- leave_commencement -->
         
         <div class="mb-3">
             <label for="leave_commencement" class="form-label">leave_commencement <span class="text-danger">*</span></label>
-            <input type="text" name="leave_commencement" id="leave_commencement" class="form-control" 
+            <input type="date" name="leave_commencement" id="leave_commencement" class="form-control" 
                    value="{{ old('leave_commencement') }}" required>
         </div>
 
-        <!-- Staff Name -->
+        <!-- date_of_return -->
         
         <div class="mb-3">
             <label for="date_of_return" class="form-label">date_of_return <span class="text-danger">*</span></label>
-            <input type="text" name="date_of_return" id="date_of_return" class="form-control" 
+            <input type="date" name="date_of_return" id="date_of_return" class="form-control" 
                    value="{{ old('date_of_return') }}" required>
         </div>
 
-        <!-- Staff Name -->
+        <!-- date_requested -->
         
         <div class="mb-3">
             <label for="date_requested" class="form-label">date_requested <span class="text-danger">*</span></label>
-            <input type="text" name="date_requested" id="date_requested" class="form-control" 
+            <input type="date" name="date_requested" id="date_requested" class="form-control" 
                    value="{{ old('date_requested') }}" required>
         </div>
 
-         <!-- Staff Name -->
+         <!-- supervisor_approval -->
         
          <div class="mb-3">
             <label for="supervisor_approval" class="form-label">supervisor_approval <span class="text-danger">*</span></label>
@@ -123,15 +132,15 @@
                    value="{{ old('supervisor_approval') }}" required>
         </div>
 
-         <!-- Staff Name -->
+         <!-- date_of_approval_SR -->
         
          <div class="mb-3">
             <label for="date_of_approval_SR" class="form-label">date_of_approval_SR <span class="text-danger">*</span></label>
-            <input type="text" name="date_of_approval_SR" id="date_of_approval_SR" class="form-control" 
+            <input type="date" name="date_of_approval_SR" id="date_of_approval_SR" class="form-control" 
                    value="{{ old('date_of_approval_SR') }}" required>
         </div>
 
-         <!-- Staff Name -->
+         <!-- HR_approval -->
         
          <div class="mb-3">
             <label for="HR_approval" class="form-label">HR_approval <span class="text-danger">*</span></label>
@@ -139,26 +148,12 @@
                    value="{{ old('HR_approval') }}" required>
         </div>
 
-         <!-- Staff Name -->
+         <!-- date_of_approval_HR -->
         
          <div class="mb-3">
             <label for="date_of_approval_HR" class="form-label">date_of_approval_HR <span class="text-danger">*</span></label>
-            <input type="text" name="date_of_approval_HR" id="date_of_approval_HR" class="form-control" 
+            <input type="date" name="date_of_approval_HR" id="date_of_approval_HR" class="form-control" 
                    value="{{ old('date_of_approval_HR') }}" required>
-        </div>
-
-        <!-- Start Date -->
-        <div class="mb-3">
-            <label for="start_date" class="form-label">Start Date <span class="text-danger">*</span></label>
-            <input type="date" name="start_date" id="start_date" class="form-control" 
-                   value="{{ old('start_date') }}" required>
-        </div>
-
-        <!-- End Date -->
-        <div class="mb-3">
-            <label for="end_date" class="form-label">End Date <span class="text-danger">*</span></label>
-            <input type="date" name="end_date" id="end_date" class="form-control" 
-                   value="{{ old('end_date') }}" required>
         </div>
 
         <!-- Reason -->

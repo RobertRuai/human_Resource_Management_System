@@ -1,69 +1,59 @@
+<!-- resources/views/users/create.blade.php -->
 @extends('layouts.app')
 
-@section('title', 'Create Employee')
+@section('title', 'Create Trainings')
 
 @section('content')
-<div class="container">
-    <h2>Create Employee</h2>
-
-    <form action="{{ route('employees.store') }}" method="POST">
+    <h1>Add new Training</h1>
+    <form action="{{ route('trainings.store') }}" method="POST">
         @csrf
-        <div class="form-group">
-            <label for="first_name">First Name</label>
-            <input type="text" name="first_name" id="first_name" class="form-control" value="{{ old('first_name') }}">
-            @error('first_name')
-                <div class="text-danger">{{ $message }}</div>
-            @enderror
+
+        <!-- Name -->
+        <div class="mb-3">
+            <label for="training_category" class="form-label">Training Category <span class="text-danger">*</span></label>
+            <input type="text" name="training_category" id="training_category" class="form-control" 
+                   value="{{ old('training_category') }}" required>
         </div>
 
-        <div class="form-group">
-            <label for="last_name">Last Name</label>
-            <input type="text" name="last_name" id="last_name" class="form-control" value="{{ old('last_name') }}">
-            @error('last_name')
-                <div class="text-danger">{{ $message }}</div>
-            @enderror
+        <!-- Email -->
+        <div class="mb-3">
+            <label for="course" class="form-label">Training Course <span class="text-danger">*</span></label>
+            <input type="text" name="course" id="course" class="form-control" 
+                   value="{{ old('course') }}" required>
         </div>
 
-        <div class="form-group">
-            <label for="email">Email</label>
-            <input type="email" name="email" id="email" class="form-control" value="{{ old('email') }}">
-            @error('email')
-                <div class="text-danger">{{ $message }}</div>
-            @enderror
+        <div class="mb-3">
+            <label for="sponsored_by" class="form-label">Sponsored By <span class="text-danger">*</span></label>
+            <input type="text" name="sponsored_by" id="sponsored_by" class="form-control" 
+                   value="{{ old('sponsored_by') }}" required>
         </div>
 
-        <div class="form-group">
-            <label for="department_id">Department</label>
-            <select name="department_id" id="department_id" class="form-control">
-                <option value="">Select Department</option>
-                @foreach ($departments as $department)
-                    <option value="{{ $department->id }}" {{ old('department_id') == $department->id ? 'selected' : '' }}>
-                        {{ $department->name }}
-                    </option>
-                @endforeach
-            </select>
-            @error('department_id')
-                <div class="text-danger">{{ $message }}</div>
-            @enderror
+        
+        <div class="mb-3">
+            <label for="location" class="form-label">Location <span class="text-danger">*</span></label>
+            <input type="text" name="location" id="location" class="form-control" 
+                   value="{{ old('location') }}" required>
         </div>
 
-        <div class="form-group">
-            <label for="job_title">Job Title</label>
-            <input type="text" name="job_title" id="job_title" class="form-control" value="{{ old('job_title') }}">
-            @error('job_title')
-                <div class="text-danger">{{ $message }}</div>
-            @enderror
+        <div class="mb-3">
+            <label for="commencement_date" class="form-label">Commencement Date <span class="text-danger">*</span></label>
+            <input type="date" name="commencement_date" id="commencement_date" class="form-control" 
+                   value="{{ old('commencement_date') }}" required>
         </div>
 
-        <div class="form-group">
-            <label for="salary">Salary</label>
-            <input type="text" name="salary" id="salary" class="form-control" value="{{ old('salary') }}">
-            @error('salary')
-                <div class="text-danger">{{ $message }}</div>
-            @enderror
+        <div class="mb-3">
+            <label for="end_date" class="form-label">End Date <span class="text-danger">*</span></label>
+            <input type="date" name="end_date" id="end_date" class="form-control" 
+                   value="{{ old('end_date') }}" required>
         </div>
 
-        <button type="submit" class="btn btn-primary">Save Employee</button>
+        <div class="mb-3">
+            <label for="justification" class="form-label">Justification <span class="text-danger">*</span></label>
+            <textarea name="justification" id="justification" class="form-control" rows="4" required>{{ old('justification') }}</textarea>
+        </div>
+
+        <!-- Submit Button -->
+        <button type="submit" class="btn btn-success">Create Training</button>
+        <a href="{{ route('trainings.index') }}" class="btn btn-secondary">Cancel</a>
     </form>
-</div>
 @endsection

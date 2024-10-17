@@ -16,7 +16,7 @@ return new class extends Migration
             $table->unsignedBigInteger('employee_id_number');
             $table->string('staff_name', 150);
             $table->string('division', 50);
-            $table->string('department', 50);
+            $table->unsignedBigInteger('department_id');
             $table->string('job_title', 50);
             $table->string('type_of_leave', 50);
             $table->integer('no_of_leaves_requested');
@@ -30,9 +30,11 @@ return new class extends Migration
             $table->string('HR_approval', 50);
             $table->date('date_of_approval_HR');
             $table->string('status', 50);
+            $table->string('reason', 250);
             $table->timestamps();
 
             $table->foreign('employee_id_number')->references('id')->on('employees')->onDelete('cascade');
+            $table->foreign('department_id')->references('id')->on('departments')->onDelete('cascade');
         });
     }
 

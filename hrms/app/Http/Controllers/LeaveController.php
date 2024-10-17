@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\leave_information;
 use App\Models\Employee;
+use App\Models\Department;
 use Illuminate\Http\Request;
 
 class LeaveController extends Controller
@@ -12,14 +13,16 @@ class LeaveController extends Controller
     public function index()
     {
         $leaves = leave_information::with('employee')->get();
-        return view('leaves.index', compact('leaves'));
+        $departments = Department::all();
+        return view('leaves.index', compact('leaves', 'departments'));
     }
 
     // Show the form for creating a new leave
     public function create()
     {
+        $departments = Department::all();
         $employees = Employee::all();
-        return view('leaves.create', compact('employees'));
+        return view('leaves.create', compact('employees', 'departments'));
     }
 
     // Store a newly created leave in storage
@@ -29,7 +32,7 @@ class LeaveController extends Controller
             'employee_id_number' => 'required|exists:employees,id',
             'staff_name' => 'required|string',
             'division' => 'required|string',
-            'department' => 'required|string',
+            'department_id' => 'required|exists:departments,id',
             'job_title' => 'required|string',
             'type_of_leave' => 'required|string',
             'no_of_leaves_requested' => 'required|integer',
@@ -42,6 +45,7 @@ class LeaveController extends Controller
             'date_of_approval_SR' => 'required|date',
             'HR_approval' => 'required|string',
             'date_of_approval_HR' => 'required|date',
+            'reason' => 'required|string',
             'status' => 'required|string|in:Pending,Approved,Rejected',
 
         ]);
@@ -59,8 +63,9 @@ class LeaveController extends Controller
     // Show the form for editing the specified leave
     public function edit(leave_information $leave)
     {
+        $departments = Department::all();
         $employees = Employee::all();
-        return view('leaves.edit', compact('leave', 'employees'));
+        return view('leaves.edit', compact('leave', 'employees', 'departments'));
     }
 
     // Update the specified leave in storage
@@ -70,7 +75,7 @@ class LeaveController extends Controller
             'employee_id_number' => 'required|exists:employees,id',
             'staff_name' => 'required|string',
             'division' => 'required|string',
-            'department' => 'required|string',
+            'department_id' => 'required|exists:departments,id',
             'job_title' => 'required|string',
             'type_of_leave' => 'required|string',
             'no_of_leaves_requested' => 'required|integer',
@@ -83,7 +88,9 @@ class LeaveController extends Controller
             'date_of_approval_SR' => 'required|date',
             'HR_approval' => 'required|string',
             'date_of_approval_HR' => 'required|date',
+            'reason' => 'required|string',
             'status' => 'required|string|in:Pending,Approved,Rejected',
+
 
         ]);
 

@@ -41,7 +41,7 @@
                         <td>{{ $leave->employee->user->name }}</td>
                         <td>{{ $leave->staff_name }}</td>
                         <td>{{ $leave->division }}</td>
-                        <td>{{ $leave->department }}</td>
+                        <td>{{ $leave->department->name }}</td>
                         <td>{{ $leave->job_title }}</td>
                         <td>{{ $leave->type_of_leave }}</td>
                         <td>{{ $leave->no_of_leaves_requested }}</td>
