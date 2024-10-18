@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\User;
 use App\Models\audit_log;
 use Illuminate\Http\Request;
 
@@ -10,6 +11,7 @@ class AuditLogController extends Controller
     // Display a listing of the audit logs
     public function index()
     {
+        $users = User::all();
         $auditLogs = audit_log::all();
         return view('audit_logs.index', compact('auditLogs'));
     }
@@ -17,7 +19,8 @@ class AuditLogController extends Controller
     // Show the form for creating a new audit log
     public function create()
     {
-        return view('audit_logs.create');
+        $users = User::all();
+        return view('audit_logs.create', compact('users'));
     }
 
     // Store a newly created audit log in storage
@@ -36,13 +39,15 @@ class AuditLogController extends Controller
     // Display the specified audit log
     public function show(audit_log $auditLog)
     {
-        return view('audit_logs.show', compact('auditLog'));
+        $users = User::all();
+        return view('audit_logs.show', compact('auditLog', 'users'));
     }
 
     // Show the form for editing the specified audit log
     public function edit(audit_log $auditLog)
     {
-        return view('audit_logs.edit', compact('auditLog'));
+        $users = User::all();
+        return view('audit_logs.edit', compact('auditLog', 'users'));
     }
 
     // Update the specified audit log in storage
