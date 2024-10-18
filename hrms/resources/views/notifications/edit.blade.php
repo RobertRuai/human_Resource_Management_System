@@ -43,7 +43,7 @@
         </div>
 
         <!-- Submit Button -->
-        <button type="submit" class="btn btn-success">Update User</button>
-        <a href="{{ route('users.index') }}" class="btn btn-secondary">Cancel</a>
+        <button type="submit" class="btn btn-success">Update Notification</button>
+        <a href="{{ route('notifications.index') }}" class="btn btn-secondary">Cancel</a>
     </form>
 @endsection

@@ -26,10 +26,11 @@ class NotificationController extends Controller
     // Store a newly created notification in storage
     public function store(Request $request)
     {
+        $users = User::all();
         $validatedData = $request->validate([
             'user_id' => 'required|exists:users,id',
             'message' => 'required|string',
-            'is_read' => 'boolean:0,1,true,false',
+            'is_read' => 'boolean:0,1,false,true',
         ]);
 
         notification::create($validatedData);
@@ -46,7 +47,8 @@ class NotificationController extends Controller
     // Show the form for editing the specified notification
     public function edit(notification $notification)
     {
-        return view('notifications.edit', compact('notification'));
+        $users = User::all();
+        return view('notifications.edit', compact('notification', 'users'));
     }
 
     // Update the specified notification in storage
@@ -55,7 +57,7 @@ class NotificationController extends Controller
         $validatedData = $request->validate([
             'user_id' => 'required|exists:users,id',
             'message' => 'required|string',
-            'is_read' => 'boolean:0,1,true,false',
+            'is_read' => 'boolean:0,1,false,true',
         ]);
 
         $notification->update($validatedData);

@@ -5,7 +5,7 @@
 
 @section('content')
     <div class="d-flex justify-content-between align-items-center mb-3">
-        <h1>notifications</h1>
+        <h1>Notifications</h1>
         <a href="{{ route('notifications.create') }}" class="btn btn-primary">Create New notification</a>
     </div>
 
@@ -23,9 +23,9 @@
             <tbody>
                 @foreach($notifications as $notification)
                     <tr>
-                        <td>{{ $notification->user_id }}</td>
+                        <td>{{ $notification->user->username }}</td>
                         <td>{{ $notification->message }}</td>
-                        <td>{{ $notification->is_read }}</td>
+                        <td>{{ $notification->is_read ? 'Read' : 'Unread' }}</td>
                         <td>
                             <a href="{{ route('notifications.show', $notification->id) }}" class="btn btn-info btn-sm">View</a>
                             <a href="{{ route('notifications.edit', $notification->id) }}" class="btn btn-warning btn-sm">Edit</a>
