@@ -26,7 +26,7 @@
                 <option value="">-- Select User --</option>
                 @foreach($users as $user)
                     <option value="{{ $user->id }}" {{ old('user_id') == $user->id ? 'selected' : '' }}>
-                        {{ $user->id }}
+                        {{ $user->username }}
                     </option>
                 @endforeach
             </select>
@@ -73,7 +73,7 @@
 
         <div class="form-group">
             <label for="date_of_birth">Date Of Birth</label>
-            <input type="text" name="date_of_birth" id="date_of_birth" class="form-control" value="{{ old('date_of_birth') }}">
+            <input type="date" name="date_of_birth" id="date_of_birth" class="form-control" value="{{ old('date_of_birth') }}">
             @error('date_of_birth')
                 <div class="text-danger">{{ $message }}</div>
             @enderror
@@ -153,7 +153,7 @@
 
         <div class="form-group">
             <label for="date_of_employment">Date of Employment</label>
-            <input type="text" name="date_of_employment" id="date_of_employment" class="form-control" value="{{ old('date_of_employment') }}">
+            <input type="date" name="date_of_employment" id="date_of_employment" class="form-control" value="{{ old('date_of_employment') }}">
             @error('date_of_employment')
                 <div class="text-danger">{{ $message }}</div>
             @enderror
