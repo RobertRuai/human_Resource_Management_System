@@ -12,7 +12,7 @@ class LeaveController extends Controller
     // Display a listing of the leaves
     public function index()
     {
-        $leaves = leave_information::with('employee')->get();
+        $leaves = leave_information::all();
         $departments = Department::all();
         return view('leaves.index', compact('leaves', 'departments'));
     }
@@ -46,7 +46,7 @@ class LeaveController extends Controller
             'HR_approval' => 'required|string',
             'date_of_approval_HR' => 'required|date',
             'reason' => 'required|string',
-            'status' => 'required|string|in:Pending,Approved,Rejected',
+            'status' => 'nullable|string|in:Pending,Approved,Rejected',
 
         ]);
 

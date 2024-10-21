@@ -15,7 +15,7 @@
                 <option value="">-- Select Employee --</option>
                 @foreach($employees as $employee)
                     <option value="{{ $employee->id }}" {{ old('employee_id_number') == $employee->id ? 'selected' : '' }}>
-                        {{ $employee->user->name }} ({{ $employee->department->name }})
+                        {{ $employee->id }} ({{ $employee->department->name }})
                     </option>
                 @endforeach
             </select>

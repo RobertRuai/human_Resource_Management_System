@@ -7,10 +7,10 @@
     <h1>Leave Details</h1>
     <div class="card">
         <div class="card-body">
-            <h5 class="card-title">{{ $leave->employee->user->name }}</h5>
+            <h5 class="card-title">{{ $leave->employee_id_number }}</h5>
             <p class="card-text"><strong>Leave Type:</strong> {{ $leave->staff_name }}</p>
             <p class="card-text"><strong>Leave Type:</strong> {{ $leave->division }}</p>
-            <p class="card-text"><strong>Department:</strong> {{ $leave->employee->department->name }}</p>
+            <p class="card-text"><strong>Department:</strong> {{ $leave->department_id }}</p>
             <p class="card-text"><strong>Leave Type:</strong> {{ $leave->job_title }}</p>
             <p class="card-text"><strong>Leave Type:</strong> {{ $leave->type_of_leave }}</p>
             <p class="card-text"><strong>Leave Type:</strong> {{ $leave->no_of_leaves_requested }}</p>
@@ -33,8 +33,6 @@
                     <span class="badge bg-danger">{{ $leave->status }}</span>
                 @endif
             </p>
-            <p class="card-text"><strong>Created At:</strong> {{ $leave->created_at->format('Y-m-d H:i') }}</p>
-            <p class="card-text"><strong>Updated At:</strong> {{ $leave->updated_at->format('Y-m-d H:i') }}</p>
             <a href="{{ route('leaves.index') }}" class="btn btn-secondary">Back to Leaves</a>
             <a href="{{ route('leaves.edit', $leave->id) }}" class="btn btn-warning">Edit Leave</a>
         </div>

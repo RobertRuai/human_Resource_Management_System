@@ -11,7 +11,7 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('leave_information', function (Blueprint $table) {
+        Schema::create('leave_informations', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('employee_id_number');
             $table->string('staff_name', 150);
@@ -29,7 +29,7 @@ return new class extends Migration
             $table->date('date_of_approval_SR');
             $table->string('HR_approval', 50);
             $table->date('date_of_approval_HR');
-            $table->string('status', 50);
+            $table->string('status', 50)->nullable()->default('Pending');
             $table->string('reason', 250);
             $table->timestamps();
 
@@ -43,6 +43,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('leave_information');
+        Schema::dropIfExists('leave_informations');
     }
 };

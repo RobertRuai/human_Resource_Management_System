@@ -38,10 +38,10 @@
             <tbody>
                 @foreach($leaves as $leave)
                     <tr>
-                        <td>{{ $leave->employee->user->name }}</td>
+                        <td>{{ $leave->employee_id_number }}</td>
                         <td>{{ $leave->staff_name }}</td>
                         <td>{{ $leave->division }}</td>
-                        <td>{{ $leave->department->name }}</td>
+                        <td>{{ $leave->department_id }}</td>
                         <td>{{ $leave->job_title }}</td>
                         <td>{{ $leave->type_of_leave }}</td>
                         <td>{{ $leave->no_of_leaves_requested }}</td>
@@ -54,6 +54,7 @@
                         <td>{{ $leave->date_of_approval_SR }}</td>
                         <td>{{ $leave->HR_approval }}</td>
                         <td>{{ $leave->date_of_approval_HR }}</td>
+                        <td>{{ $leave->statuus }}</td>
                         <td>
                             @if($leave->status == 'Approved')
                                 <span class="badge bg-success">{{ $leave->status }}</span>
