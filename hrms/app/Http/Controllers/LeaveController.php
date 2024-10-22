@@ -55,21 +55,21 @@ class LeaveController extends Controller
     }
 
     // Display the specified leave
-    public function show(leave_information $leave)
+    public function show(leave_information $leaf)
     {
-        return view('leaves.show', compact('leave'));
+        return view('leaves.show', compact('leaf'));
     }
 
     // Show the form for editing the specified leave
-    public function edit(leave_information $leave)
+    public function edit(leave_information $leaf)
     {
         $departments = Department::all();
         $employees = Employee::all();
-        return view('leaves.edit', compact('leave', 'employees', 'departments'));
+        return view('leaves.edit', compact('leaf', 'employees', 'departments'));
     }
 
     // Update the specified leave in storage
-    public function update(Request $request, leave_information $leave)
+    public function update(Request $request, leave_information $leaf)
     {
         $validatedData = $request->validate([
             'employee_id_number' => 'required|exists:employees,id',
@@ -89,19 +89,19 @@ class LeaveController extends Controller
             'HR_approval' => 'required|string',
             'date_of_approval_HR' => 'required|date',
             'reason' => 'required|string',
-            'status' => 'required|string|in:Pending,Approved,Rejected',
+            'status' => 'nullable|string|in:Pending,Approved,Rejected',
 
 
         ]);
 
-        $leave->update($validatedData);
+        $leaf->update($validatedData);
         return redirect()->route('leaves.index')->with('success', 'Leave updated successfully.');
     }
 
     // Remove the specified leave from storage
-    public function destroy(leave_information $leave)
+    public function destroy(leave_information $leaf)
     {
-        $leave->delete();
+        $leaf->delete();
         return redirect()->route('leaves.index')->with('success', 'Leave deleted successfully.');
     }
 }
