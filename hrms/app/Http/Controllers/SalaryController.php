@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\User;
 use App\Models\Salary;
 use App\Models\Employee;
+use App\Models\audit_log;
 use Illuminate\Http\Request;
 
 class SalaryController extends Controller
@@ -42,7 +43,16 @@ class SalaryController extends Controller
             'salary_endDate' => 'required|date',
         ]);
 
-        Salary::create($validatedData);
+        $salary = Salary::create($validatedData);
+
+        audit_log::create([
+            'user_id' => auth()->id(), // Current logged-in user
+            'action' => 'create',
+            'model' => 'Salary',
+            'model_id' => $salary->id,
+            'description' => 'Created a new salary with ID ' . $salary->id,
+        ]);
+
         return redirect()->route('salaries.index')->with('success', 'Salary created successfully.');
     }
 
@@ -77,6 +87,15 @@ class SalaryController extends Controller
         ]);
 
         $salary->update($validatedData);
+
+        audit_log::create([
+            'user_id' => auth()->id(),
+            'action' => 'update',
+            'model' => 'Salary',
+            'model_id' => $salary->id,
+            'description' => 'Updated salary with ID ' . $salary->id,
+        ]);
+
         return redirect()->route('salaries.index')->with('success', 'Salary updated successfully.');
     }
 
@@ -84,6 +103,15 @@ class SalaryController extends Controller
     public function destroy(Salary $salary)
     {
         $salary->delete();
+
+        audit_log::create([
+            'user_id' => auth()->id(),
+            'action' => 'delete',
+            'model' => 'Salary',
+            'model_id' => $salary->id,
+            'description' => 'Deleted salary with ID ' . $salary->id,
+        ]);
+
         return redirect()->route('salaries.index')->with('success', 'Salary deleted successfully.');
     }
 }

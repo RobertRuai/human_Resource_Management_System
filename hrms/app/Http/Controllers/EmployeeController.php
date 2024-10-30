@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\User;
 use App\Models\Employee;
 use App\Models\Department;
+use App\Models\audit_log;
 use Illuminate\Http\Request;
 
 class EmployeeController extends Controller
@@ -34,7 +35,7 @@ class EmployeeController extends Controller
      */
     public function store(Request $request)
     {
-        $employees = Employee::with('user', 'department')->get();
+        $employee = Employee::with('user', 'department')->get();
         $validatedData = $request->validate([
             'user_id' => 'required|exists:users,id',
             'department_id' => 'required|exists:departments,id',
@@ -60,7 +61,16 @@ class EmployeeController extends Controller
             'next_of_kin' => 'required|string|max:100',
         ]);
 
-        Employee::create($validatedData);
+       $employee = Employee::create($validatedData);
+
+        audit_log::create([
+            'user_id' => auth()->id(), // Current logged-in user
+            'action' => 'create',
+            'model' => 'Employee',
+            'model_id' => $employee->id,
+            'description' => 'Created a new employee with ID ' . $employee->id,
+        ]);
+
         return redirect()->route('employees.index')->with('success', 'Employee created successfully.');
     }
 
@@ -86,10 +96,9 @@ class EmployeeController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request)
+    public function update(Request $request, Employee $employee)
     {
-        $employees = Employee::with('user', 'department')->first();
-        $validatedData = $request->validate([
+            $validatedData = $request->validate([
             'user_id' => 'nullable|exists:users,id',
             'department_id' => 'required|exists:departments,id',
             'first_name' => 'required|string|max:50',
@@ -114,17 +123,34 @@ class EmployeeController extends Controller
             'next_of_kin' => 'required|string|max:100',
         ]);
 
-        $employees->update($validatedData);
+        $employee->update($validatedData);
+
+        audit_log::create([
+            'user_id' => auth()->id(), // Current logged-in user
+            'action' => 'update',
+            'model' => 'Employee',
+            'model_id' => $employee->id,
+            'description' => 'Updated employee with ID ' . $employee->id,
+        ]);
+
         return redirect()->route('employees.index')->with('success', 'Employee updated successfully.');
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy()
+    public function destroy(Employee $employee)
     {
-        $employees = Employee::with('user', 'department')->first();
-        $employees->delete();
+        $employee->delete();
+
+        audit_log::create([
+            'user_id' => auth()->id(), // Current logged-in user
+            'action' => 'delete',
+            'model' => 'Employee',
+            'model_id' => $employee->id,
+            'description' => 'Deleted employee with ID ' . $employee->id,
+        ]);
+
         return redirect()->route('employees.index')->with('success', 'Employee deleted successfully.');
     }
 }

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Role;
+use App\Models\audit_log;
 use Illuminate\Http\Request;
 
 class RoleController extends Controller
@@ -28,7 +29,16 @@ class RoleController extends Controller
             'guard_name' => 'nullable|string',
         ]);
 
-        Role::create($validatedData);
+        $role = Role::create($validatedData);
+
+        audit_log::create([
+            'user_id' => auth()->id(), // Current logged-in user
+            'action' => 'create',
+            'model' => 'Role',
+            'model_id' => $role->id,
+            'description' => 'Created a new role with ID ' . $role->id,
+        ]);
+
         return redirect()->route('roles.index')->with('success', 'Role created successfully.');
     }
 
@@ -53,6 +63,15 @@ class RoleController extends Controller
         ]);
 
         $role->update($validatedData);
+
+        audit_log::create([
+            'user_id' => auth()->id(), // Current logged-in user
+            'action' => 'update',
+            'model' => 'Role',
+            'model_id' => $role->id,
+            'description' => 'Updated role with ID ' . $role->id,
+        ]);
+
         return redirect()->route('roles.index')->with('success', 'Role updated successfully.');
     }
 
@@ -60,6 +79,15 @@ class RoleController extends Controller
     public function destroy(Role $role)
     {
         $role->delete();
+
+        audit_log::create([
+            'user_id' => auth()->id(), // Current logged-in user
+            'action' => 'delete',
+            'model' => 'Role',
+            'model_id' => $role->id,
+            'description' => 'Deleted role with ID ' . $role->id,
+        ]);
+
         return redirect()->route('roles.index')->with('success', 'Role deleted successfully.');
     }
 }

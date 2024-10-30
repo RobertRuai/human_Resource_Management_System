@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Department;
+use App\Models\audit_log;
 use Illuminate\Http\Request;
 
 class DepartmentController extends Controller
@@ -28,7 +29,16 @@ class DepartmentController extends Controller
             'description' => 'nullable|string',
         ]);
 
-        Department::create($validatedData);
+        $department = Department::create($validatedData);
+
+        audit_log::create([
+            'user_id' => auth()->id(), // Current logged-in user
+            'action' => 'create',
+            'model' => 'Department',
+            'model_id' => $department->id,
+            'description' => 'Created a new Department with ID ' . $department->id,
+        ]);
+
         return redirect()->route('departments.index')->with('success', 'Department created successfully.');
     }
 
@@ -53,6 +63,14 @@ class DepartmentController extends Controller
         ]);
 
         $department->update($validatedData);
+
+        audit_log::create([
+            'user_id' => auth()->id(), // Current logged-in user
+            'action' => 'update',
+            'model' => 'Department',
+            'model_id' => $department->id,
+            'description' => 'Updated Department with ID ' . $department->id,
+        ]);
         return redirect()->route('departments.index')->with('success', 'Department updated successfully.');
     }
 
@@ -60,6 +78,15 @@ class DepartmentController extends Controller
     public function destroy(Department $department)
     {
         $department->delete();
+
+        audit_log::create([
+            'user_id' => auth()->id(), // Current logged-in user
+            'action' => 'delete',
+            'model' => 'Department',
+            'model_id' => $department->id,
+            'description' => 'Deleted Department with ID ' . $department->id,
+        ]);
+
         return redirect()->route('departments.index')->with('success', 'Department deleted successfully.');
     }
 }

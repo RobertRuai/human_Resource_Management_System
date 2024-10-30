@@ -27,14 +27,16 @@ return new class extends Migration
             $table->date('date_requested');
             $table->string('supervisor_approval', 50);
             $table->date('date_of_approval_SR');
-            $table->string('HR_approval', 50);
+            $table->unsignedBigInteger('HR_approval');
             $table->date('date_of_approval_HR');
-            $table->string('status', 50)->nullable()->default('Pending');
+            $table->string('status', 50)->default('Pending');
             $table->string('reason', 250);
             $table->timestamps();
 
             $table->foreign('employee_id_number')->references('id')->on('employees')->onDelete('cascade');
             $table->foreign('department_id')->references('id')->on('departments')->onDelete('cascade');
+            $table->foreign('HR_approval')->references('id')->on('users')->onDelete('cascade');
+
         });
     }
 

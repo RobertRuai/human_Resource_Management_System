@@ -33,7 +33,16 @@ class TrainingController extends Controller
             'justification' => 'required|string',
         ]);
 
-        training::create($validatedData);
+        $training = training::create($validatedData);
+
+        audit_log::create([
+            'user_id' => auth()->id(), // Current logged-in user
+            'action' => 'create',
+            'model' => 'training',
+            'model_id' => $training->id,
+            'description' => 'Created a new training with ID ' . $training->id,
+        ]);
+
         return redirect()->route('trainings.index')->with('success', 'Training created successfully.');
     }
 
@@ -63,6 +72,15 @@ class TrainingController extends Controller
         ]);
 
         $training->update($validatedData);
+
+        audit_log::create([
+            'user_id' => auth()->id(),
+            'action' => 'update',
+            'model' => 'trainig',
+            'model_id' => $training->id,
+            'description' => 'Updated training with ID ' . $training->id,
+        ]);
+
         return redirect()->route('trainings.index')->with('success', 'Training updated successfully.');
     }
 
@@ -70,6 +88,15 @@ class TrainingController extends Controller
     public function destroy(training $training)
     {
         $training->delete();
+
+        audit_log::create([
+            'user_id' => auth()->id(),
+            'action' => 'delete',
+            'model' => 'trainig',
+            'model_id' => $training->id,
+            'description' => 'Deleted training with ID ' . $training->id,
+        ]);
+
         return redirect()->route('trainings.index')->with('success', 'Training deleted successfully.');
     }
 }

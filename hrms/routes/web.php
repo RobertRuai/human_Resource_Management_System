@@ -25,16 +25,18 @@ Route::get('/admin', function () {
 })->middleware(['auth', 'role:Admin,'])->name('admin.index');
 
 
-Route::resource('audit_logs', AuditLogController::class);
-Route::resource('departments', DepartmentController::class);
-Route::resource('employees', EmployeeController::class);
-Route::resource('leaves', LeaveController::class);
-Route::resource('notifications', NotificationController::class);
-Route::resource('roles', RoleController::class);
-Route::resource('salaries', SalaryController::class);
-Route::resource('trainings', TrainingController::class);
-Route::resource('users', UserController::class);
 
+Route::middleware('auth')->group(function () {
+    Route::resource('audit_logs', AuditLogController::class);
+    Route::resource('departments', DepartmentController::class);
+    Route::resource('employees', EmployeeController::class);
+    Route::resource('leaves', LeaveController::class);
+    Route::resource('notifications', NotificationController::class);
+    Route::resource('roles', RoleController::class);
+    Route::resource('salaries', SalaryController::class);
+    Route::resource('trainings', TrainingController::class);
+    Route::resource('users', UserController::class);
+});
 
 
 Route::middleware('auth')->group(function () {

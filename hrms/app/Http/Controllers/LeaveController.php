@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\leave_information;
 use App\Models\Employee;
 use App\Models\Department;
+use App\Models\audit_log;
 use Illuminate\Http\Request;
 
 class LeaveController extends Controller
@@ -103,5 +104,57 @@ class LeaveController extends Controller
     {
         $leaf->delete();
         return redirect()->route('leaves.index')->with('success', 'Leave deleted successfully.');
+    }
+
+
+
+    // Display pending leaves for the HR manager to review
+    public function pendingLeaves()
+    {
+        $pendingLeaves = leave_information::where('status', 'pending')->get();
+        return view('leaves.pending', compact('pendingLeaves'));
+    }
+
+    // Approve a leave request
+    public function approveLeave($id)
+    {
+        $leaf = leave_information::findOrFail($id);
+        $leaf->update([
+            'status' => leave_information::STATUS_APPROVED,
+            'approved_by' => auth()->id(),
+        ]);
+
+        // Log the action in the audit logs
+        audit_log::create([
+            'user_id' => auth()->id(),
+            'action' => 'approve',
+            'model' => 'Leave',
+            'model_id' => $leaf->id,
+            'description' => 'Approved leave for employee ID ' . $leaf->employee_id,
+        ]);
+
+        return redirect()->route('leaves.pending')->with('success', 'Leave approved successfully.');
+    }
+
+    // Disapprove a leave request
+    public function disapproveLeave(Request $request, $id)
+    {
+        $leaf = leave_information::findOrFail($id);
+        $leaf->update([
+            'status' => leave_information::STATUS_DISAPPROVED,
+            'approved_by' => auth()->id(),
+            'remarks' => $request->remarks,  // Capture the reason for disapproval
+        ]);
+
+        // Log the action in the audit logs
+        audit_log::create([
+            'user_id' => auth()->id(),
+            'action' => 'disapprove',
+            'model' => 'Leave',
+            'model_id' => $leaf->id,
+            'description' => 'Disapproved leave for employee ID ' . $leaf->employee_id,
+        ]);
+
+        return redirect()->route('leaves.pending')->with('success', 'Leave disapproved successfully.');
     }
 }

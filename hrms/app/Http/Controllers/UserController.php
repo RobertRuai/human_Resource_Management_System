@@ -38,7 +38,16 @@ class UserController extends Controller
 
         $validatedData['password'] = Hash::make($validatedData['password']);
 
-        User::create($validatedData);
+        $user = User::create($validatedData);
+
+        audit_log::create([
+            'user_id' => auth()->id(), // Current logged-in user
+            'action' => 'create',
+            'model' => 'User',
+            'model_id' => $user->id,
+            'description' => 'Created a new user with ID ' . $user->id,
+        ]);
+
         return redirect()->route('users.index')->with('success', 'User created successfully.');
     }
 
@@ -72,6 +81,15 @@ class UserController extends Controller
         }
 
         $user->update($validatedData);
+
+        audit_log::create([
+            'user_id' => auth()->id(), // Current logged-in user
+            'action' => 'update',
+            'model' => 'User',
+            'model_id' => $user->id,
+            'description' => 'Updated user with ID ' . $user->id,
+        ]);
+
         return redirect()->route('users.index')->with('success', 'User updated successfully.');
     }
 
@@ -79,6 +97,14 @@ class UserController extends Controller
     public function destroy(User $user)
     {
         $user->delete();
+
+        audit_log::create([
+            'user_id' => auth()->id(), // Current logged-in user
+            'action' => 'delete',
+            'model' => 'User',
+            'model_id' => $user->id,
+            'description' => 'Deleted user with ID ' . $user->id,
+        ]);
         return redirect()->route('users.index')->with('success', 'User deleted successfully.');
     }
 }

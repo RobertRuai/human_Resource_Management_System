@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\User;
 use App\Models\notification;
+use App\Models\audit_log;
 use Illuminate\Http\Request;
 
 class NotificationController extends Controller
@@ -33,7 +34,15 @@ class NotificationController extends Controller
             'is_read' => 'boolean:0,1,false,true',
         ]);
 
-        notification::create($validatedData);
+        $notification = notification::create($validatedData);
+        audit_log::create([
+            'user_id' => auth()->id(), // Current logged-in user
+            'action' => 'create',
+            'model' => 'Notification',
+            'model_id' => $notification->id,
+            'description' => 'Created a new notification with ID ' . $notification->id,
+        ]);
+
         return redirect()->route('notifications.index')->with('success', 'Notification created successfully.');
     }
 
@@ -61,6 +70,15 @@ class NotificationController extends Controller
         ]);
 
         $notification->update($validatedData);
+
+        audit_log::create([
+            'user_id' => auth()->id(),
+            'action' => 'update',
+            'model' => 'Notification',
+            'model_id' => $notification->id,
+            'description' => 'Updated notification with ID ' . $notification->id,
+        ]);
+
         return redirect()->route('notifications.index')->with('success', 'Notification updated successfully.');
     }
 
@@ -68,6 +86,15 @@ class NotificationController extends Controller
     public function destroy(notification $notification)
     {
         $notification->delete();
+
+        audit_log::create([
+            'user_id' => auth()->id(),
+            'action' => 'delete',
+            'model' => 'Notification',
+            'model_id' => $notification->id,
+            'description' => 'Deleted notification with ID ' . $notification->id,
+        ]);
+
         return redirect()->route('notifications.index')->with('success', 'Notification deleted successfully.');
     }
 }
