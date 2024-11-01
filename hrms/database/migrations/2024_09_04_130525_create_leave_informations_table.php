@@ -27,7 +27,7 @@ return new class extends Migration
             $table->date('date_requested');
             $table->string('supervisor_approval', 50);
             $table->date('date_of_approval_SR');
-            $table->unsignedBigInteger('HR_approval');
+            $table->unsignedBigInteger('HR_approval')->nullable();
             $table->date('date_of_approval_HR');
             $table->string('status', 50)->default('Pending');
             $table->string('reason', 250);

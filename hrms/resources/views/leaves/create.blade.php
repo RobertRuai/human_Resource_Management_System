@@ -145,7 +145,7 @@
          <div class="mb-3">
             <label for="HR_approval" class="form-label">HR_approval <span class="text-danger">*</span></label>
             <input type="text" name="HR_approval" id="HR_approval" class="form-control" 
-                   value="{{ old('HR_approval') }}" required>
+                   value="{{ old('HR_approval') }}">
         </div>
 
          <!-- date_of_approval_HR -->
