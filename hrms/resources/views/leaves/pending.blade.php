@@ -1,5 +1,7 @@
 @extends('layouts.app')
 
+@section('title', ' Pending Leaves')
+
 @section('content')
 <div class="container">
     <h1>Pending Leave Requests</h1>
@@ -17,9 +19,9 @@
         <tbody>
             @foreach ($pendingLeaves as $leaf)
             <tr>
-                <td>{{ $leaf->employee->name }}</td>
-                <td>{{ $leaf->start_date }}</td>
-                <td>{{ $leaf->end_date }}</td>
+                <td>{{ $leaf->employee_id_number }}</td>
+                <td>{{ $leaf->leave_commencement }}</td>
+                <td>{{ $leaf->date_of_return }}</td>
                 <td>
                     <a href="{{ route('leaves.approve', $leaf->id) }}" class="btn btn-success">Approve</a>
 

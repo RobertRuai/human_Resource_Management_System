@@ -36,6 +36,10 @@ Route::middleware('auth')->group(function () {
     Route::resource('salaries', SalaryController::class);
     Route::resource('trainings', TrainingController::class);
     Route::resource('users', UserController::class);
+
+    Route::get('/leaves', [LeaveController::class, 'pendingLeaves'])->name('leaves.pending');
+    Route::get('{id}/leaves', [LeaveController::class, 'approveLeave'])->name('leaves.pending');
+    Route::get('{id}/leaves', [LeaveController::class, 'disapproveLeave'])->name('leaves.pending');
 });
 
 

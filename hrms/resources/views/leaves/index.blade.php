@@ -7,6 +7,7 @@
     <div class="d-flex justify-content-between align-items-center mb-3">
         <h1>Leaves</h1>
         <a href="{{ route('leaves.create') }}" class="btn btn-primary">Request New Leave</a>
+        <a href="{{ route('leaves.pending') }}" class="btn btn-primary">Pending Leaves</a>
     </div>
 
     @if($leaves->isEmpty())
