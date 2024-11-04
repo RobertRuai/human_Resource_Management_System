@@ -170,7 +170,7 @@
                 <option value="">-- Select Status --</option>
                 <option value="Pending" {{ (old('status', $leaf->status) == 'Pending') ? 'selected' : '' }}>Pending</option>
                 <option value="Approved" {{ (old('status', $leaf->status) == 'Approved') ? 'selected' : '' }}>Approved</option>
-                <option value="Rejected" {{ (old('status', $leaf->status) == 'Rejected') ? 'selected' : '' }}>Rejected</option>
+                <option value="Disapproved" {{ (old('status', $leaf->status) == 'Disapproved') ? 'selected' : '' }}>Disapproved</option>
             </select>
         </div>
 

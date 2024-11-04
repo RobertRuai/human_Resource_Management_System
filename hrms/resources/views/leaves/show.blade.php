@@ -29,7 +29,7 @@
                     <span class="badge bg-success">{{ $leaf->status }}</span>
                 @elseif($leaf->status == 'Pending')
                     <span class="badge bg-warning text-dark">{{ $leaf->status }}</span>
-                @elseif($leleafave->status == 'Rejected')
+                @elseif($leaf->status == 'Rejected')
                     <span class="badge bg-danger">{{ $leaf->status }}</span>
                 @endif
             </p>

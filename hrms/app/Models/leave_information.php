@@ -13,9 +13,9 @@ class leave_information extends Model
 
     protected $dates = ['leave_commencement', 'date_of_return', 'date_of_approval_SR', 'date_of_approval_HR',];
 
-    const STATUS_PENDING = 'pending';
-    const STATUS_APPROVED = 'approved';
-    const STATUS_DISAPPROVED = 'disapproved';
+    const STATUS_PENDING = 'Pending';
+    const STATUS_APPROVED = 'Approved';
+    const STATUS_DISAPPROVED = 'Disapproved';
 
     public function employee () 
     {
@@ -25,6 +25,6 @@ class leave_information extends Model
     // Relationship with the User (HR manager) who approved the leave
     public function approvedBy()
     {
-        return $this->belongsTo(User::class, 'approved_by');
+        return $this->belongsTo(User::class, 'HR_approval');
     }
 }

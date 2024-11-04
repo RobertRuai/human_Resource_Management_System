@@ -5,6 +5,7 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\AuditLogController;
 use App\Http\Controllers\DepartmentController;
 use App\Http\Controllers\LeaveController;
+use App\Http\Controllers\LeaveApprovalController;
 use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\SalaryController;
@@ -37,9 +38,9 @@ Route::middleware('auth')->group(function () {
     Route::resource('trainings', TrainingController::class);
     Route::resource('users', UserController::class);
 
-    Route::get('/leaves', [LeaveController::class, 'pendingLeaves'])->name('leaves.pending');
-    Route::post('leaves/{id}', [LeaveController::class, 'approveLeave'])->name('leaves.approve');
-    Route::post('leaves/{id}', [LeaveController::class, 'disapproveLeave'])->name('leaves.disapprove');
+    Route::get('/hr/leaves', [LeaveApprovalController::class, 'index'])->name('hr.leaves.index');
+    Route::get('/hr/leaves/{id}/approve', [LeaveApprovalController::class, 'approveLeave'])->name('hr.leaves.approve');
+    Route::post('/hr/leaves/{id}/disapprove', [LeaveApprovalController::class, 'disapproveLeave'])->name('hr.leaves.disapprove');
 });
 
 

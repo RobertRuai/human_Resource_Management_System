@@ -27,6 +27,7 @@
                     <li class="nav-item"><a class="nav-link" href="{{ route('departments.index') }}">Departments</a></li>
                     <li class="nav-item"><a class="nav-link" href="{{ route('salaries.index') }}">Salaries</a></li>
                     <li class="nav-item"><a class="nav-link" href="{{ route('leaves.index') }}">Leaves</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{{ route('hr.leaves.index') }}">Leave Approvals</a></li>
                     <li class="nav-item"><a class="nav-link" href="{{ route('trainings.index') }}">Trainings</a></li>
                     <li class="nav-item"><a class="nav-link" href="{{ route('notifications.index') }}">Notifications</a></li>
                     <li class="nav-item"><a class="nav-link" href="{{ route('audit_logs.index') }}">Audit Logs</a></li>
