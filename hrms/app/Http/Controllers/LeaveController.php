@@ -133,7 +133,7 @@ class LeaveController extends Controller
             'description' => 'Approved leave for employee ID ' . $leaf->employee_id,
         ]);
 
-        return redirect()->route('leaves.pending')->with('success', 'Leave approved successfully.');
+        return redirect()->route('leaves.approve')->with('success', 'Leave approved successfully.');
     }
 
     // Disapprove a leave request
@@ -155,6 +155,6 @@ class LeaveController extends Controller
             'description' => 'Disapproved leave for employee ID ' . $leaf->employee_id,
         ]);
 
-        return redirect()->route('leaves.pending')->with('success', 'Leave disapproved successfully.');
+        return redirect()->route('leaves.disapprove')->with('success', 'Leave disapproved successfully.');
     }
 }

@@ -38,8 +38,8 @@ Route::middleware('auth')->group(function () {
     Route::resource('users', UserController::class);
 
     Route::get('/leaves', [LeaveController::class, 'pendingLeaves'])->name('leaves.pending');
-    Route::get('{id}/leaves', [LeaveController::class, 'approveLeave'])->name('leaves.pending');
-    Route::get('{id}/leaves', [LeaveController::class, 'disapproveLeave'])->name('leaves.pending');
+    Route::post('leaves/{id}', [LeaveController::class, 'approveLeave'])->name('leaves.approve');
+    Route::post('leaves/{id}', [LeaveController::class, 'disapproveLeave'])->name('leaves.disapprove');
 });
 
 
