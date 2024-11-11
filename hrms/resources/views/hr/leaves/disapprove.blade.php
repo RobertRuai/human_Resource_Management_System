@@ -23,6 +23,6 @@
         </div>
     </div>
 
-    <a href="{{ route('leaves.index') }}" class="btn btn-primary mt-3">Back to Leave Requests</a>
+    <a href="{{ route('hr.leaves.index') }}" class="btn btn-primary mt-3">Back to Leave Requests</a>
 </div>
 @endsection

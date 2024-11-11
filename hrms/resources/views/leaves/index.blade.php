@@ -31,6 +31,7 @@
                     <th>Date of approval Supervisor</th>
                     <th>HR approval</th>
                     <th>Date of Approval HR</th>
+                    <th>Reason</th>
                     <th>Status</th>
                     <th>Actions</th>
                 </tr>
@@ -54,13 +55,13 @@
                         <td>{{ $leaf->date_of_approval_SR }}</td>
                         <td>{{ $leaf->HR_approval }}</td>
                         <td>{{ $leaf->date_of_approval_HR }}</td>
-                        <td>{{ $leaf->statuus }}</td>
+                        <td>{{ $leaf->reason }}</td>
                         <td>
                             @if($leaf->status == 'Approved')
                                 <span class="badge bg-success">{{ $leaf->status }}</span>
                             @elseif($leaf->status == 'Pending')
                                 <span class="badge bg-warning text-dark">{{ $leaf->status }}</span>
-                            @elseif($leaf->status == 'Rejected')
+                            @elseif($leaf->status == 'Disapproved')
                                 <span class="badge bg-danger">{{ $leaf->status }}</span>
                             @endif
                         </td>

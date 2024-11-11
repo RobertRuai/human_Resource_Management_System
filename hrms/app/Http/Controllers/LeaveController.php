@@ -47,7 +47,7 @@ class LeaveController extends Controller
             'HR_approval' => 'nullable|string',
             'date_of_approval_HR' => 'required|date',
             'reason' => 'required|string',
-            'status' => 'nullable|string|in:Pending,Approved,Rejected',
+            'status' => 'nullable|string|in:Pending,Approved,Disapproved',
 
         ]);
 
@@ -90,7 +90,7 @@ class LeaveController extends Controller
             'HR_approval' => 'nullable|string',
             'date_of_approval_HR' => 'required|date',
             'reason' => 'required|string',
-            'status' => 'nullable|string|in:Pending,Approved,Rejected',
+            'status' => 'nullable|string|in:Pending,Approved,Disapproved',
 
 
         ]);
