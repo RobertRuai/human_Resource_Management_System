@@ -39,8 +39,8 @@ Route::middleware('auth')->group(function () {
     Route::resource('users', UserController::class);
 
     Route::get('/hr/leaves', [LeaveApprovalController::class, 'index'])->name('hr.leaves.index');
-    Route::get('/hr/leaves/{id}/approve', [LeaveApprovalController::class, 'approveLeave'])->name('hr.leaves.approve');
-    Route::post('/hr/leaves/{id}/disapprove', [LeaveApprovalController::class, 'disapproveLeave'])->name('hr.leaves.disapprove');
+    Route::get('/hr/leaves/{id}/approveLeave', [LeaveApprovalController::class, 'approveLeave'])->name('hr.leaves.approve');
+    Route::post('/hr/leaves/{id}/disapproveLeave', [LeaveApprovalController::class, 'disapproveLeave'])->name('hr.leaves.disapprove');
 });
 
 

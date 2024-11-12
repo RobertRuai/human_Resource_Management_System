@@ -19,7 +19,7 @@
     <h3>Disapproval Remarks</h3>
     <div class="card mt-3">
         <div class="card-body">
-            {{ $leaf->remarks }}
+            {{ $leaf->reason }}
         </div>
     </div>
 

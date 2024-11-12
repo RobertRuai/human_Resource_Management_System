@@ -57,6 +57,7 @@ class LeaveApprovalController extends Controller
             'description' => 'Disapproved leave for employee ID ' . $leaf->employee_id,
         ]);
 
+        #return view('hr.leaves.disapprove', compact('request', 'leaf'));
         return redirect()->route('hr.leaves.index')->with('success', 'Leave disapproved successfully.');
     }
     

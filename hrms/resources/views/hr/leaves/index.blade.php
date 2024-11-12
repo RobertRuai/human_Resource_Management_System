@@ -64,7 +64,7 @@
                     <a href="{{ route('hr.leaves.approve', $leaf->id) }}" class="btn btn-success">Approve</a>
 
                     <!-- Disapprove Modal Trigger -->
-                    <button class="btn btn-danger" data-toggle="modal" data-target="#disapproveLeaveModal-{{ $leaf->id }}">Disapprove</button>
+                    <button class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#disapproveLeaveModal-{{ $leaf->id }}">Disapprove</button>
 
                     <!-- Disapprove Modal -->
                     <div class="modal fade" id="disapproveLeaveModal-{{ $leaf->id }}" tabindex="-1" role="dialog">
@@ -72,7 +72,7 @@
                             <div class="modal-content">
                                 <div class="modal-header">
                                     <h5 class="modal-title">Disapprove Leave Request</h5>
-                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
                                         <span aria-hidden="true">&times;</span>
                                     </button>
                                 </div>
@@ -81,9 +81,9 @@
                                         @csrf
                                         <div class="form-group">
                                             <label for="reason">Reason for Disapproval</label>
-                                            <textarea name="reason" class="form-control" required></textarea>
+                                            <textarea name="reason" id="reason" class="form-control" required></textarea>
                                         </div>
-                                        <button type="submit" class="btn btn-danger">Disapprove</button>
+                                        <button type="submit" class="btn btn-danger mt-3">Disapprove</button>
                                     </form>
                                 </div>
                             </div>
