@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\training;
+use App\Models\audit_log;
 use Illuminate\Http\Request;
 
 class TrainingController extends Controller

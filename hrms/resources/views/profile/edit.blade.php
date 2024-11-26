@@ -25,10 +25,10 @@
     <form action="{{ route('profile.update') }}" method="POST">
         @csrf
 
-         <!-- Name Field -->
+         <!-- Username Field -->
         <div class="mb-3">
-            <label for="name" class="form-label">Name</label>
-            <input type="text" class="form-control" id="name" name="name" value="{{ old('name', $user->username) }}" required>
+            <label for="username" class="form-label">Name</label>
+            <input type="text" class="form-control" id="username" name="username" value="{{ old('username', $user->username) }}" required>
         </div>
 
         <!-- Email Field -->
