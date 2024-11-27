@@ -22,6 +22,7 @@
                     <th>commencement_date</th>
                     <th>end_date</th>
                     <th>justification</th>
+                    <th>status</th>
                 </tr>
             </thead>
             <tbody>
@@ -34,6 +35,15 @@
                         <td>{{ $training->commencement_date }}</td>
                         <td>{{ $training->end_date }}</td>
                         <td>{{ $training->justification }}</td>
+                        <td>
+                            @if($training->status == 'finished')
+                                <span class="badge bg-success">{{ $training->status }}</span>
+                            @elseif($training->status == 'pending')
+                                <span class="badge bg-warning text-dark">{{ $training->status }}</span>
+                            @elseif($training->status == 'in_progress')
+                                <span class="badge bg-info">{{ $training->status }}</span>
+                            @endif
+                        </td>
                         <td>
                             <a href="{{ route('trainings.show', $training->id) }}" class="btn btn-info btn-sm">View</a>
                             <a href="{{ route('trainings.edit', $training->id) }}" class="btn btn-warning btn-sm">Edit</a>

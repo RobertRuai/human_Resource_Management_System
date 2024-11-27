@@ -20,6 +20,7 @@ return new class extends Migration
             $table->date('commencement_date');
             $table->date('end_date');
             $table->text('justification');
+            $table->enum('status', ['pending', 'in_progress', 'finished'])->default('pending');
             $table->timestamps();
         });
     }

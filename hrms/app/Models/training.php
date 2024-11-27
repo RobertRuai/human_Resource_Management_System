@@ -13,6 +13,6 @@ class training extends Model
 
     public function employee () 
     {
-        return $this->belongsTo(Employee::class);
+        return $this->belongsToMany(Employee::class, 'training_employee', 'training_id', 'employee_id');
     }
 }

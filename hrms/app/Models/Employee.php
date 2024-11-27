@@ -63,7 +63,7 @@ class Employee extends Model
     }
 
     public function training() {
-        return $this->hasMany(training::class);
+        return $this->belongsToMany(training::class, 'training_employee');
     }
     public function getCount() {
         return $this->count();

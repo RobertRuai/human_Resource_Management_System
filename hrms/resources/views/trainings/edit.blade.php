@@ -62,7 +62,29 @@
 
         <div class="mb-3">
             <label for="justification" class="form-label">Justification <span class="text-danger">*</span></label>
-            <textarea name="justification" id="justification" class="form-control" rows="4" required>{{ old('justification' ) }}</textarea>
+            <textarea name="justification" id="justification" class="form-control" rows="4" required>{{ old('justification', $training->justification ) }}</textarea>
+        </div>
+
+        <!-- Status (optional, if applicable) -->
+        <div class="mb-3">
+            <label for="status" class="form-label">Status <span class="text-danger">*</span></label>
+            <select name="status" id="status" class="form-select" required>
+                <option value="">-- Select Status --</option>
+                <option value="pending" {{ (old('status', $training->status) == 'pending') ? 'selected' : '' }}>Pending</option>
+                <option value="in_progress" {{ (old('status', $training->status) == 'in_progress') ? 'selected' : '' }}>In Progress</option>
+                <option value="finished" {{ (old('status', $training->status) == 'finished') ? 'selected' : '' }}>Finished</option>
+            </select>
+        </div>
+
+        <!-- Employee Selection -->
+        <div class="form-group mb-4">
+            <label for="employees" class="form-label">Select Employees</label>
+            <select name="employees[]" id="employees" class="form-control" multiple required>
+                @foreach($employees as $employee)
+                    <option value="{{ $employee->id }}">{{ $employee->first_name }} {{ $employee->last_name }}</option>
+                @endforeach
+            </select>
+            <small class="text-muted">Hold CTRL (Windows) or CMD (Mac) to select multiple employees.</small>
         </div>
 
         <!-- Submit Button -->
