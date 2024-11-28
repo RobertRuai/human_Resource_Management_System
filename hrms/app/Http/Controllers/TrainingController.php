@@ -6,6 +6,8 @@ use App\Models\training;
 use App\Models\Employee;
 use App\Models\audit_log;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
+
 
 class TrainingController extends Controller
 {
@@ -36,32 +38,38 @@ class TrainingController extends Controller
             'end_date' => 'required|date|after_or_equal:commencement_date',
             'justification' => 'required|string',
             'status' => 'required|in:pending,in_progress,finished',
-            'employees' => 'nullable|array'
+            'employees' => 'required|array',
+            'employees.*' => 'exists:employees,id',
         ]);
 
-        $training = training::create($request->only([
-            'training_category',
-            'course',
-            'sponsored_by',
-            'location',
-            'commencement_date',
-            'end_date',
-            'justification',
-            'status',
-        ]));
+        try {
+            $training = training::create($request->only([
+                'training_category',
+                'course',
+                'sponsored_by',
+                'location',
+                'commencement_date',
+                'end_date',
+                'justification',
+                'status',
+            ]));
 
-        // Attach employees to the training
-        $training->employee()->syncWithoutDetaching($request->employees);
+            // Attach employees to the training
+            $training->employee()->syncWithoutDetaching($request->employees);
 
-        audit_log::create([
-            'user_id' => auth()->id(), // Current logged-in user
-            'action' => 'create',
-            'model' => 'training',
-            'model_id' => $training->id,
-            'description' => 'Created a new training with ID ' . $training->id,
-        ]);
+            audit_log::create([
+                'user_id' => auth()->id(), // Current logged-in user
+                'action' => 'create',
+                'model' => 'training',
+                'model_id' => $training->id,
+                'description' => 'Created a new training with ID ' . $training->id,
+            ]);
 
-        return redirect()->route('trainings.index')->with('success', 'Training created successfully.');
+            return redirect()->route('trainings.index')->with('success', 'Training created successfully.');
+        } catch (\Exception $e) {
+            Log::error('Error creating training: ' . $e->getMessage());
+            return redirect()->back()->withErrors('Failed to create training. Please try again.');
+        }
     }
 
     // Display the specified training
@@ -76,6 +84,9 @@ class TrainingController extends Controller
     {
         $training = training::findOrFail($id);
         $employees = Employee::all();
+        $training = training::with('employee')->findOrFail($id);
+        $selectedEmployeeIds = $training->employee->pluck('id')->toArray();
+        $employees = Employee::whereNotIn('id', $selectedEmployeeIds)->get();
         return view('trainings.edit', compact('training', 'employees'));
     }
 
@@ -91,7 +102,8 @@ class TrainingController extends Controller
             'end_date' => 'required|date|after_or_equal:commencement_date',
             'justification' => 'required|string',
             'status' => 'required|in:pending,in_progress,finished',
-             'employees' => 'nullable|array'
+             'employees' => 'nullable|array', 
+             'employees.*' => 'exists:employees,id',
         ]);
 
         $training = training::findOrFail($id);
@@ -105,6 +117,9 @@ class TrainingController extends Controller
             'justification',
             'status',
         ]));
+
+        // Attach employees to the training
+        $training->employee()->syncWithoutDetaching($request->employees);
 
         audit_log::create([
             'user_id' => auth()->id(),
