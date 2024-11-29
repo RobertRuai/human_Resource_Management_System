@@ -11,6 +11,8 @@
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
     <!-- Custom CSS -->
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
+    <!-- favicon-->
+    <link rel="icon" type="image/png" href="{{ asset('images/favicon.png') }}">
 </head>
 <body>
     <!-- Navigation Bar -->
