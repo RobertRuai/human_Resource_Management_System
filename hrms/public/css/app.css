@@ -1,0 +1,90 @@
+/* General Styling */
+body {
+    background-color: #f8f9fa; /* Light grey background */
+    color: #212529;
+}
+
+/* Navbar */
+.navbar-brand {
+    font-weight: bold;
+    letter-spacing: 1px;
+}
+.navbar-nav .nav-link {
+    font-size: 1rem;
+    padding: 0.5rem 1rem;
+    transition: color 0.3s ease;
+}
+.navbar-nav .nav-link.active,
+.navbar-nav .nav-link:hover {
+    color: #0796f5 !important; /* Highlight color */
+}
+
+/* Cards */
+.card {
+    border: none;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+/* Footer */
+footer {
+    background-color: #343a40;
+    color: #adb5bd;
+}
+footer p {
+    margin: 0;
+}
+
+/* Buttons */
+.btn {
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+.btn:hover {
+    transform: scale(1.05);
+}
+
+/* Tables */
+.table th, .table td {
+    vertical-align: middle;
+}
+.table-hover tbody tr:hover {
+    background-color: rgba(0, 0, 0, 0.05);
+}
+
+/* Alerts */
+.alert {
+    border-radius: 5px;
+    padding: 1rem;
+}
+
+/* Modals */
+.modal-header {
+    background-color: #343a40;
+    color: #fff;
+    border-bottom: none;
+}
+.modal-footer {
+    border-top: none;
+}
+
+html, body {
+    height: 100%;
+}
+
+#wrapper {
+    display: flex;
+    min-height: 100vh; /* Full viewport height */
+    flex-direction: row; /* Side-by-side layout */
+}
+
+#sidebar-wrapper {
+    min-height: 100vh; /* Ensures the sidebar extends to full page height */
+    height: 100%; /* Fallback for some browsers */
+    background-color: #343a40; /* Dark Bootstrap theme color */
+    color: white;
+}
+
+#page-content-wrapper {
+    flex-grow: 1; /* Allows the main content to fill the remaining space */
+    background-color: #f8f9fa; /* Light background for contrast */
+}
