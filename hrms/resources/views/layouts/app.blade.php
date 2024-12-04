@@ -16,74 +16,81 @@
 
     <!-- Custom CSS -->
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
+     <link href="{{ asset('css/styles.css') }}" rel="stylesheet">
 
     <!-- Favicon -->
     <link rel="icon" type="image/png" href="{{ asset('images/favicon.png') }}">
 
     @stack('styles')
 </head>
-<body class="d-flex flex-column vh-100 bg-light">
-    <div class="d-flex" id="wrapper">
+<body class="d-flex flex-column vh-100">
+    <div class="d-flex flex-grow-1" id="wrapper">
         <!-- Sidebar -->
-        <div id="sidebar-wrapper" class="bg-info text-light">
-            <div class="sidebar-heading text-center py-4 fs-4 fw-bold text-uppercase border-bottom">
-                <i class="fas fa-users-cog me-2"></i>HR Management
+        <nav id="sidebar-wrapper" class="sidebar-wrapper bg-dark text-light vh-100 overflow-auto">
+            <div class="icon">
+                <i class="fas fa-users-cog me-6"></i>
             </div>
-            <div class="list-group list-group-flush">
-                <a href="{{ route('dashboard') }}" 
-                   class="list-group-item list-group-item-action bg-info text-light {{ Request::is('dashboard') ? 'active bg-primary text-white' : '' }}">
-                    <i class="fas fa-tachometer-alt me-2"></i> Dashboard
-                </a>
-                <a href="{{ route('users.index') }}" 
-                   class="list-group-item list-group-item-action bg-info text-light {{ Request::is('users') ? 'active bg-primary text-white' : '' }}">
-                    <i class="fas fa-user me-2"></i> Users
-                </a>
-                <a href="{{ route('roles.index') }}" 
-                   class="list-group-item list-group-item-action bg-info text-light {{ Request::is('roles') ? 'active bg-primary text-white' : '' }}">
-                    <i class="fas fa-user-tag me-2"></i> Roles
-                </a>
-                <a href="{{ route('employees.index') }}" 
-                   class="list-group-item list-group-item-action bg-info text-light {{ Request::is('employees') ? 'active bg-primary text-white' : '' }}">
-                    <i class="fas fa-briefcase me-2"></i> Employees
-                </a>
-                <a href="{{ route('departments.index') }}" 
-                   class="list-group-item list-group-item-action bg-info text-light {{ Request::is('departments') ? 'active bg-primary text-white' : '' }}">
-                    <i class="fas fa-building me-2"></i> Departments
-                </a>
-                <a href="{{ route('salaries.index') }}" 
-                   class="list-group-item list-group-item-action bg-info text-light {{ Request::is('salaries') ? 'active bg-primary text-white' : '' }}">
-                    <i class="fas fa-money-check-alt me-2"></i> Salaries
-                </a>
-                <a href="{{ route('leaves.index') }}" 
-                   class="list-group-item list-group-item-action bg-info text-light {{ Request::is('leaves') ? 'active bg-primary text-white' : '' }}">
-                    <i class="fas fa-calendar-alt me-2"></i> Leaves
-                </a>
-                <a href="{{ route('trainings.index') }}" 
-                   class="list-group-item list-group-item-action bg-info text-light {{ Request::is('trainings') ? 'active bg-primary text-white' : '' }}">
-                    <i class="fas fa-chalkboard-teacher me-2"></i> Trainings
-                </a>
-                <a href="{{ route('notifications.index') }}" 
-                   class="list-group-item list-group-item-action bg-info text-light {{ Request::is('notifications') ? 'active bg-primary text-white' : '' }}">
-                    <i class="fas fa-bell me-2"></i> Notifications
-                </a>
-                <a href="{{ route('audit_logs.index') }}" 
-                   class="list-group-item list-group-item-action bg-info text-light {{ Request::is('audit_logs') ? 'active bg-primary text-white' : '' }}">
-                    <i class="fas fa-file-alt me-2"></i> Audit Logs
+            <div class="nav-item">
+                <a href="{{ route('dashboard') }}" class="nav-link {{ Request::is('dashboard') ? 'active' : '' }}">
+                    <i class="fas fa-tachometer-alt me-2"></i>Dashboard
                 </a>
             </div>
-        </div>
-        <!-- /Sidebar -->
-
-        <!-- Page Content -->
+            <div class="nav-item">
+                <a href="{{ route('users.index') }}" class="nav-link {{ Request::is('users') ? 'active' : '' }}">
+                    <i class="fas fa-user me-2"></i>Users
+                </a>
+            </div>
+            <div class="nav-item">
+                <a href="{{ route('roles.index') }}" class="nav-link {{ Request::is('roles') ? 'active' : '' }}">
+                    <i class="fas fa-user-tag me-2"></i>Roles
+                </a>
+            </div>
+            <div class="nav-item">
+                <a href="{{ route('employees.index') }}" class="nav-link {{ Request::is('employees') ? 'active' : '' }}">
+                    <i class="fas fa-briefcase me-2"></i>Employees
+                </a>
+            </div>
+            <div class="nav-item">
+                <a href="{{ route('departments.index') }}" class="nav-link {{ Request::is('departments') ? 'active' : '' }}">
+                    <i class="fas fa-building me-2"></i>Departments
+                </a>
+            </div>
+            <div class="nav-item">
+                <a href="{{ route('salaries.index') }}" class="nav-link {{ Request::is('salaries') ? 'active' : '' }}">
+                    <i class="fas fa-money-check-alt me-2"></i>Salaries
+                </a>
+            </div>
+            <div class="nav-item">
+                <a href="{{ route('leaves.index') }}" class="nav-link {{ Request::is('leaves') ? 'active' : '' }}">
+                    <i class="fas fa-calendar-alt me-2"></i>Leaves
+                </a>
+            </div>
+            <div class="nav-item">
+                <a href="{{ route('trainings.index') }}" class="nav-link {{ Request::is('trainings') ? 'active' : '' }}">
+                    <i class="fas fa-chalkboard-teacher me-2"></i>Trainings
+                </a>
+            </div>
+            <div class="nav-item">
+                <a href="{{ route('notifications.index') }}" class="nav-link {{ Request::is('notifications') ? 'active' : '' }}">
+                    <i class="fas fa-bell me-2"></i>Notifications
+                </a>
+            </div>
+            <div class="nav-item">
+                <a href="{{ route('audit_logs.index') }}" class="nav-link {{ Request::is('audit_logs') ? 'active' : '' }}">
+                    <i class="fas fa-file-alt me-2"></i>Audit Logs
+                </a>
+            </div>
+        </nav>
         <div id="page-content-wrapper" class="w-100">
             <!-- Top Navbar -->
             <nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm">
                 <div class="container-fluid">
-                    <button class="btn btn-info me-3" id="menu-toggle"><i class="fas fa-bars"></i></button>
-                    <span class="navbar-brand mb-0 h1">HR Management</span>
-
-                    <div class="collapse navbar-collapse" id="navbarNav">
-                        <ul class="navbar-nav ms-auto">
+                    <button class="btn btn-dark me-3" id="menu-toggle"><i class="fas fa-bars"></i></button>
+                    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                        <span class="navbar-toggler-icon"></span>
+                    </button>
+                    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                        <ul class="navbar-nav ms-auto mt-2 mt-lg-0">
                             @guest
                                 <li class="nav-item"><a class="nav-link" href="{{ route('login') }}">Login</a></li>
                                 @if (Route::has('register'))
@@ -112,9 +119,7 @@
                     </div>
                 </div>
             </nav>
-
-            <!-- Main Content -->
-            <div class="container mt-4">
+            <div class="container-fluid px-4">
                 @if(session('success'))
                     <div class="alert alert-success alert-dismissible fade show" role="alert">
                         {{ session('success') }}
@@ -136,18 +141,13 @@
                 @yield('content')
             </div>
         </div>
-        <!-- /Page Content -->
     </div>
 
     <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-
-    <!-- Custom JS -->
     <script>
-        // Toggle Sidebar
-        document.getElementById("menu-toggle").addEventListener("click", function () {
-            const wrapper = document.getElementById("wrapper");
-            wrapper.classList.toggle("toggled");
+        document.getElementById("menu-toggle").addEventListener("click", function() {
+            document.getElementById("wrapper").classList.toggle("toggled");
         });
     </script>
     @stack('scripts')

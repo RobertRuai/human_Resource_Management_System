@@ -3,7 +3,6 @@
 @section('title', 'Employee List')
 
 @section('content')
-<div class="container">
     <h2>Employee List</h2>
     <a href="{{ route('employees.create') }}" class="btn btn-primary mb-3">Add New Employee</a>
     @if(session('success'))
@@ -35,6 +34,7 @@
                 <th>Gender</th>
                 <th>Marital Status</th>
                 <th>Next of Kin</th>
+                <th>Actions</th>
 
             </tr>
         </thead>
@@ -77,5 +77,4 @@
             @endforeach
         </tbody>
     </table>
-</div>
 @endsection

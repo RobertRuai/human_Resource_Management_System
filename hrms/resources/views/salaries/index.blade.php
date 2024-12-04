@@ -26,6 +26,7 @@
                     <th>Net Salary</th>
                     <th>Salary startDate</th>
                     <th>Salary endDate</th>
+                    <th>Actions</th>
                 </tr>
             </thead>
             <tbody>

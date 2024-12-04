@@ -18,6 +18,7 @@
                     <th>ID</th>
                     <th>Departmennt Name</th>
                     <th>Description</th>
+                    <th>Actions</th>
                 </tr>
             </thead>
             <tbody>

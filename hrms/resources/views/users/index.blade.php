@@ -18,6 +18,7 @@
                     <th>UserName</th>
                     <th>Email</th>
                     <th>Role</th>
+                    <th>Actions</th>
                 </tr>
             </thead>
             <tbody>

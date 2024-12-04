@@ -18,7 +18,6 @@ class DashboardController extends Controller
         // Total counts
         $employeeCount = Employee::count();
         $userCount = User::count();
-        #$trainingCount = training::where('status', 'Active')->count();
         $pendingLeavesCount = leave_information::where('status', 'Pending')->count();
 
         // Department distribution
@@ -39,22 +38,22 @@ class DashboardController extends Controller
         ];
 
         // Training participation
-        #$trainings = training::withCount('participants')->get();
-        #$trainingData = [
-        #    'labels' => $trainings->pluck('name')->toArray(),
-        #    'data' => $trainings->pluck('participants_count')->toArray(),
-        #];
+        $trainings = training::withCount('employee')->get();
+        $trainingData = [
+            'labels' => $trainings->pluck('name')->toArray(),
+            'data' => $trainings->pluck('employee_count')->toArray(),
+        ];
 
         // User role distribution
         $roles = Role::withCount('user')->get();
         $roleData = [
             'labels' => $roles->pluck('name')->toArray(),
-            'data' => $roles->pluck('users_count')->toArray(),
+            'data' => $roles->pluck('user_count')->toArray(),
         ];
 
         return view('dashboard', compact(
             'employeeCount', 'userCount', 'pendingLeavesCount',
-            'departmentData', 'leaveStatusData', 'roleData'
+            'departmentData', 'leaveStatusData', 'trainingData', 'roleData'
         ));
     }
 }

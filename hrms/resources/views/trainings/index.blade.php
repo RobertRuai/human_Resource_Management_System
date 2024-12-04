@@ -23,6 +23,7 @@
                     <th>end_date</th>
                     <th>justification</th>
                     <th>status</th>
+                    <th>Actions</th>
                 </tr>
             </thead>
             <tbody>

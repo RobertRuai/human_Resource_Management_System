@@ -4,8 +4,9 @@
 @section('title', 'Notifications Details')
 
 @section('content')
+<div class="container">
     <h1>Notification Details</h1>
-    <div class="card">
+    <div class="card mb-4">
         <div class="card-body">
             <h5 class="card-title">{{ $notification->user->username }}</h5>
             <p class="card-text"><strong>Message:</strong> {{ $notification->message }}</p>
@@ -14,4 +15,5 @@
             <a href="{{ route('notifications.edit', $notification->id) }}" class="btn btn-warning">Edit Notification</a>
         </div>
     </div>
+</div>
 @endsection

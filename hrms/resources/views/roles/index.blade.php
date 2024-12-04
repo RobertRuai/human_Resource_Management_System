@@ -18,6 +18,7 @@
                     <th>Role ID</th>
                     <th>Role Name</th>
                     <th>Guard Name</th>
+                    <th>Actions</th>
                 </tr>
             </thead>
             <tbody>

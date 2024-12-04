@@ -18,6 +18,7 @@
                     <th>User</th>
                     <th>message</th>
                     <th>Read Status</th>
+                    <th>Actions</th>
                 </tr>
             </thead>
             <tbody>
