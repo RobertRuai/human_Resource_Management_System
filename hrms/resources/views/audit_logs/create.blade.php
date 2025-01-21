@@ -1,8 +1,6 @@
 <!-- resources/views/users/create.blade.php -->
 @extends('layouts.app')
 
-@section('title', 'Create Audit-Logs')
-
 @section('content')
     <h1>Create Audit-Logs</h1>
     <form action="{{ route('audit_logs.store') }}" method="POST">

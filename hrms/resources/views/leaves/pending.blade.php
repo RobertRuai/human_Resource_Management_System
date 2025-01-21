@@ -1,7 +1,5 @@
 @extends('layouts.app')
 
-@section('title', ' Pending Leaves')
-
 @section('content')
 <div class="container">
     <h1>Pending Leave Requests</h1>
@@ -58,6 +56,7 @@
     </table>
     @else
     <p>No pending leave requests.</p>
+    <p class="copyright">&copy; {{ date('Y')}} HRMS Portal South Sudan Revenue Authority. All Rights Reserved.</p>
     @endif
 </div>
 @endsection

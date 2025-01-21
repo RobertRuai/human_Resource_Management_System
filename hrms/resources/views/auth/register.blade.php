@@ -1,4 +1,8 @@
 <x-guest-layout>
+<div class="sign-in">
+        <h1>Register</h1>
+        <p>To register your account fill in the form below.</p>
+    </div>
     <form method="POST" action="{{ route('register') }}">
         @csrf
 

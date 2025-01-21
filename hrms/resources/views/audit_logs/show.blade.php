@@ -1,20 +1,33 @@
 <!-- resources/views/users/show.blade.php -->
 @extends('layouts.app')
 
-@section('title', 'AuditLogs Details')
-
 @section('content')
-    <h1>AuditLogs Details</h1>
+<div class="col-md-12">
     <div class="card">
-        <div class="card-body">
-            <h5 class="card-title">{{ $auditLog->user->username }}</h5>
-            <p class="card-text"><strong>action:</strong> {{ $auditLog->action }}</p>
-            <p><strong>Model:</strong> {{ $auditLog->model }}</p>
-            <p><strong>Model ID:</strong> {{ $auditLog->model_id }}</p>
-            <p><strong>Description:</strong> {{ $auditLog->description }}</p>
-            <p><strong>Timestamp:</strong> {{ $auditLog->created_at }}</p>
-            <a href="{{ route('audit_logs.index') }}" class="btn btn-secondary">Back to AuditLogs</a>
-            <a href="{{ route('audit_logs.edit', $auditLog->id) }}" class="btn btn-warning">Edit AuditLogs</a>
+        <div class="card-header bg-white text-dark">
+        <i class="fas fa-file-alt"></i> Audit Log Details
         </div>
     </div>
-@endsection
+    <div class="card-body add-page">
+        <div class="justify-content-between align-items-center mb-3">
+            <div class="justify-content-left align-items-center">
+                <div class="card shadow-md">
+                        <div class="card">
+                            <div class="card-body">
+                                    <p class="card-title"><strong>User Name:</strong> {{ $auditLog->user->username }}</p>
+                                    <p class="card-text"><strong>Action:</strong> {{ $auditLog->action }}</p>
+                                    <p><strong>Model:</strong> {{ $auditLog->model }}</p>
+                                    <p><strong>Model ID:</strong> {{ $auditLog->model_id }}</p>
+                                    <p><strong>Description:</strong> {{ $auditLog->description }}</p>
+                                    <p><strong>Timestamp:</strong> {{ $auditLog->created_at }}</p><a href="{{ route('audit_logs.edit', $auditLog->id) }}" class="btn btn-warning"><i class="fas fa-edit"></i> Edit Activity</a>
+                                    <a href="{{ route('audit_logs.index') }}" class="btn btn-secondary"><i class="fas fa-arrow-alt-circle-left"></i> Back to Audit Logs</a>
+                                </div>
+                                <p class="copyright">&copy; {{ date('Y')}} HRMS Portal South Sudan Revenue Authority. All Rights Reserved.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+    @endsection
+
+        

@@ -1,31 +1,75 @@
 @extends('layouts.app')
 
-@section('title', ' Pending Leaves')
-
 @section('content')
-<div class="container">
-    <h1>Pending Leave Requests</h1>
+<div class="col-md-12">
+    <div class="card">
+        <div class="card-header bg-white text-dark">
+            <i class="fas fa-calendar-alt"></i> Pending Leaves
+        </div>
+        <!-- Search Area -->
+        <div class="container mt-1 search-area">
+            <div class="row justify-content-center">
+                <div class="col-md-8">
+                    <div class="input-group">
+                        <input type="text" class="form-control" placeholder="Search leaves.." aria-label="Search" aria-describedby="button-search">
+                        <div class="input-group-append">
+                            <button class="btn btn-white" type="button" id="button-search">
+                                <i class="fas fa-search"></i> Search
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="card-body">
+            <div class="col-md-5 download-btn">
+                <div class="download-form">
+                    <a href="#" class="list-group-item list-group-item-action">
+                        <i class="fas fa-file-pdf text-danger"></i> PDF
+                    </a>
+                </div>
+                <div class="download-form">
+                    <a href="#" class="list-group-item list-group-item-action">
+                        <i class="fas fa-file-excel text-success"></i> Excel
+                    </a>
+                </div>
+                    <button class="btn btn-secondary" onclick="window.print()">
+                        <i class="fas fa-print"></i> Print Page
+                    </button>
+                </div>
+            </div>
+            <div class="">
+                <select class="form-control select-option" id="monthSelector">
+                    <option selected>Filter Approvals by Division</option>
+                    <option>Corporate Service Division (CSD)</option>
+                    <option>Domestic Tax Revenue Division (DTRD)</option>
+                    <option>Customs Revenue Division (CRD)</option>
+                    <option>Internal Audit Division (IAD)</option>
+                    <option>Internal Affairs Division (INAD)</option>
+                    <option>Information and Communication Technology Division (ICTD)</option>
+                </select>
+            </div>
 
     @if ($pendingLeaves->count())
     <table class="table table-striped">
         <thead>
             <tr>
-            <th>Employee Name</th>
-            <th>Staff Name</th>
+            <th>Employee-Name</th>
+            <th>Employee-Name</th>
             <th>Division</th>
             <th>Department</th>
-            <th>Job Title</th>
-            <th>type of Leave</th>
-            <th>Total Leaves requested</th>
-            <th>Total leaves per Year</th>
-            <th>Total Leaves Taken</th>
-            <th>Leave Commencement</th>
-            <th>Date of Return</th>
-            <th>Date Requested</th>
-            <th>Supervisor Approval</th>
-            <th>Date of approval Supervisor</th>
-            <th>HR approval</th>
-            <th>Date of Approval HR</th>
+            <th>Job-Title</th>
+            <th>Type-of-Leave</th>
+            <th>Total-Leaves-Requested</th>
+            <th>Total-Leaves/Year</th>
+            <th>Total-Leaves-Taken</th>
+            <th>Leave-Commencement</th>
+            <th>Date-of-Return</th>
+            <th>Date-Requested</th>
+            <th>Supervisor-Approval</th>
+            <th>Date-of-Approval-Supervisor</th>
+            <th>HR-Approval</th>
+            <th>Date-of-Approval-HR</th>
             <th>Reason</th>
             <th>Status</th>
             <th>Actions</th>
@@ -61,10 +105,10 @@
                     @endif
                 </td>
                 <td>
-                    <a href="{{ route('hr.leaves.approve', $leaf->id) }}" class="btn btn-success">Approve</a>
+                    <a href="{{ route('hr.leaves.approve', $leaf->id) }}" class="btn btn-success"><i class="fas fa-check-square"></i> Approve</a>
 
                     <!-- Disapprove Modal Trigger -->
-                    <button class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#disapproveLeaveModal-{{ $leaf->id }}">Disapprove</button>
+                    <a class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#disapproveLeaveModal-{{ $leaf->id }}"><i class="fas fa-ban"></i> Disapprove</a>
 
                     <!-- Disapprove Modal -->
                     <div class="modal fade" id="disapproveLeaveModal-{{ $leaf->id }}" tabindex="-1" role="dialog">
@@ -76,16 +120,16 @@
                                         <span aria-hidden="true">&times;</span>
                                     </button>
                                 </div>
-                                <div class="modal-body">
                                     <form method="POST" action="{{ route('hr.leaves.disapprove', $leaf->id) }}">
                                         @csrf
                                         <div class="form-group">
                                             <label for="reason">Reason for Disapproval</label>
                                             <textarea name="reason" id="reason" class="form-control" required></textarea>
                                         </div>
-                                        <button type="submit" class="btn btn-danger mt-3">Disapprove</button>
+                                        <div class="text-center">
+                                            <button class="btn btn-danger btn-sm mb-2">Disapprove</button>
+                                        </div>
                                     </form>
-                                </div>
                             </div>
                         </div>
                     </div>
@@ -94,8 +138,8 @@
             @endforeach
         </tbody>
     </table>
+    <p class="copyright">&copy; 2024 HRMS Portal South Sudan Revenue Authority. All Rights Reserved.</p>
     @else
-    <p>No pending leave requests.</p>
+    <p class="salaries-paragraph"><i class="fas fa fa-warning text-warning"></i> No pending leave requests.</p>
     @endif
-</div>
 @endsection

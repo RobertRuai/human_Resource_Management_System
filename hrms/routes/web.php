@@ -4,6 +4,7 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\EmployeeController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\AuditLogController;
+use App\Http\Controllers\DivisionController;
 use App\Http\Controllers\DepartmentController;
 use App\Http\Controllers\LeaveController;
 use App\Http\Controllers\LeaveApprovalController;
@@ -34,7 +35,10 @@ Route::get('/admin', function () {
 
 Route::middleware('auth')->group(function () {
     Route::resource('audit_logs', AuditLogController::class);
+    Route::resource('divisions', DivisionController::class);
     Route::resource('departments', DepartmentController::class);
+    Route::get('divisions/{division}/departments', [DepartmentController::class, 'byDivision'])
+        ->name('divisions.departments');
     Route::resource('employees', EmployeeController::class);
     Route::resource('leaves', LeaveController::class);
     Route::resource('notifications', NotificationController::class);

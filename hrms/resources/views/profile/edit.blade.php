@@ -1,8 +1,6 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="container">
-    <h1>Edit Profile</h1>
 
     @if(session('success'))
         <div class="alert alert-success">
@@ -19,9 +17,19 @@
                 </ul>
             </div>
     @endif
-
-
-
+    
+    <div class="col-md-12">
+    <div class="card">
+        <div class="card-header bg-white text-dark">
+        <i class="fas fa-user"></i> Edit Profile
+        </div>
+    </div>
+    <div class="card-body add-page">
+        <div class="justify-content-between align-items-center mb-3">
+            <div class="justify-content-left align-items-center">
+                <div class="card shadow-md">
+                        <div class="card">
+                            <div class="card-body">
     <form action="{{ route('profile.update') }}" method="POST">
         @csrf
 
@@ -38,7 +46,9 @@
         </div>
 
         <!-- Password Change Section -->
-        <h4 class="mt-4">Change Password</h4>
+        <div class="card-header bg-white text-dark">
+        Change Password
+        </div>
 
         <!-- Current Password -->
         <div class="mb-3">

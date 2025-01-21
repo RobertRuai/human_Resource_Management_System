@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Department;
+use App\Models\Division;
 use App\Models\audit_log;
 use Illuminate\Http\Request;
 
@@ -11,14 +12,17 @@ class DepartmentController extends Controller
     // Display a listing of the departments
     public function index()
     {
+        $divisions = Division::where('status', 'active')->get();
         $departments = Department::all();
-        return view('departments.index', compact('departments'));
+        return view('departments.index', compact('departments', 'divisions'));
     }
 
     // Show the form for creating a new department
     public function create()
     {
-        return view('departments.create');
+        // Fetch divisions for dropdown
+        $divisions = Division::where('status', 'active')->get();
+        return view('departments.create', compact('divisions'));
     }
 
     // Store a newly created department in storage
@@ -27,6 +31,7 @@ class DepartmentController extends Controller
         $validatedData = $request->validate([
             'name' => 'required|string|unique:departments',
             'description' => 'nullable|string',
+            'division_id' => 'nullable|exists:divisions,id'
         ]);
 
         $department = Department::create($validatedData);
@@ -51,7 +56,8 @@ class DepartmentController extends Controller
     // Show the form for editing the specified department
     public function edit(Department $department)
     {
-        return view('departments.edit', compact('department'));
+        $divisions = Division::where('status', 'active')->get();
+        return view('departments.edit', compact('department', 'divisions'));
     }
 
     // Update the specified department in storage
@@ -60,6 +66,7 @@ class DepartmentController extends Controller
         $validatedData = $request->validate([
             'name' => 'required|string|unique:departments,name,' . $department->id,
             'description' => 'nullable|string',
+            'division_id' => 'nullable|exists:divisions,id'
         ]);
 
         $department->update($validatedData);

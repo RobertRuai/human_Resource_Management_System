@@ -1,8 +1,6 @@
 <!-- resources/views/users/edit.blade.php -->
 @extends('layouts.app')
 
-@section('title', 'Edit Notifications')
-
 @section('content')
     <h1>Edit Notification</h1>
 

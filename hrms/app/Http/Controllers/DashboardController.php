@@ -18,6 +18,7 @@ class DashboardController extends Controller
         // Total counts
         $employeeCount = Employee::count();
         $userCount = User::count();
+        $departmentCount = Department::count();
         $pendingLeavesCount = leave_information::where('status', 'Pending')->count();
 
         // Department distribution
@@ -52,7 +53,7 @@ class DashboardController extends Controller
         ];
 
         return view('dashboard', compact(
-            'employeeCount', 'userCount', 'pendingLeavesCount',
+            'employeeCount', 'userCount', 'pendingLeavesCount', 'departmentCount',
             'departmentData', 'leaveStatusData', 'trainingData', 'roleData'
         ));
     }
