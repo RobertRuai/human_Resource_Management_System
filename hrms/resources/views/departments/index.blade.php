@@ -10,14 +10,32 @@
     <div class="container mt-1 search-area">
         <div class="row justify-content-center">
             <div class="col-md-8">
-                <div class="input-group">
-                    <input type="text" class="form-control" placeholder="Search departments.." aria-label="Search" aria-describedby="button-search">
-                    <div class="input-group-append">
-                        <button class="btn btn-white" type="button" id="button-search">
-                            <i class="fas fa-search"></i> Search
-                        </button>
+            <form action="{{ route('departments.index') }}" method="GET">
+                <div class="row">
+                    <div class="col-md-4">
+                        <input type="text" name="search" class="form-control" 
+                               placeholder="Search departments..." 
+                               value="{{ request('search') }}">
+                    </div>
+                    
+                    <div class="col-md-4">
+                        <select name="division_id" class="form-control">
+                            <option value="">All Divisions</option>
+                            @foreach($divisions as $division)
+                                <option value="{{ $division->id }}" 
+                                    {{ request('division_id') == $division->id ? 'selected' : '' }}>
+                                    {{ $division->name }}
+                                </option>
+                            @endforeach
+                        </select>
+                    </div>
+                    
+                    <div class="col-md-4">
+                        <button type="submit" class="btn btn-primary mr-2">Search</button>
+                        <a href="{{ route('departments.index') }}" class="btn btn-secondary">Reset</a>
                     </div>
                 </div>
+            </form>
             </div>
         </div>
     </div>
@@ -116,4 +134,22 @@
 @endif
 @endsection
 
+@section('scripts')
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Optional: Add live search/filter functionality
+        const searchInput = document.querySelector('input[name="search"]');
+        const divisionSelect = document.querySelector('select[name="division_id"]');
+        
+        function updateSearchParams() {
+            const searchTerm = searchInput.value;
+            const divisionId = divisionSelect.value;
+            
+            // You could add AJAX search here if desired
+        }
 
+        searchInput.addEventListener('input', updateSearchParams);
+        divisionSelect.addEventListener('change', updateSearchParams);
+    });
+</script>
+@endsection

@@ -18,7 +18,7 @@
                                 <p class="card-text"><strong>Department ID:</strong> {{ $department->id }}</p>
                                 <p class="card-text"><strong>Name:</strong> {{ $department->name }}</p>
                                 <p class="card-text"><strong>Description:</strong> {{ $department->description }}</p>
-                                <p class="card-text"><strong>Division:</strong> {{ $employee->division->name }}</p>
+                                <p class="card-text"><strong>Division:</strong> {{ $department->division->name }}</p>
                                 <a href="{{ route('departments.edit', $department->id) }}" class="btn btn-warning"><i class="fas fa-edit"></i> Edit Department</a>
                                 <a href="{{ route('departments.index') }}" class="btn btn-secondary"><i class="fas fa-arrow-alt-circle-left"></i> Back to Departments</a>
                             </div>

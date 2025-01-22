@@ -40,18 +40,15 @@
             </div>
 
             <div class="col-2 form-group">
-                <label for="department_id">Department <span class="text-danger">*</span></label>
-                <select name="department_id" id="department_id" class="form-control">
+                <label for="department_id">Department</label>
+                <select class="form-control" id="department_id" name="department_id" required>
                     <option value="">Select Department</option>
-                    @foreach ($departments as $department)
-                        <option value="{{ $department->id }}" {{ old('department_id') == $department->id ? 'selected' : '' }}>
+                    @foreach($departments as $department)
+                        <option value="{{ $department->id }}" data-division="{{ $department->division->name ?? '' }}">
                             {{ $department->name }}
-                        </option>
+                         </option>
                     @endforeach
                 </select>
-                @error('department_id')
-                    <div class="text-danger">{{ $message }}</div>
-                @enderror
             </div>
 
             <div class="col-2  form-group">
@@ -181,11 +178,8 @@
             </div>
 
             <div class="col-2 form-group">
-                <label for="division">Division <span class="text-danger">*</span></label>
-                <input type="text" name="division" id="division" class="form-control" value="{{ old('division') }}">
-                @error('division')
-                    <div class="text-danger">{{ $message }}</div>
-                @enderror
+                <label for="division">Division</label>
+                <input type="text" class="form-control" id="division" name="division" readonly>
             </div>
 
             <div class="col-2 form-group">
@@ -229,4 +223,16 @@
     </form>
     <p class="copyright">&copy; {{ date('Y') }} HRMS Portal South Sudan Revenue Authority. All Rights Reserved.</p>
 </div>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const departmentSelect = document.getElementById('department_id');
+        const divisionInput = document.getElementById('division');
+
+        departmentSelect.addEventListener('change', function () {
+            const selectedOption = departmentSelect.options[departmentSelect.selectedIndex];
+            const divisionName = selectedOption.getAttribute('data-division');
+            divisionInput.value = divisionName;
+        });
+    });
+</script>
 @endsection

@@ -445,3 +445,17 @@ footer {
     font-size: 13px;
 }
 
+.status-badge {
+    padding: 0.2em 0.6em;
+    font-size: 0.75em;
+    border-radius: 0.8em;
+    color: #fff;
+}
+
+.status-active {
+    background-color: #28a745; /* Green */
+}
+
+.status-inactive {
+    background-color: #1d7f92; /* blue */
+}

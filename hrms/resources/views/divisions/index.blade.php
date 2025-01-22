@@ -27,7 +27,11 @@
                 <td>{{ $division->description }}</td>
                 <td>{{ $division->head_of_division }}</td>
                 <td>{{ $division->departments_count }}</td>
-                <td>{{ $division->status }}</td>
+                <td>
+                    <span class="status-badge {{ $division->status == 'active' ? 'status-active' : 'status-inactive' }}">
+                        {{ ucfirst($division->status) }}
+                    </span>
+                </td>
                 <td>
                     <a href="{{ route('divisions.show', $division) }}" class="btn btn-sm btn-info">View</a>
                     <a href="{{ route('divisions.edit', $division) }}" class="btn btn-sm btn-warning">Edit</a>

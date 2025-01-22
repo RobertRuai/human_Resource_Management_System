@@ -25,15 +25,15 @@
                         </div>
 
                         <div class="col-2 form-group">
-                            <label for="description" class="form-label">Division <span class="text-danger">*</span></label>
+                            <label for="description" class="form-label">Description <span class="text-danger">*</span></label>
                             <input type="text" name="description" id="description" class="form-control" 
                                 value="{{ old('description') }}">
                         </div>
 
                         <div class="col-2 form-group">
-                            <label for="division_id">Division</label>
+                            <label for="division_id">Division <span class="text-danger">*</span></label>
                             <select class="form-control" id="division_id" name="division_id">
-                                <option value="">Select Division (Optional)</option>
+                                <option value="">Select Division</option>
                                 @foreach($divisions as $division)
                                     <option value="{{ $division->id }}">{{ $division->name }}</option>
                                 @endforeach

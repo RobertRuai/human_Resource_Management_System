@@ -41,7 +41,7 @@
             </div>
 
             <div class="col-2 form-group">
-                <label for="description" class="form-label">Division <span class="text-danger">*</span></label>
+                <label for="description" class="form-label">Description <span class="text-danger">*</span></label>
                 <input type="text" name="description" id="description" class="form-control" 
                     value="{{ old('description', $department->description) }}">
                     @error('description')
@@ -49,12 +49,14 @@
                         @enderror
             </div>
 
-            <div class="col-2 form-group">
+            <div class="form-group">
                 <label for="division_id">Division</label>
-                <select class="form-control" id="division_id" name="division_id">
-                    <option value="">Select Division (Optional)</option>
-                     @foreach($divisions as $division)
-                        <option value="{{ $division->id }}">{{ $division->name }}</option>
+                <select class="form-control" id="division_id" name="division_id" required>
+                    <option value="">Select Division</option>
+                    @foreach($divisions as $division)
+                        <option value="{{ $division->id }}" {{ $department->division_id == $division->id ? 'selected' : '' }}>
+                            {{ $division->name }}
+                        </option>
                     @endforeach
                 </select>
             </div>

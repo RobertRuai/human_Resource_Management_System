@@ -10,10 +10,25 @@ use Illuminate\Http\Request;
 class DepartmentController extends Controller
 {
     // Display a listing of the departments
-    public function index()
+    public function index(Request $request)
     {
         $divisions = Division::where('status', 'active')->get();
         $departments = Department::all();
+
+        $query = Department::query();
+
+        if ($request->has('search')) {
+            $search = $request->input('search');
+            $query->where('name', 'LIKE', "%{$search}%")
+                  ->orWhere('division_id', 'LIKE', "%{$search}%");
+        }
+
+        // Division filter
+        if ($request->has('division_id') && $request->input('division_id') != '') {
+            $query->where('division_id', $request->input('division_id'));
+        }
+    
+        $departments = $query->paginate(10); // Adjust pagination as needed
         return view('departments.index', compact('departments', 'divisions'));
     }
 
