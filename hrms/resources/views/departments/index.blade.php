@@ -47,14 +47,12 @@
         </div>
         <div class="col-md-5 download-btn">
             <div class="download-form">
-                <a href="#" class="list-group-item list-group-item-action">
-                    <i class="fas fa-file-pdf text-danger"></i> PDF
+                <a href="{{ route('departments.export.pdf', request()->query()) }}" class="btn btn-danger">
+                    <i class="fas fa-file-pdf"></i> Export to PDF
                 </a>
-            </div>
-            <div class="download-form">
-                <a href="#" class="list-group-item list-group-item-action">
-                    <i class="fas fa-file-excel text-success"></i> Excel
-                </a>
+                <a href="{{ route('departments.export.excel', request()->query()) }}" class="btn btn-success">
+                    <i class="fas fa-file-excel"></i> Export to Excel
+                 </a>
             </div>
                 <button class="btn btn-secondary" onclick="window.print()">
                     <i class="fas fa-print"></i> Print Page

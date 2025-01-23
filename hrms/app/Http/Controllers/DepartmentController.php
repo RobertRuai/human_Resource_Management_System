@@ -6,6 +6,10 @@ use App\Models\Department;
 use App\Models\Division;
 use App\Models\audit_log;
 use Illuminate\Http\Request;
+use Barryvdh\DomPDF\Facade as PDF;
+use App\Exports\DepartmentsExport;
+use Maatwebsite\Excel\Facades\Excel;
+
 
 class DepartmentController extends Controller
 {
@@ -17,16 +21,21 @@ class DepartmentController extends Controller
 
         $query = Department::query();
 
+        // Division filter
+        if ($request->filled('division_id')) {
+            $query->where('division_id', $request->input('division_id'));
+        }
+
         if ($request->has('search')) {
             $search = $request->input('search');
             $query->where('name', 'LIKE', "%{$search}%")
-                  ->orWhere('division_id', 'LIKE', "%{$search}%");
+                  ->orWhere('description', 'LIKE', "%{$search}%");
         }
 
         // Division filter
-        if ($request->has('division_id') && $request->input('division_id') != '') {
-            $query->where('division_id', $request->input('division_id'));
-        }
+        #if ($request->has('division_id') && $request->input('division_id') != '') {
+        #    $query->where('division_id', $request->input('division_id'));
+        #}
     
         $departments = $query->paginate(10); // Adjust pagination as needed
         return view('departments.index', compact('departments', 'divisions'));
@@ -110,5 +119,25 @@ class DepartmentController extends Controller
         ]);
 
         return redirect()->route('departments.index')->with('success', 'Department deleted successfully.');
+    }
+
+    public function exportPdf(Request $request)
+    {
+        $query = Department::query();
+
+        if ($request->filled('division_id')) {
+            $query->where('division_id', $request->input('division_id'));
+        }
+
+        $departments = $query->with('division')->get();
+
+        $pdf = PDF::loadView('departments.pdf', compact('departments'));
+
+        return $pdf->download('departments.pdf');
+    }
+
+    public function exportExcel(Request $request)
+    {
+        return Excel::download(new DepartmentsExport($request->input('division_id')), 'departments.xlsx');
     }
 }

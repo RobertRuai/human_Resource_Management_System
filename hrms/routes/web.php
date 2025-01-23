@@ -50,6 +50,9 @@ Route::middleware('auth')->group(function () {
     Route::get('/hr/leaves', [LeaveApprovalController::class, 'index'])->name('hr.leaves.index');
     Route::get('/hr/leaves/{id}/approveLeave', [LeaveApprovalController::class, 'approveLeave'])->name('hr.leaves.approve');
     Route::post('/hr/leaves/{id}/disapproveLeave', [LeaveApprovalController::class, 'disapproveLeave'])->name('hr.leaves.disapprove');
+
+    Route::get('departments/export/pdf', [DepartmentController::class, 'exportPdf'])->name('departments.export.pdf');
+    Route::get('departments/export/excel', [DepartmentController::class, 'exportExcel'])->name('departments.export.excel');
 });
 
 
