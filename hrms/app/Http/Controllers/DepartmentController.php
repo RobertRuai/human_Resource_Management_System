@@ -6,7 +6,7 @@ use App\Models\Department;
 use App\Models\Division;
 use App\Models\audit_log;
 use Illuminate\Http\Request;
-use Barryvdh\DomPDF\Facade as PDF;
+use Barryvdh\DomPDF\Facade\Pdf;
 use App\Exports\DepartmentsExport;
 use Maatwebsite\Excel\Facades\Excel;
 
@@ -131,7 +131,7 @@ class DepartmentController extends Controller
 
         $departments = $query->with('division')->get();
 
-        $pdf = PDF::loadView('departments.pdf', compact('departments'));
+        $pdf = Pdf::loadView('departments.pdf', compact('departments'));
 
         return $pdf->download('departments.pdf');
     }
