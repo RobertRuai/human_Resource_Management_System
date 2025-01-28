@@ -171,9 +171,17 @@
 
             <div class="col-2 form-group">
                 <label for="type_of_employment">Type of Employment <span class="text-danger">*</span></label>
-                <input type="text" name="type_of_employment" id="type_of_employment" class="form-control" value="{{ old('type_of_employment') }}">
+                <select name="type_of_employment" id="type_of_employment" class="form-control" required>
+                    <option value="">Select Type of Employment</option>
+                    <option value="Full-time employment" {{ old('type_of_employment') == 'Full-time employment' ? 'selected' : '' }}>Full-time employment</option>
+                    <option value="Part-time employment" {{ old('type_of_employment') == 'Part-time employment' ? 'selected' : '' }}>Part-time employment</option>
+                    <option value="Traineeship" {{ old('type_of_employment') == 'Traineeship' ? 'selected' : '' }}>Traineeship</option>
+                    <option value="Internship" {{ old('type_of_employment') == 'Internship' ? 'selected' : '' }}>Internship</option>
+                </select>
                 @error('type_of_employment')
-                    <div class="text-danger">{{ $message }}</div>
+                <span class="invalid-feedback" role="alert">
+                        <strong>{{ $message }}</strong>
+                    </span>
                 @enderror
             </div>
 
@@ -202,9 +210,18 @@
         <div class="form-display">
             <div class="col-2 form-group">
                 <label for="marital_status">Marital Status <span class="text-danger">*</span></label>
-                <input type="text" name="marital_status" id="marital_status" class="form-control" value="{{ old('marital_status') }}">
+                <select name="marital_status" id="marital_status" class="form-control" required>
+                    <option value="">Select Marital Status</option>
+                    <option value="single" {{ old('marital_status') == 'single' ? 'selected' : '' }}>Single</option>
+                    <option value="married" {{ old('marital_status') == 'married' ? 'selected' : '' }}>Married</option>
+                    <option value="divorced" {{ old('marital_status') == 'divorced' ? 'selected' : '' }}>Divorced</option>
+                    <option value="widowed" {{ old('marital_status') == 'widowed' ? 'selected' : '' }}>Widowed</option>
+                    <option value="separated" {{ old('marital_status') == 'separated' ? 'selected' : '' }}>Separated</option>
+                </select>                
                 @error('marital_status')
-                    <div class="text-danger">{{ $message }}</div>
+                    <span class="invalid-feedback" role="alert">
+                        <strong>{{ $message }}</strong>
+                    </span>
                 @enderror
             </div>
 

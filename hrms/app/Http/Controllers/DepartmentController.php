@@ -16,29 +16,34 @@ class DepartmentController extends Controller
     // Display a listing of the departments
     public function index(Request $request)
     {
-        $divisions = Division::where('status', 'active')->get();
-        $departments = Department::all();
+         // Fetch all divisions for the filter dropdown
+         $divisions = Division::where('status', 'active')->get();
 
-        $query = Department::query();
-
-        // Division filter
-        if ($request->filled('division_id')) {
-            $query->where('division_id', $request->input('division_id'));
-        }
-
-        if ($request->has('search')) {
-            $search = $request->input('search');
-            $query->where('name', 'LIKE', "%{$search}%")
-                  ->orWhere('description', 'LIKE', "%{$search}%");
-        }
-
-        // Division filter
-        #if ($request->has('division_id') && $request->input('division_id') != '') {
-        #    $query->where('division_id', $request->input('division_id'));
-        #}
-    
-        $departments = $query->paginate(10); // Adjust pagination as needed
-        return view('departments.index', compact('departments', 'divisions'));
+         // Start with a base query
+         $query = Department::query();
+ 
+         // Division filter
+         if ($request->filled('division_id')) {
+             $query->where('division_id', $request->input('division_id'));
+         }
+ 
+         // Search filter
+         if ($request->filled('search')) {
+             $search = $request->input('search');
+             $query->where(function($q) use ($search) {
+                 $q->where('name', 'LIKE', "%{$search}%")
+                   ->orWhere('description', 'LIKE', "%{$search}%");
+             });
+         }
+ 
+         // Eager load division to prevent N+1 query
+         $departments = $query->with('division')->paginate(10);
+ 
+         return view('departments.index', [
+             'departments' => $departments,
+             'divisions' => $divisions,
+             'selectedDivision' => $request->input('division_id')
+         ]);
     }
 
     // Show the form for creating a new department

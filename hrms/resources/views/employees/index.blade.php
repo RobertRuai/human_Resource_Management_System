@@ -10,14 +10,32 @@
         <div class="container mt-1 search-area">
             <div class="row justify-content-center">
                 <div class="col-md-8">
-                    <div class="input-group">
-                        <input type="text" class="form-control" placeholder="Search employees.." aria-label="Search" aria-describedby="button-search">
-                        <div class="input-group-append">
-                            <button class="btn btn-white" type="button" id="button-search">
-                                <i class="fas fa-search"></i> Search
-                            </button>
+                <form action="{{ route('employees.index') }}" method="GET">
+                        <div class="row">
+                            <div class="col-md-4">
+                                <input type="text" name="search" class="form-control" 
+                                       placeholder="Search employees..." 
+                                       value="{{ request('search') }}">
+                            </div>
+                            <div class="col-md-4">
+                                <select name="division_id" class="form-control">
+                                    <option value="">All Divisions</option>
+                                    @foreach($departments as $department)
+                                        @if($department->division)
+                                            <option value="{{ $department->division->id }}" 
+                                                {{ request('division_id') == $department->division->id ? 'selected' : '' }}>
+                                                {{ $department->division->name }}
+                                            </option>
+                                        @endif
+                                    @endforeach
+                                </select>
+                            </div>
+                            <div class="col-md-4">
+                                <button type="submit" class="btn btn-primary mr-2">Search</button>
+                                <a href="{{ route('employees.index') }}" class="btn btn-secondary">Reset</a>
+                            </div>
                         </div>
-                    </div>
+                    </form>
                 </div>
             </div>
         </div>
@@ -41,17 +59,6 @@
                         <i class="fas fa-print"></i> Print Page
                     </button>
                 </div>
-            </div>
-            <div class="">
-                <select class="form-control select-option" id="monthSelector">
-                    <option selected>Filter Employees by Division <i class="fas fa-chevron-down"></i></option>
-                    <option>Corporate Service Division (CSD)</option>
-                    <option>Domestic Tax Revenue Division (DTRD)</option>
-                    <option>Customs Revenue Division (CRD)</option>
-                    <option>Internal Audit Division (IAD)</option>
-                    <option>Internal Affairs Division (INAD)</option>
-                    <option>Information and Communication Technology Division (ICTD)</option>
-                </select>
             </div>
             
             @if(session('success'))

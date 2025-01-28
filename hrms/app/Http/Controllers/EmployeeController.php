@@ -13,11 +13,39 @@ class EmployeeController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $employees = Employee::with('user', 'department')->get();
+        // Fetch all departments for the filter dropdown
         $departments = Department::with('division')->get();
-        return view('employees.index', compact('employees', 'departments'));
+
+        // Start with a base query
+        $query = Employee::query();
+
+        // Division filter
+        if ($request->filled('division_id')) {
+            $query->whereHas('department', function($q) use ($request) {
+                $q->where('division_id', $request->input('division_id'));
+            });
+        }
+
+        // Search filter
+        if ($request->filled('search')) {
+            $search = $request->input('search');
+            $query->where(function($q) use ($search) {
+                $q->where('first_name', 'LIKE', "%{$search}%")
+                  ->orWhere('last_name', 'LIKE', "%{$search}%")
+                  ->orWhere('email', 'LIKE', "%{$search}%");
+            });
+        }
+
+        // Eager load user and department to prevent N+1 query
+        $employees = $query->with('user', 'department')->paginate(10);
+
+        return view('employees.index', [
+            'employees' => $employees,
+            'departments' => $departments,
+            'selectedDivision' => $request->input('division_id')
+        ]);
     }
 
     /**
@@ -85,12 +113,11 @@ class EmployeeController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit()
+    public function edit(Employee $employee)
     {
-        $employees = Employee::with('user', 'department')->first();
-        $users = User::where('id', '!=', $employees->user_id)->doesntHave('employee')->orWhere('id', $employees->user_id)->get();
+        $users = User::where('id', '!=', $employee->user_id)->doesntHave('employee')->orWhere('id', $employee->user_id)->get();
         $departments = Department::all();
-        return view('employees.edit', compact('employees', 'departments', 'users'));
+        return view('employees.edit', compact('employee', 'departments', 'users'));
     }
 
     /**
