@@ -27,7 +27,7 @@ return new class extends Migration
             $table->string('qualification', 50);
             $table->text('current_experience');
             $table->string('job_title', 50);
-            $table->string('grade', 10);
+            $table->string('grade', 100);
             $table->date('date_of_employment');
             $table->string('type_of_employment', 20);
             $table->string('division', 50);

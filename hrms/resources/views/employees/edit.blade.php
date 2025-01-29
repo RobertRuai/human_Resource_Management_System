@@ -157,10 +157,27 @@
 
             <div class="col-2 form-group">
                 <label for="grade">Grade <span class="text-danger">*</span></label>
-                <input type="text" name="grade" id="grade" class="form-control"
-                value="{{ old('grade', $employee->grade) }}">
+                <select name="grade" id="grade" class="form-control" required>
+                    <option value="">Select Grade</option>
+                    <option value="1A - Commissioner General" {{ old('grade', $employee->grade) == '1A - Commissioner General' ? 'selected' : '' }}>1A - Commissioner General</option>
+                    <option value="1B - Deputy Commissioner General" {{ old('grade', $employee->grade) == '1B - Deputy Commissioner General' ? 'selected' : '' }}>1B - Deputy Commissioner General</option>
+                    <option value="2 - Technical Advisor" {{ old('grade', $employee->grade) == '2 - Technical Advisor' ? 'selected' : '' }}>2 - Technical Advisor</option>
+                    <option value="2 - Commissioner" {{ old('grade', $employee->grade) == '2 - Commissioner' ? 'selected' : '' }}>2 - Commissioner</option>
+                    <option value="3 - Deputy Commissioner" {{ old('grade', $employee->grade) == '3 - Deputy Commissioner' ? 'selected' : '' }}>3 - Deputy Commissioner</option>
+                    <option value="4 - Assistant Commissioner" {{ old('grade', $employee->grade) == '4 - Assistant Commissioner' ? 'selected' : '' }}>4 - Assistant Commissioner</option>
+                    <option value="5 - Chief Officer" {{ old('grade', $employee->grade) == '5 - Chief Officer' ? 'selected' : '' }}>5 - Chief Officer</option>
+                    <option value="6 - Principal Officer" {{ old('grade', $employee->grade) == '6 - Principal Officer' ? 'selected' : '' }}>6 - Principal Officer</option>
+                    <option value="7 - Senior Officer" {{ old('grade', $employee->grade) == '7 - Senior Officer' ? 'selected' : '' }}>7 - Senior Officer</option>
+                    <option value="8 - Officer" {{ old('grade', $employee->grade) == '8 - Officer' ? 'selected' : '' }}>8 - Officer</option>
+                    <option value="9 - Assistant Officer" {{ old('grade', $employee->grade) == '9 - Assistant Officer' ? 'selected' : '' }}>9 - Assistant Officer</option>
+                    <option value="10 - Promotional Grade for Diploma" {{ old('grade', $employee->grade) == '10 - Promotional Grade for Diploma' ? 'selected' : '' }}>10 - Promotional Grade for Diploma</option>
+                    <option value="11 - Entry Grade for Diploma" {{ old('grade', $employee->grade) == '11 - Entry Grade for Diploma' ? 'selected' : '' }}>11 - Entry Grade for Diploma</option>
+                    <option value="12 - Entry Grade for Certificate" {{ old('grade', $employee->grade) == '12 - Entry Grade for Certificate' ? 'selected' : '' }}>12 - Entry Grade for Certificate</option>
+                </select>
                 @error('grade')
-                    <div class="text-danger">{{ $message }}</div>
+                    <span class="invalid-feedback" role="alert">
+                        <strong>{{ $message }}</strong>
+                    </span>                
                 @enderror
             </div>
         </div>
