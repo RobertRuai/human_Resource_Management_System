@@ -19,7 +19,8 @@ class Employee extends Model
         'phone', 'email', 'city', 'address', 'postal_code', 'qualification',
         'current_experience', 'job_title', 'grade', 'date_of_employment',
         'type_of_employment', 'division', 'location',
-        'gender', 'marital_status', 'next_of_kin'
+        'gender', 'marital_status', 'next_of_kin',
+        'photo', 'credentials'
     ];
 
     /**

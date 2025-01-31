@@ -79,7 +79,7 @@ class EmployeeController extends Controller
             'qualification' => 'required|string|max:50',
             'current_experience' => 'required|string',
             'job_title' => 'required|string|max:50',
-            'grade' => 'required|string|max:10',
+            'grade' => 'required|string|max:100',
             'date_of_employment' => 'required|date',
             'type_of_employment' => 'required|string|max:20',
             'division' => 'required|string|max:50',
@@ -87,7 +87,20 @@ class EmployeeController extends Controller
             'gender' => 'required|string|max:10',
             'marital_status' => 'required|string|max:20',
             'next_of_kin' => 'required|string|max:100',
+            'photo' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'credentials' => 'nullable|mimes:pdf|max:10000',
         ]);
+
+        if ($request->hasFile('photo')) {
+            $validatedData['photo'] = $request->file('photo')->store('photos', 'public');
+        }
+
+        if ($request->hasFile('credentials')) {
+            $validatedData['credentials'] = $request->file('credentials')->store('credentials', 'public');
+        }
+
+        #$validatedData['date_of_birth'] = \Carbon\Carbon::createFromFormat('m/d/Y', $validatedData['date_of_birth'])->format('Y-d-m');
+        #$validatedData['date_of_employment'] = \Carbon\Carbon::createFromFormat('m/d/Y', $validatedData['date_of_employment'])->format('Y-d-m');
 
        $employee = Employee::create($validatedData);
 
@@ -140,7 +153,7 @@ class EmployeeController extends Controller
             'qualification' => 'required|string|max:50',
             'current_experience' => 'required|string',
             'job_title' => 'required|string|max:50',
-            'grade' => 'required|string|max:10',
+            'grade' => 'required|string|max:100',
             'date_of_employment' => 'required|date',
             'type_of_employment' => 'required|string|max:20',
             'division' => 'required|string|max:50',
@@ -148,7 +161,20 @@ class EmployeeController extends Controller
             'gender' => 'required|string|max:10',
             'marital_status' => 'required|string|max:20',
             'next_of_kin' => 'required|string|max:100',
+            'photo' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'credentials' => 'nullable|mimes:pdf|max:10000',
         ]);
+
+        if ($request->hasFile('photo')) {
+            $validatedData['photo'] = $request->file('photo')->store('photos', 'public');
+        }
+
+        if ($request->hasFile('credentials')) {
+            $validatedData['credentials'] = $request->file('credentials')->store('credentials', 'public');
+        }
+
+        #$validatedData['date_of_birth'] = \Carbon\Carbon::createFromFormat('m/d/Y', $validatedData['date_of_birth'])->format('Y-d-m');
+        #$validatedData['date_of_employment'] = \Carbon\Carbon::createFromFormat('m/d/Y', $validatedData['date_of_employment'])->format('Y-d-m');
 
         $employee->update($validatedData);
 

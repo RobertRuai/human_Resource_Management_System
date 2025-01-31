@@ -23,8 +23,8 @@
         </div>
     @endif
 
-    <form action="{{ route('employees.store') }}" method="POST">
-        @csrf
+    <form action="{{ route('employees.store') }}" method="POST" enctype="multipart/form-data">
+    @csrf
     <div class="">
         <div class="form-display">
             <div class="col-2 form-group">
@@ -129,17 +129,19 @@
 
             <div class="col-2 form-group">
                 <label for="qualification">Qualification <span class="text-danger">*</span></label>
-                <input type="text" name="qualification" id="qualification" class="form-control" value="{{ old('qualification') }}">
+                <select name="qualification" id="qualification" class="form-control" required>
+                    <option value="">Select Qualification</option>
+                    <option value="PhD degree" {{ old('qualification') == 'PhD degree' ? 'selected' : '' }}>PhD degree</option>
+                    <option value="Master's degree" {{ old('qualification') == "Master's degree" ? 'selected' : '' }}>Master's degree</option>
+                    <option value="Bachelor's Degree" {{ old('qualification') == "Bachelor's Degree" ? 'selected' : '' }}>Bachelor's Degree</option>
+                    <option value="Diploma Certificate" {{ old('qualification') == 'Diploma Certificate' ? 'selected' : '' }}>Diploma Certificate</option>
+                    <option value="Open University Certificate" {{ old('qualification') == 'Open University Certificate' ? 'selected' : '' }}>Open University Certificate</option>
+                    <option value="Certificate of Higher Education" {{ old('qualification') == 'Certificate of Higher Education' ? 'selected' : '' }}>Certificate of Higher Education</option>
+                </select>
                 @error('qualification')
-                    <div class="text-danger">{{ $message }}</div>
-                @enderror
-            </div>
-
-            <div class="col-2 form-group">
-                <label for="current_experience">Current Experience <span class="text-danger">*</span></label>
-                <input type="text" name="current_experience" id="current_experience" class="form-control" value="{{ old('current_experience') }}">
-                @error('current_experience')
-                    <div class="text-danger">{{ $message }}</div>
+                    <span class="invalid-feedback" role="alert">
+                        <strong>{{ $message }}</strong>
+                    </span>
                 @enderror
             </div>
 
@@ -148,6 +150,23 @@
                 <input type="text" name="job_title" id="job_title" class="form-control" value="{{ old('job_title') }}">
                 @error('job_title')
                     <div class="text-danger">{{ $message }}</div>
+                @enderror
+            </div>
+
+            <div class="col-2 form-group">
+                <label for="current_experience"> Experience <span class="text-danger">*</span></label>
+                <select name="current_experience" id="current_experience" class="form-control" required>
+                    <option value="">Select Experience</option>
+                    <option value="1-2 years" {{ old('current_experience') == '1-2 years' ? 'selected' : '' }}>1-2 years</option>
+                    <option value="2-5 years" {{ old('current_experience') == '2-5 years' ? 'selected' : '' }}>2-5 years</option>
+                    <option value="5-10 years" {{ old('current_experience') == '5-10 years' ? 'selected' : '' }}>5-10 years</option>
+                    <option value="10-20 years" {{ old('current_experience') == '10-20 years' ? 'selected' : '' }}>10-20 years</option>
+                    <option value="20+ years" {{ old('current_experience') == '20+ years' ? 'selected' : '' }}>20+ years</option>
+                </select>
+                @error('current_experience')
+                    <span class="invalid-feedback" role="alert">
+                        <strong>{{ $message }}</strong>
+                    </span>                
                 @enderror
             </div>
 
@@ -218,9 +237,15 @@
 
             <div class="col-2 form-group">
                 <label for="gender">Gender <span class="text-danger">*</span></label>
-                <input type="text" name="gender" id="gender" class="form-control" value="{{ old('gender') }}">
+                <select name="gender" id="gender" class="form-control" required>
+                    <option value="">Select Gender</option>
+                    <option value="Male" {{ old('gender') == 'Male' ? 'selected' : '' }}>Male</option>
+                    <option value="Female" {{ old('gender') == 'Female' ? 'selected' : '' }}>Female</option>
+                </select>
                 @error('gender')
-                    <div class="text-danger">{{ $message }}</div>
+                    <span class="invalid-feedback" role="alert">
+                        <strong>{{ $message }}</strong>
+                    </span>
                 @enderror
             </div>
         </div>
@@ -248,6 +273,28 @@
                 <input type="text" name="next_of_kin" id="next_of_kin" class="form-control" value="{{ old('next_of_kin') }}">
                 @error('next_of_kin')
                     <div class="text-danger">{{ $message }}</div>
+                @enderror
+            </div>
+        </div>
+
+        <div class="form-display">
+            <div class="col-2 form-group">
+                <label for="photo">Employee Photo <span class="text-danger">*</span></label>
+                <input type="file" name="photo" id="photo" class="form-control" accept="image/*" required>
+                @error('photo')
+                <span class="invalid-feedback" role="alert">
+                    <strong>{{ $message }}</strong>
+                </span>
+                @enderror
+            </div>
+
+            <div class="col-2 form-group">
+                <label for="credentials">Credentials (PDF) <span class="text-danger">*</span></label>
+                <input type="file" name="credentials" id="credentials" class="form-control" accept="application/pdf" required>
+                @error('credentials')
+                <span class="invalid-feedback" role="alert">
+                    <strong>{{ $message }}</strong>
+                </span>
                 @enderror
             </div>
         </div>

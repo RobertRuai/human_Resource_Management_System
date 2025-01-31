@@ -36,7 +36,8 @@ return new class extends Migration
             $table->string('marital_status', 20);
             $table->string('next_of_kin', 100);
             #$table->decimal('salary', 10, 2);           
-            #$table->string('photo')->nullable();
+            $table->string('photo')->nullable();
+            $table->string('credentials')->nullable();
             $table->timestamps();
 
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
