@@ -206,4 +206,23 @@ class EmployeeController extends Controller
 
         return redirect()->route('employees.index')->with('success', 'Employee deleted successfully.');
     }
+
+     /**
+     * Fetch employee details by employee_id_number.
+     */
+    public function getEmployeeDetails($employeeId)
+    {
+        $employee = Employee::with('department.division')->find($employeeId);
+
+        if (!$employee) {
+            return response()->json(['error' => 'Employee not found'], 404);
+        }
+
+        return response()->json([
+            'name' => $employee->first_name . ' ' . $employee->last_name,
+            'division' => $employee->department->division->name ?? '',
+            'department_id' => $employee->department_id,
+            'job_title' => $employee->job_title,
+        ]);
+    }
 }

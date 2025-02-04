@@ -24,7 +24,7 @@
                     <option value="">Select Employee</option>
                     @foreach($employees as $employee)
                         <option value="{{ $employee->id }}" {{ old('employee_id_number') == $employee->id ? 'selected' : '' }}>
-                            {{ $employee->id }} ({{ $employee->department->name }})
+                        {{ $employee->id }} {{ $employee->first_name }} {{ $employee->last_name }} ({{ $employee->department->name }})
                         </option>
                     @endforeach
                 </select>
@@ -33,34 +33,31 @@
             <div class="col-2 form-group">
                 <label for="staff_name" class="form-label">Employee Name <span class="text-danger">*</span></label>
                 <input type="text" name="staff_name" id="username" class="form-control" 
-                    value="{{ old('staff_name') }}" required>
-            </div>
-
-            <div class="col-2 form-group">
-                <label for="division" class="form-label">Division <span class="text-danger">*</span></label>
-                <input type="text" name="division" id="division" class="form-control" 
-                    value="{{ old('division') }}" required>
+                    value="{{ old('staff_name') }}" readonly required>
             </div>
 
             <div class="col-2 form-group">
                 <label for="department_id">Department</label>
-                <select name="department_id" id="department_id" class="form-control">
+                <select class="form-control" id="department_id" name="department_id" readonly required>
                     <option value="">Select Department</option>
-                    @foreach ($departments as $department)
-                        <option value="{{ $department->id }}" {{ old('department_id') == $department->id ? 'selected' : '' }}>
+                    @foreach($departments as $department)
+                        <option value="{{ $department->id }}" data-division="{{ $department->division->name ?? '' }}">
                             {{ $department->name }}
-                        </option>
+                         </option>
                     @endforeach
                 </select>
-                @error('department_id')
-                    <div class="text-danger">{{ $message }}</div>
-                @enderror
             </div>
+
+            <div class="col-2 form-group">
+                <label for="division">Division</label>
+                <input type="text" class="form-control" id="division" name="division" readonly readonly>
+            </div>
+
 
             <div class="col-2 form-group">
                 <label for="job_title" class="form-label">Job Title <span class="text-danger">*</span></label>
                 <input type="text" name="job_title" id="job_title" class="form-control" 
-                    value="{{ old('job_title') }}" required>
+                    value="{{ old('job_title') }}" readonly required>
             </div>
         </div>
         
@@ -151,4 +148,34 @@
         </form>
 </div>
     <p class="copyright">&copy; {{ date('Y')}} HRMS Portal South Sudan Revenue Authority. All Rights Reserved.</p>
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    const employeeSelect = document.getElementById('employee_id_number');
+    const staffNameInput = document.getElementById('username');
+    const divisionInput = document.getElementById('division');
+    const departmentSelect = document.getElementById('department_id');
+    const jobTitle = document.getElementById('job_title');
+
+    employeeSelect.addEventListener('change', function() {
+        const employeeId = this.value;
+        if (employeeId) {
+            fetch(`/get-employee-details/${employeeId}`)
+                .then(response => response.json())
+                .then(data => {
+                    staffNameInput.value = data.name;
+                    divisionInput.value = data.division;
+                    departmentSelect.value = data.department_id;
+                    jobTitle.value = data.job_title;
+                })
+                .catch(error => console.error('Error fetching employee details:', error));
+        } else {
+            staffNameInput.value = '';
+            divisionInput.value = '';
+            departmentSelect.value = '';
+            jobTitle.value = '';
+        }
+    });
+});
+</script>
 @endsection

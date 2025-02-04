@@ -40,6 +40,7 @@ Route::middleware('auth')->group(function () {
     Route::get('divisions/{division}/departments', [DepartmentController::class, 'byDivision'])
         ->name('divisions.departments');
     Route::resource('employees', EmployeeController::class);
+    Route::get('/get-employee-details/{employeeId}', [EmployeeController::class, 'getEmployeeDetails']);
     Route::resource('leaves', LeaveController::class);
     Route::resource('notifications', NotificationController::class);
     Route::resource('roles', RoleController::class);
