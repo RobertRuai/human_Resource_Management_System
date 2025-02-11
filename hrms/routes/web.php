@@ -42,6 +42,8 @@ Route::middleware('auth')->group(function () {
     Route::resource('employees', EmployeeController::class);
     Route::get('/get-employee-details/{employeeId}', [EmployeeController::class, 'getEmployeeDetails']);
     Route::resource('leaves', LeaveController::class);
+    Route::post('leaves/{leave}/supervisor-review', [LeaveController::class, 'supervisorReview'])->name('leaves.supervisor-review');
+    Route::post('leaves/{leave}/hr-review', [LeaveController::class, 'hrReview'])->name('leaves.hr-review');
     Route::resource('notifications', NotificationController::class);
     Route::resource('roles', RoleController::class);
     Route::resource('salaries', SalaryController::class);

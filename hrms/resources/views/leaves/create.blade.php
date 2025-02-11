@@ -16,131 +16,43 @@
     <form action="{{ route('leaves.store') }}" method="POST">
         @csrf
 
-    <div class="">
-        <div class="form-display">
-            <div class="col-2 form-group">
-                <label for="employee_id_number" class="form-label">Employee <span class="text-danger">*</span></label>
-                <select name="employee_id_number" id="employee_id_number" class="form-select" required>
-                    <option value="">Select Employee</option>
-                    @foreach($employees as $employee)
-                        <option value="{{ $employee->id }}" {{ old('employee_id_number') == $employee->id ? 'selected' : '' }}>
-                        {{ $employee->id }} {{ $employee->first_name }} {{ $employee->last_name }} ({{ $employee->department->name }})
-                        </option>
-                    @endforeach
-                </select>
-            </div>
-
-            <div class="col-2 form-group">
-                <label for="staff_name" class="form-label">Employee Name <span class="text-danger">*</span></label>
-                <input type="text" name="staff_name" id="username" class="form-control" 
-                    value="{{ old('staff_name') }}" readonly required>
-            </div>
-
-            <div class="col-2 form-group">
-                <label for="department_id">Department</label>
-                <select class="form-control" id="department_id" name="department_id" readonly required>
-                    <option value="">Select Department</option>
-                    @foreach($departments as $department)
-                        <option value="{{ $department->id }}" data-division="{{ $department->division->name ?? '' }}">
-                            {{ $department->name }}
-                         </option>
-                    @endforeach
-                </select>
-            </div>
-
-            <div class="col-2 form-group">
-                <label for="division">Division</label>
-                <input type="text" class="form-control" id="division" name="division" readonly readonly>
-            </div>
-
-
-            <div class="col-2 form-group">
-                <label for="job_title" class="form-label">Job Title <span class="text-danger">*</span></label>
-                <input type="text" name="job_title" id="job_title" class="form-control" 
-                    value="{{ old('job_title') }}" readonly required>
-            </div>
+    <div class="form-display">
+        <div class="col-2 form-group">
+            <label for="employee_id" class="form-label">Employee <span class="text-danger">*</span></label>
+            <select name="employee_id" id="employee_id" class="form-select" required>
+                <option value="">Select Employee</option>
+                @foreach($employees as $employee)
+                    <option value="{{ $employee->id }}" {{ old('employee_id') == $employee->id ? 'selected' : '' }}>
+                    {{ $employee->first_name }} {{ $employee->last_name }} ({{ $employee->department->name }})
+                    </option>
+                @endforeach
+            </select>
         </div>
-        
-        <div class="form-display">
-            <div class="col-2 form-group">
-                <label for="type_of_leave" class="form-label">Leave Type <span class="text-danger">*</span></label>
-                <select name="type_of_leave" id="type_of_leave" class="form-select" required>
-                    <option value="">Select Leave Type</option>
-                    <option value="Annual" {{ old('type_of_leave') == 'Annual' ? 'selected' : '' }}>Annual</option>
-                    <option value="Sick" {{ old('type_of_leave') == 'Sick' ? 'selected' : '' }}>Sick</option>
-                    <option value="Maternity" {{ old('type_of_leave') == 'Maternity' ? 'selected' : '' }}>Maternity</option>
-                    <option value="Paternity" {{ old('type_of_leave') == 'Paternity' ? 'selected' : '' }}>Paternity</option>
-                    <option value="Unpaid" {{ old('type_of_leave') == 'Unpaid' ? 'selected' : '' }}>Unpaid</option>
-                    <option value="Other" {{ old('type_of_leave') == 'Other' ? 'selected' : '' }}>Other</option>
-                </select>
-            </div>
-        
-            <div class="col-2 form-group">
-                <label for="no_of_leaves_requested" class="form-label">No. of Leaves Requested <span class="text-danger">*</span></label>
-                <input type="text" name="no_of_leaves_requested" id="no_of_leaves_requested" class="form-control" 
-                    value="{{ old('no_of_leaves_requested') }}" required>
-            </div>
 
-            <div class="col-2 form-group">
-                <label for="total_leaves_perYear" class="form-label">Total Leaves Per Year <span class="text-danger">*</span></label>
-                <input type="text" name="total_leaves_perYear" id="total_leaves_perYear" class="form-control" 
-                    value="{{ old('total_leaves_perYear') }}" required>
-            </div>
-
-            <div class="col-2 form-group">
-                <label for="total_leaves_taken" class="form-label">Total Leaves Taken <span class="text-danger">*</span></label>
-                <input type="text" name="total_leaves_taken" id="total_leaves_taken" class="form-control" 
-                    value="{{ old('total_leaves_taken') }}" required>
-            </div>
-
-            <div class="col-2 form-group">
-                <label for="leave_commencement" class="form-label">Leave Commencement <span class="text-danger">*</span></label>
-                <input type="date" name="leave_commencement" id="leave_commencement" class="form-control" 
-                    value="{{ old('leave_commencement') }}" required>
-            </div>
+        <div class="col-2 form-group">
+            <label for="type_of_leave" class="form-label">Leave Type <span class="text-danger">*</span></label>
+            <select name="type_of_leave" id="type_of_leave" class="form-select" required>
+                <option value="">Select Leave Type</option>
+                <option value="Compassionate/Emergency leave" {{ old('type_of_leave') == 'Compassionate/Emergency leave' ? 'selected' : '' }}>Compassionate/Emergency leave</option>
+                <option value="Sick/Convalescence leave" {{ old('type_of_leave') == 'Sick/Convalescence leave' ? 'selected' : '' }}>Sick/Convalescence leave</option>
+                <option value="Study leave(short term)" {{ old('type_of_leave') == 'Study leave(short term)' ? 'selected' : '' }}>Study leave(short term)</option>
+                <option value="Special leave" {{ old('type_of_leave') == 'Special leave' ? 'selected' : '' }}>Special leave</option>
+            </select>
         </div>
-        <div class="form-display">
-            <div class="col-2 form-group">
-                <label for="date_of_return" class="form-label">Date of Return <span class="text-danger">*</span></label>
-                <input type="date" name="date_of_return" id="date_of_return" class="form-control" 
-                    value="{{ old('date_of_return') }}" required>
-            </div>
 
-            <div class="col-2 form-group">
-                <label for="date_requested" class="form-label">Date Requested <span class="text-danger">*</span></label>
-                <input type="date" name="date_requested" id="date_requested" class="form-control" 
-                    value="{{ old('date_requested') }}" required>
-            </div>
-
-            <div class="col-2 form-group">
-                <label for="supervisor_approval" class="form-label">Supervisor Approval <span class="text-danger">*</span></label>
-                <input type="text" name="supervisor_approval" id="supervisor_approval" class="form-control" 
-                    value="{{ old('supervisor_approval') }}" required>
-            </div>
-
-            <div class="col-2 form-group">
-                <label for="date_of_approval_SR" class="form-label">Date of Approval Supervisor <span class="text-danger">*</span></label>
-                <input type="date" name="date_of_approval_SR" id="date_of_approval_SR" class="form-control" 
-                    value="{{ old('date_of_approval_SR') }}" required>
-            </div>
-
-            <div class="col-2 form-group">
-                <label for="HR_approval" class="form-label">HR Approval <span class="text-danger">*</span></label>
-                <input type="text" name="HR_approval" id="HR_approval" class="form-control" 
-                    value="{{ old('HR_approval') }}">
-            </div>
+        <div class="col-2 form-group">
+            <label for="start_date" class="form-label">Start Date <span class="text-danger">*</span></label>
+            <input type="date" name="start_date" id="start_date" class="form-control" value="{{ old('start_date') }}" required>
         </div>
-        <div class="form-display">
-            <div class="col-2 form-group">
-                <label for="date_of_approval_HR" class="form-label">Date of Approval HR <span class="text-danger">*</span></label>
-                <input type="date" name="date_of_approval_HR" id="date_of_approval_HR" class="form-control" 
-                    value="{{ old('date_of_approval_HR') }}" required>
-            </div>
 
-            <div class="col-2 form-group">
-                <label for="reason" class="form-label">Reason <span class="text-danger">*</span></label>
-                <textarea name="reason" id="reason" class="form-control" rows="4" required placeholder="Enter your text here..">{{ old('reason') }}</textarea>
-            </div>
+        <div class="col-2 form-group">
+            <label for="end_date" class="form-label">End Date <span class="text-danger">*</span></label>
+            <input type="date" name="end_date" id="end_date" class="form-control" value="{{ old('end_date') }}" required>
+        </div>
+
+        <div class="col-2 form-group">
+            <label for="employee_remarks" class="form-label">Remarks</label>
+            <textarea name="employee_remarks" id="employee_remarks" class="form-control" rows="3">{{ old('employee_remarks') }}</textarea>
         </div>
     </div>
             <button type="submit" class="btn btn-success"><i class='fas fa-save'></i> Save Leave</button>
@@ -151,7 +63,7 @@
 
 <script>
 document.addEventListener('DOMContentLoaded', function () {
-    const employeeSelect = document.getElementById('employee_id_number');
+    const employeeSelect = document.getElementById('employee_id');
     const staffNameInput = document.getElementById('username');
     const divisionInput = document.getElementById('division');
     const departmentSelect = document.getElementById('department_id');

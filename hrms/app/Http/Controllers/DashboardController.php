@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Employee;
 use App\Models\User;
 use App\Models\training;
-use App\Models\leave_information;
+use App\Models\Leave;
 use App\Models\Department;
 use App\Models\Role;
 
@@ -19,7 +19,7 @@ class DashboardController extends Controller
         $employeeCount = Employee::count();
         $userCount = User::count();
         $departmentCount = Department::count();
-        $pendingLeavesCount = leave_information::where('status', 'Pending')->count();
+        $pendingLeavesCount = Leave::where('status', 'Pending')->count();
 
         // Department distribution
         $departments = Department::withCount('employees')->get();
@@ -32,9 +32,9 @@ class DashboardController extends Controller
         $leaveStatusData = [
             'labels' => ['Approved', 'Pending', 'Disapproved'],
             'data' => [
-                leave_information::where('status', 'Approved')->count(),
-                leave_information::where('status', 'Pending')->count(),
-                leave_information::where('status', 'Disapproved')->count(),
+                Leave::where('status', 'Approved')->count(),
+                Leave::where('status', 'Pending')->count(),
+                Leave::where('status', 'Disapproved')->count(),
             ],
         ];
 

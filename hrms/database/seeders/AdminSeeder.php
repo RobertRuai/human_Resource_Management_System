@@ -30,13 +30,20 @@ class AdminSeeder extends Seeder
         ]);
 
         $user3 = User::create([
-            'username' => 'User1',
-            'email' => 'user1@gmail.com',
+            'username' => 'Supervisor1',
+            'email' => 'supervisor1@gmail.com',
             'email_verified_at' => now(),
             'password' => '123456',
             'role_id' => '3',
         ]);
 
+        $user4 = User::create([
+            'username' => 'User1',
+            'email' => 'user1@gmail.com',
+            'email_verified_at' => now(),
+            'password' => '123456',
+            'role_id' => '4',
+        ]);
 
         $user1->assignRole(['Admin']);
         $user2->assignRole(['HR Manager']);

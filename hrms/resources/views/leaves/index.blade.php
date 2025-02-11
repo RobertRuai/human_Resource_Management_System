@@ -61,69 +61,41 @@
         <table class="table table-bordered table-striped">
             <thead class="table-light">
                 <tr>
-                    <th>Employee ID</th>
-                    <th>Name</th>
-                    <th>Division</th>
-                    <th>Department</th>
-                    <th>Position</th>
-                    <th>Type of Leave</th>
-                    <th>Date of Approval</th>
-                    <th>Date of Return</th><!--
-                    <th>Total-Leaves-Requested</th>
-                    <th>Total-Leaves/Year</th>
-                    <th>Total-Leaves-Taken</th>
-                    <th>Leave-Commencement</th>
-                    <th>Date-Requested</th>
-                    <th>Supervisor-Approval</th>
-                    <th>Date-of-Approval-Supervisor</th>
-                    <th>HR-Approval</th>
-                    <th>Reason</th>-->
+                    <th>Employee</th>
+                    <th>Leave Type</th>
+                    <th>Start Date</th>
+                    <th>End Date</th>
                     <th>Status</th>
                     <th>Actions</th>
                 </tr>
             </thead>
             <tbody>
-                @foreach($leaves as $leaf)
-                    <tr>
-                        <td>{{ $leaf->employee_id_number }}</td>
-                        <td>{{ $leaf->staff_name }}</td>
-                        <td>{{ $leaf->division }}</td>
-                        <td>{{ $leaf->department_id }}</td>
-                        <td>{{ $leaf->job_title }}</td>
-                        <td>{{ $leaf->type_of_leave }}</td>
-                        <td>{{ $leaf->date_of_approval_HR }}</td>
-                        <td>{{ $leaf->date_of_return }}</td><!--
-                        <td>{{ $leaf->no_of_leaves_requested }}</td>
-                        <td>{{ $leaf->total_leaves_perYear }}</td>
-                        <td>{{ $leaf->total_leaves_taken }}</td>
-                        <td>{{ $leaf->leave_commencement }}</td>
-                        <td>{{ $leaf->date_requested }}</td>
-                        <td>{{ $leaf->supervisor_approval }}</td>
-                        <td>{{ $leaf->date_of_approval_SR }}</td>
-                        <td>{{ $leaf->HR_approval }}</td>
-                        <td>{{ $leaf->reason }}</td>-->
-                        <td>
-                            @if($leaf->status == 'Approved')
-                                <span class="badge bg-success">{{ $leaf->status }}</span>
-                            @elseif($leaf->status == 'Pending')
-                                <span class="badge bg-warning text-dark">{{ $leaf->status }}</span>
-                            @elseif($leaf->status == 'Disapproved')
-                                <span class="badge bg-danger">{{ $leaf->status }}</span>
+                @foreach($leaves as $leave)
+                <tr>
+                    <td>{{ $leave->employee->first_name }}</td>
+                    <td>{{ $leave->type_of_leave }}</td>
+                    <td>{{ $leave->start_date }}</td>
+                    <td>{{ $leave->end_date }}</td>
+                    <td>
+                        <span class="badge 
+                            @if($leave->status == 'pending') bg-warning
+                            @elseif($leave->status == 'approved') bg-success
+                            @elseif($leave->status == 'rejected') bg-danger
+                            @endif">
+                            {{ ucfirst($leave->status) }}
+                        </span>
+                    </td>
+                    <td>
+                        <a href="{{ route('leaves.show', $leave) }}" class="btn btn-sm btn-info">View</a>
+                        @can('review', $leave)
+                            @if($leave->status == 'pending')
+                                <a href="{{ route('leaves.supervisor-review', $leave) }}" class="btn btn-sm btn-primary">Review</a>
+                            @elseif($leave->status == 'hr_review')
+                                <a href="{{ route('leaves.hr-review', $leave) }}" class="btn btn-sm btn-primary">HR Review</a>
                             @endif
-                        </td>
-                        <td>
-                            <a href="{{ route('leaves.show', $leaf->id) }}" class="btn btn-info btn-sm"><i class="fas fa-eye"></i> View</a>
-                            <a href="{{ route('leaves.edit', $leaf->id) }}" class="btn btn-warning btn-sm"><i class="fas fa-edit"></i>
-                            Edit</a>
-                            <!-- Delete Button with Confirmation -->
-                            <form action="{{ route('leaves.destroy', $leaf->id) }}" method="POST" style="display:inline-block;" 
-                                  onsubmit="return confirm('Are you sure you want to delete this leave record?');">
-                                @csrf
-                                @method('DELETE')
-                                <button type="submit" class="btn btn-danger btn-sm"><i class="fas fa-trash"></i> Delete</button>
-                            </form>
-                        </td>
-                    </tr>
+                        @endcan
+                    </td>
+                </tr>
                 @endforeach
             </tbody>
         </table>
