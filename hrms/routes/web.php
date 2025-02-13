@@ -27,11 +27,11 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 });
 
-Route::get('/admin', function () {
-    return view('admin.index');
-})->middleware(['auth', 'role:Admin,'])->name('admin.index');
-
-
+Route::middleware(['auth', 'role:Admin'])->group(function () {
+    Route::get('/admin', function () {
+        return view('admin.index');
+    })->name('admin.index');
+});
 
 Route::middleware('auth')->group(function () {
     Route::resource('audit_logs', AuditLogController::class);
@@ -42,7 +42,6 @@ Route::middleware('auth')->group(function () {
     Route::resource('employees', EmployeeController::class);
     Route::get('/get-employee-details/{employeeId}', [EmployeeController::class, 'getEmployeeDetails']);
     Route::resource('leaves', LeaveController::class);
-    Route::post('leaves/{leave}/supervisor-review', [LeaveController::class, 'supervisorReview'])->name('leaves.supervisor-review');
     Route::post('leaves/{leave}/hr-review', [LeaveController::class, 'hrReview'])->name('leaves.hr-review');
     Route::resource('notifications', NotificationController::class);
     Route::resource('roles', RoleController::class);
@@ -58,6 +57,20 @@ Route::middleware('auth')->group(function () {
     Route::get('departments/export/excel', [DepartmentController::class, 'exportExcel'])->name('departments.export.excel');
 });
 
+Route::middleware(['auth', 'role:HR Manager'])->group(function () {
+    // Add HR Manager routes here
+    Route::get('leaves/{leave}/hr-review', [LeaveController::class, 'showHrReview'])->name('leaves.hr-review');
+    Route::post('leaves/{leave}/hr-review', [LeaveController::class, 'hrReview'])->name('leaves.hr-review');
+});
+
+Route::middleware(['auth', 'role:Supervisor'])->group(function () {
+    Route::get('leaves/{leave}/supervisor-review', [LeaveController::class, 'showSupervisorReview'])->name('leaves.supervisor-review');
+    Route::post('leaves/{leave}/supervisor-review', [LeaveController::class, 'supervisorReview'])->name('leaves.supervisor-review');
+});
+
+Route::middleware(['auth', 'role:Employee'])->group(function () {
+    // Add Employee routes here
+});
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');

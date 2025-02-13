@@ -76,4 +76,9 @@ class User extends Authenticatable
     {
         return $this->with('employee')->where('id', auth()->id())->first();
     }
+
+    public function hasAnyRole($roles)
+    {
+        return $this->roles()->whereIn('name', $roles)->exists();
+    }
 }

@@ -87,13 +87,11 @@
                     </td>
                     <td>
                         <a href="{{ route('leaves.show', $leave) }}" class="btn btn-sm btn-info">View</a>
-                        @can('review', $leave)
-                            @if($leave->status == 'pending')
-                                <a href="{{ route('leaves.supervisor-review', $leave) }}" class="btn btn-sm btn-primary">Review</a>
-                            @elseif($leave->status == 'hr_review')
+                        @if($leave->status == 'pending' && auth()->user()->hasRole('Supervisor'))
+                                <a href="{{ route('leaves.supervisor-review', $leave->id) }}" class="btn btn-sm btn-primary">Review</a>
+                            @elseif($leave->status == 'hr_review' && auth()->user()->hasRole('HR Manager'))
                                 <a href="{{ route('leaves.hr-review', $leave) }}" class="btn btn-sm btn-primary">HR Review</a>
-                            @endif
-                        @endcan
+                        @endif
                     </td>
                 </tr>
                 @endforeach

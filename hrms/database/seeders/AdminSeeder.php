@@ -47,6 +47,7 @@ class AdminSeeder extends Seeder
 
         $user1->assignRole(['Admin']);
         $user2->assignRole(['HR Manager']);
-        $user3->assignRole(['Employee']);
+        $user3->assignRole(['Supervisor']);
+        $user4->assignRole(['Employee']);
     }
 }

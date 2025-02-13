@@ -116,6 +116,11 @@ class LeaveController extends Controller
         return redirect()->route('leaves.index')->with('success', 'Leave deleted successfully.');
     }
 
+    public function showSupervisorReview(Leave $leave)
+    {
+        return view('leaves.supervisor_review', compact('leave'));
+    }
+
     public function supervisorReview(Request $request, Leave $leave)
     {
         $validatedData = $request->validate([
@@ -138,6 +143,11 @@ class LeaveController extends Controller
 
         return redirect()->route('leaves.index')
             ->with('success', 'Leave request reviewed successfully.');
+    }
+
+    public function showHrReview(Leave $leave)
+    {
+        return view('leaves.hr_review', compact('leave'));
     }
 
     public function hrReview(Request $request, Leave $leave)
