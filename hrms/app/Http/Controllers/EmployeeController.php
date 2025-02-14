@@ -7,6 +7,11 @@ use App\Models\Employee;
 use App\Models\Department;
 use App\Models\audit_log;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use PDF;
+use App\Exports\EmployeesExport;
+use Maatwebsite\Excel\Facades\Excel;
+
 
 class EmployeeController extends Controller
 {
@@ -15,11 +20,21 @@ class EmployeeController extends Controller
      */
     public function index(Request $request)
     {
+        $user = Auth::user();
+
+        if ($user->hasRole('Admin') || $user->hasRole('HR Manager') || $user->hasRole('Supervisor')) {
+            // Admin, HR Manager, and Supervisor can view all employees
+            $query = Employee::query();
+        } else {
+            // Regular employees can only view their own details
+            $query = Employee::where('user_id', $user->id);
+        }
+
         // Fetch all departments for the filter dropdown
         $departments = Department::with('division')->get();
 
         // Start with a base query
-        $query = Employee::query();
+        #$query = Employee::query();
 
         // Division filter
         if ($request->filled('division_id')) {
@@ -120,6 +135,11 @@ class EmployeeController extends Controller
      */
     public function show(Employee $employee)
     {
+        $user = Auth::user();
+
+        if (!$user->hasRole('Admin') && !$user->hasRole('HR Manager') && !$user->hasRole('Supervisor') && $employee->user_id != $user->id) {
+            return response()->json(['error' => 'Unauthorized'], 401);
+        }
         return view('employees.show', compact('employee'));
     }
 
@@ -128,6 +148,12 @@ class EmployeeController extends Controller
      */
     public function edit(Employee $employee)
     {
+        $user = Auth::user();
+
+        if (!$user->hasRole('Admin') && !$user->hasRole('HR Manager') && !$user->hasRole('Supervisor') && $employee->user_id != $user->id) {
+            return response()->json(['error' => 'Unauthorized'], 401);
+        }
+
         $users = User::where('id', '!=', $employee->user_id)->doesntHave('employee')->orWhere('id', $employee->user_id)->get();
         $departments = Department::all();
         return view('employees.edit', compact('employee', 'departments', 'users'));
@@ -138,6 +164,12 @@ class EmployeeController extends Controller
      */
     public function update(Request $request, Employee $employee)
     {
+        $user = Auth::user();
+
+        if (!$user->hasRole('Admin') && !$user->hasRole('HR Manager') && !$user->hasRole('Supervisor') && $employee->user_id != $user->id) {
+            return response()->json(['error' => 'Unauthorized'], 401);
+        }
+
             $validatedData = $request->validate([
             'user_id' => 'nullable|exists:users,id',
             'department_id' => 'required|exists:departments,id',
@@ -194,6 +226,12 @@ class EmployeeController extends Controller
      */
     public function destroy(Employee $employee)
     {
+        $user = Auth::user();
+
+        if (!$user->hasRole('Admin') && !$user->hasRole('HR Manager') && !$user->hasRole('Supervisor') && $employee->user_id != $user->id) {
+            return response()->json(['error' => 'Unauthorized'], 401);
+        }
+
         $employee->delete();
 
         audit_log::create([
@@ -212,6 +250,12 @@ class EmployeeController extends Controller
      */
     public function getEmployeeDetails($employeeId)
     {
+        $user = Auth::user();
+
+        if (!$user->hasRole('Admin') && !$user->hasRole('HR Manager') && !$user->hasRole('Supervisor')) {
+            return response()->json(['error' => 'Unauthorized'], 401);
+        }
+
         $employee = Employee::with('department.division')->find($employeeId);
 
         if (!$employee) {
@@ -224,5 +268,23 @@ class EmployeeController extends Controller
             'department_id' => $employee->department_id,
             'job_title' => $employee->job_title,
         ]);
+    }
+
+    /**
+     * Export employee data as PDF.
+     */
+    public function exportPdf()
+    {
+        $employees = Employee::all();
+        $pdf = PDF::loadView('employees.pdf', compact('employees'));
+        return $pdf->download('employees.pdf');
+    }
+
+    /**
+     * Export employee data as Excel.
+     */
+    public function exportExcel()
+    {
+        return Excel::download(new EmployeesExport, 'employees.xlsx');
     }
 }

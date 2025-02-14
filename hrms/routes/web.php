@@ -39,9 +39,18 @@ Route::middleware('auth')->group(function () {
     Route::resource('departments', DepartmentController::class);
     Route::get('divisions/{division}/departments', [DepartmentController::class, 'byDivision'])
         ->name('divisions.departments');
+});
+
+Route::middleware(['auth', 'role:Admin|HR Manager|Supervisor|Employee'])->group(function () {
     Route::resource('employees', EmployeeController::class);
     Route::get('/get-employee-details/{employeeId}', [EmployeeController::class, 'getEmployeeDetails']);
+    Route::get('employees/export/pdf', [EmployeeController::class, 'exportPdf'])->name('employees.export.pdf');
+    Route::get('employees/export/excel', [EmployeeController::class, 'exportExcel'])->name('employees.export.excel');
+});
+
+Route::middleware('auth')->group(function () {
     Route::resource('leaves', LeaveController::class);
+    Route::post('leaves/{leave}/supervisor-review', [LeaveController::class, 'supervisorReview'])->name('leaves.supervisor-review');
     Route::post('leaves/{leave}/hr-review', [LeaveController::class, 'hrReview'])->name('leaves.hr-review');
     Route::resource('notifications', NotificationController::class);
     Route::resource('roles', RoleController::class);

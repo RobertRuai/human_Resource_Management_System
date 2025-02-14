@@ -46,14 +46,12 @@
             </div>
             <div class="col-md-5 download-btn">
                 <div class="download-form">
-                    <a href="#" class="list-group-item list-group-item-action">
-                        <i class="fas fa-file-pdf text-danger"></i> PDF
-                    </a>
-                </div>
-                <div class="download-form">
-                    <a href="#" class="list-group-item list-group-item-action">
-                        <i class="fas fa-file-excel text-success"></i> Excel
-                    </a>
+                <a href="{{ route('employees.export.pdf') }}" class="btn btn-danger">
+                    <i class="fas fa-file-pdf text-danger"></i> Export to PDF
+                </a>
+                <a href="{{ route('employees.export.excel') }}" class="btn btn-success">
+                    <i class="fas fa-file-excel text-success"></i> Export to Excel
+                </a>
                 </div>
                     <button class="btn btn-secondary" onclick="window.print()">
                         <i class="fas fa-print"></i> Print Page
@@ -65,6 +63,7 @@
                 <div class="alert alert-success">{{ session('success') }}</div>
             @endif
 
+            @if(auth()->user()->hasRole('Admin') || auth()->user()->hasRole('HR Manager') || auth()->user()->hasRole('Supervisor'))
                 <div class="table-responsive">
                     <table class="table table-bordered table-striped">
                         <thead class="thead-dark">
@@ -89,7 +88,7 @@
                             <td>{{ $employee->middle_name }}</td>
                             <td>{{ $employee->last_name }}</td>
                             <td>{{ $employee->email }}</td>
-                            <td>{{ $employee->division }}</td>
+                            <td>{{ $employee->department->division->name ?? 'N/A' }}</td>
                             <td>{{ $employee->department->name }}</td>
                             <td>{{ $employee->job_title }}</td>
                             <td>
@@ -106,32 +105,53 @@
                         @endforeach
                     </tbody>
                 </table>
-            </div><!--
-            <div class="page-nav">
-            <div class="container mt-4">
-                <nav aria-label="Page navigation example">
-                    <ul class="pagination justify-content-center">
-                        <li class="page-item">
-                        <a class="page-link" href="#" aria-label="Previous">
-                            <span aria-hidden="true">&laquo;</span>
-                            <span class="sr-only">Previous</span>
-                        </a>
-                        </li>
-                        <li class="page-item"><a class="page-link" href="#">1</a></li>
-                        <li class="page-item"><a class="page-link" href="#">2</a></li>
-                        <li class="page-item"><a class="page-link" href="#">3</a></li>
-                        <li class="page-item"><a class="page-link" href="#">4</a></li>
-                        <li class="page-item"><a class="page-link" href="#">5</a></li>
-                        <li class="page-item">
-                        <a class="page-link" href="#" aria-label="Next">
-                            <span aria-hidden="true">&raquo;</span>
-                            <span class="sr-only">Next</span>
-                        </a>
-                        </li>
-                    </ul>
-                </nav>
+            </div>
+            @elseif(auth()->user()->hasRole('Employee'))
+                <div class="table-responsive">
+                    <table class="table table-bordered table-striped">
+                        <thead class="thead-dark">
+                            <tr>
+                                <th>Employee ID</th>
+                                <th>First Name</th>
+                                <th>Middle Name</th>
+                                <th>Last Name</th>
+                                <th>Email</th>
+                                <th>Division</th>
+                                <th>Department</th>
+                                <th>Position</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach($employees as $employee)
+                                @if($employee->user_id == auth()->id())
+                                    <tr>
+                                        <td>{{ $employee->user->id }}</td>
+                                        <td>{{ $employee->first_name }}</td>
+                                        <td>{{ $employee->middle_name }}</td>
+                                        <td>{{ $employee->last_name }}</td>
+                                        <td>{{ $employee->email }}</td>
+                                        <td>{{ $employee->department->division->name ?? 'N/A' }}</td>
+                                        <td>{{ $employee->department->name }}</td>
+                                        <td>{{ $employee->job_title }}</td>
+                                        <td>
+                                            <a href="{{ route('employees.show', $employee->id) }}" class="btn btn-info btn-sm"><i class="fas fa-eye"></i> View</a>
+                                            <a href="{{ route('employees.edit', $employee->id) }}" class="btn btn-warning btn-sm"><i class="fas fa-edit"></i> Edit</a>
+                                            <form action="{{ route('employees.destroy', $employee->id) }}" method="POST" style="display:inline-block;"
+                                            onsubmit="return confirm('Are you sure you want to delete this employee?');">
+                                                @csrf
+                                                @method('DELETE')
+                                                <button  type="submit" class="btn btn-danger btn-sm"><i class="fas fa-trash"></i> Delete</button>
+                                            </form>
+                                        </td>
+                                    </tr>
+                                @endif
+                            @endforeach
+                        </tbody>
+                    </table>
                 </div>
-            </div>-->
+            @else
+                <div class="alert alert-warning">You do not have permission to view other employees' details.</div>
+            @endif
             <p class="copyright">&copy; {{ date('Y') }} HRMS Portal South Sudan Revenue Authority. All Rights Reserved.</p>
         </div>
     </div>
