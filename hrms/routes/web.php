@@ -50,6 +50,7 @@ Route::middleware(['auth', 'role:Admin|HR Manager|Supervisor|Employee'])->group(
 
 Route::middleware('auth')->group(function () {
     Route::resource('leaves', LeaveController::class);
+    Route::resource('employees', EmployeeController::class);
     Route::post('leaves/{leave}/supervisor-review', [LeaveController::class, 'supervisorReview'])->name('leaves.supervisor-review');
     Route::post('leaves/{leave}/hr-review', [LeaveController::class, 'hrReview'])->name('leaves.hr-review');
     Route::resource('notifications', NotificationController::class);
@@ -79,6 +80,7 @@ Route::middleware(['auth', 'role:Supervisor'])->group(function () {
 
 Route::middleware(['auth', 'role:Employee'])->group(function () {
     // Add Employee routes here
+    Route::get('/get-employee-details/{employeeId}', [EmployeeController::class, 'getEmployeeDetails']);
 });
 
 Route::middleware('auth')->group(function () {

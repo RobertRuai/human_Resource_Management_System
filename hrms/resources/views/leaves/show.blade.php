@@ -14,7 +14,7 @@
                 <div class="card shadow-md">
                         <div class="card">
                             <div class="card-body">
-                                        <p class="card-text"><strong>Employee Name:</strong> {{ $leaf->employee->full_name }}</p>
+                                        <p class="card-text"><strong>Employee Name:</strong> {{ $leaf->employee->first_name }}</p>
                                         <p class="card-text"><strong>Division:</strong> {{ $leaf->employee->department->division->name ?? '' }}</p>
                                         <p class="card-text"><strong>Department:</strong> {{ $leaf->employee->department->name ?? '' }}</p>
                                         <p class="card-text"><strong>Job Title:</strong> {{ $leaf->employee->job_title }}</p>

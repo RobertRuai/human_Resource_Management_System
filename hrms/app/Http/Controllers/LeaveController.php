@@ -16,9 +16,32 @@ use Carbon\Carbon;
 class LeaveController extends Controller
 {
     // Display a listing of the leaves
-    public function index()
+    public function index(Request $request)
     {
-        $leaves = Leave::all();
+        $user = Auth::user();
+        if ($user->hasRole('Admin') || $user->hasRole('HR Manager') || $user->hasRole('Supervisor')) {
+            // Admin, HR Manager, and Supervisor can view all employees
+            $query = Employee::query();
+        } else {
+            // Regular employees can only view their own details
+            $query = Employee::where('user_id', $user->id);
+        }
+
+        // Search functionality
+        if ($request->filled('search')) {
+            $query->whereHas('employee', function ($q) use ($request) {
+                $q->where('first_name', 'like', '%' . $request->search . '%')
+                  ->orWhere('last_name', 'like', '%' . $request->search . '%');
+            });
+        }
+
+        // Filter by status
+        if ($request->filled('status')) {
+            $query->where('status', $request->status);
+        }
+
+        $leaves = Leave::with('employee')->get();
+        #$leaves = $query->get();
         $departments = Department::all();
         return view('leaves.index', compact('leaves', 'departments'));
     }

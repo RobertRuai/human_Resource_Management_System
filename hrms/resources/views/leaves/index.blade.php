@@ -11,14 +11,24 @@
         <div class="container mt-1 search-area">
             <div class="row justify-content-center">
                 <div class="col-md-8">
-                    <div class="input-group">
-                        <input type="text" class="form-control" placeholder="Search leaves.." aria-label="Search" aria-describedby="button-search">
-                        <div class="input-group-append">
-                            <button class="btn btn-white" type="button" id="button-search">
-                                <i class="fas fa-search"></i> Search
-                            </button>
-                        </div>
-                    </div>
+                <form action="{{ route('leaves.index') }}" method="GET" class="mb-3">
+            <div class="row">
+                <div class="col-md-4">
+                    <input type="text" name="search" class="form-control" placeholder="Search by employee name" value="{{ request('search') }}">
+                </div>
+                <div class="col-md-4">
+                    <select name="status" class="form-control">
+                        <option value="">All Statuses</option>
+                        <option value="approved" {{ request('status') == 'approved' ? 'selected' : '' }}>Approved</option>
+                        <option value="rejected" {{ request('status') == 'rejected' ? 'selected' : '' }}>Rejected</option>
+                        <option value="pending" {{ request('status') == 'pending' ? 'selected' : '' }}>Pending</option>
+                    </select>
+                </div>
+                <div class="col-md-4">
+                    <button type="submit" class="btn btn-primary">Filter</button>
+                </div>
+            </div>
+        </form>
                 </div>
             </div>
         </div>
@@ -58,6 +68,9 @@
     @if($leaves->isEmpty())
         <p>No leave records found.</p>
     @else
+        @if(auth()->user()->hasRole('Employee'))
+            <div class="alert alert-info">Showing your leave requests.</div>
+        @endif
         <table class="table table-bordered table-striped">
             <thead class="table-light">
                 <tr>
@@ -72,7 +85,7 @@
             <tbody>
                 @foreach($leaves as $leave)
                 <tr>
-                    <td>{{ $leave->employee->first_name }}</td>
+                    <td>{{ $leave->employee->first_name}}</td>
                     <td>{{ $leave->type_of_leave }}</td>
                     <td>{{ $leave->start_date }}</td>
                     <td>{{ $leave->end_date }}</td>
