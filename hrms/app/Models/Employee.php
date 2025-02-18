@@ -71,4 +71,10 @@ class Employee extends Model
     public function getCount() {
         return $this->count();
     }
+
+    public function payrolls()
+    {
+        return $this->hasMany(Payroll::class);
+    }
+
 }

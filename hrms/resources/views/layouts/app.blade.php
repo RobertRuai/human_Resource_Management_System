@@ -50,7 +50,7 @@
                 </a>
             </div>
             <div class="nav-item">
-                <a href="{{ route('salaries.index') }}" class="nav-link {{ Request::is('salaries') ? 'active' : '' }}">
+                <a href="{{ route('payrolls.index') }}" class="nav-link {{ Request::is('payrolls') ? 'active' : '' }}">
                     <i class="fas fa-money-check-alt me-2"></i>Payrolls
                 </a>
             </div>

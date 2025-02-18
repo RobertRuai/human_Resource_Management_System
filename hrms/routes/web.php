@@ -67,6 +67,10 @@ Route::middleware('auth')->group(function () {
     Route::get('departments/export/excel', [DepartmentController::class, 'exportExcel'])->name('departments.export.excel');
 });
 
+Route::middleware(['auth', 'role:Admin|HR Manager'])->group(function () {
+    Route::resource('payrolls', PayrollController::class);
+});
+
 Route::middleware(['auth', 'role:HR Manager'])->group(function () {
     // Add HR Manager routes here
     Route::get('leaves/{leave}/hr-review', [LeaveController::class, 'showHrReview'])->name('leaves.hr-review');
