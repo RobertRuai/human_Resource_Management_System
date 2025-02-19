@@ -10,6 +10,7 @@ use App\Http\Controllers\LeaveController;
 use App\Http\Controllers\LeaveApprovalController;
 use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\RoleController;
+use App\Http\Controllers\PayrollController;
 use App\Http\Controllers\SalaryController;
 use App\Http\Controllers\TrainingController;
 use App\Http\Controllers\UserController;
