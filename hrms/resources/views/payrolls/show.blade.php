@@ -3,7 +3,7 @@
 @section('content')
     <div class="container">
         <h1>Payroll Details</h1>
-        <p><strong>Employee Name:</strong> {{ $payroll->employee->name }}</p>
+        <p><strong>Employee Name:</strong> {{ $payroll->employee->first_name }} {{ $payroll->employee->last_name }}</p>
         <p><strong>Basic Salary:</strong> {{ $payroll->basic_salary }}</p>
         <p><strong>Gross Salary:</strong> {{ $payroll->gross_salary }}</p>
         <p><strong>Taxable Amount:</strong> {{ $payroll->taxable_amount }}</p>

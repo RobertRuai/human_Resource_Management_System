@@ -59,22 +59,20 @@
                     <i class="fas fa-chalkboard-teacher me-2"></i>Trainings
                 </a>
             </div>
-            <div class="nav-item">
-                <a href="{{ route('hr.leaves.index') }}" class="nav-link {{ Request::is('hr.leaves') ? 'active' : '' }}">
-                    <i class="fas fa-calendar-alt me-2"></i>Leave Approvals
-                </a>
-            </div>
+
             <div class="nav-item leave-approvals"></div>
             <div class="nav-item">
                 <a href="{{ route('users.index') }}" class="nav-link {{ Request::is('users') ? 'active' : '' }}">
                     <i class="fas fa-user me-2"></i>Users
                 </a>
-            </div><!--
+            </div>
+
             <div class="nav-item">
                 <a href="{{ route('roles.index') }}" class="nav-link {{ Request::is('roles') ? 'active' : '' }}">
                     <i class="fas fa-user-tag me-2"></i>Roles
                 </a>
-            </div>-->
+            </div>
+            
             <div class="nav-item">
                 <a href="{{ route('notifications.index') }}" class="nav-link {{ Request::is('notifications') ? 'active' : '' }}">
                     <i class="fas fa-bell me-2"></i>Notifications
