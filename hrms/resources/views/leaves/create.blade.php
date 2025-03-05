@@ -8,10 +8,7 @@
         <i class="fas fa-calendar-plus"></i> Request New Leave
         </div>
     </div>
-    <div class="card-body add-page">
-        <div class="justify-content-between align-items-center mb-3">
-            <div class="justify-content-left align-items-center">
-                <div class="card shadow-md">
+                <div class="card add-page">
                     <div class="card-body">
     <form action="{{ route('leaves.store') }}" method="POST">
         @csrf

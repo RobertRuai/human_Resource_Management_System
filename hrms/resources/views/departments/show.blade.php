@@ -8,12 +8,8 @@
         <i class="fas fa-building"></i> Department Details
         </div>
     </div>
-    <div class="card-body add-page">
-        <div class="justify-content-between align-items-center mb-3">
-            <div class="justify-content-left align-items-center">
-                <!-- <p>Below is a brief information about Information and Communication Technology department.</p> -->
-                <div class="card shadow-md">
-                        <div class="card">
+    
+                        <div class="card add-page">
                             <div class="card-body">
                                 <p class="card-text"><strong>Department ID:</strong> {{ $department->id }}</p>
                                 <p class="card-text"><strong>Name:</strong> {{ $department->name }}</p>

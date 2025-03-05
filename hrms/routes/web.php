@@ -55,6 +55,7 @@ Route::middleware('auth')->group(function () {
     Route::post('leaves/{leave}/supervisor-review', [LeaveController::class, 'supervisorReview'])->name('leaves.supervisor-review');
     Route::post('leaves/{leave}/hr-review', [LeaveController::class, 'hrReview'])->name('leaves.hr-review');
     Route::resource('notifications', NotificationController::class);
+    Route::resource('payrolls', PayrollController::class);
     Route::resource('roles', RoleController::class);
     Route::resource('salaries', SalaryController::class);
     Route::resource('trainings', TrainingController::class);
@@ -69,7 +70,13 @@ Route::middleware('auth')->group(function () {
 });
 
 Route::middleware(['auth', 'role:Admin|HR Manager'])->group(function () {
-    Route::resource('payrolls', PayrollController::class);
+    Route::get('/payrolls/bulk-generate', [PayrollController::class, 'showBulkGenerateForm'])->name('payrolls.bulkGenerateForm');
+    Route::post('/payrolls/bulk-generate', [PayrollController::class, 'bulkGenerate'])->name('payrolls.bulkGenerate');
+    Route::delete('/payrolls/bulk-destroy', [PayrollController::class, 'bulkDestroy'])->name('payrolls.bulkDestroy');
+    Route::post('/payrolls/select', [PayrollController::class, 'select'])->name('payrolls.select');
+    Route::get('/payrolls/export', [PayrollController::class, 'exportToExcel'])->name('payrolls.export');
+     // Resource route should come last
+     Route::resource('payrolls', PayrollController::class);
 });
 
 Route::middleware(['auth', 'role:HR Manager'])->group(function () {

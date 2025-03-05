@@ -1,8 +1,6 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="container">
-    <h1>Edit Division: {{ $division->name }}</h1>
     
     @if ($errors->any())
         <div class="alert alert-danger">
@@ -14,11 +12,20 @@
         </div>
     @endif
 
+    <div class="col-md-12">
+    <div class="card">
+        <div class="card-header bg-white text-dark">
+        <i class="fas fa-building"></i> Edit Division Details
+        </div>
+    </div>
+                <div class="card add-page">
+                            <div class="card-body">
     <form action="{{ route('divisions.update', $division) }}" method="POST">
         @csrf
         @method('PUT')
         
-        <div class="form-group">
+        <div class="form-display">
+            <div class="col-2 form-group">
             <label for="name">Division Name</label>
             <input type="text" 
                    class="form-control @error('name') is-invalid @enderror" 
@@ -31,7 +38,7 @@
             @enderror
         </div>
 
-        <div class="form-group">
+        <div class="col-2 form-group">
             <label for="description">Description</label>
             <textarea class="form-control @error('description') is-invalid @enderror" 
                       id="description" 
@@ -42,7 +49,7 @@
             @enderror
         </div>
 
-        <div class="form-group">
+        <div class="col-2 form-group">
             <label for="head_of_division">Head of Division</label>
             <input type="text" 
                    class="form-control @error('head_of_division') is-invalid @enderror" 
@@ -54,7 +61,7 @@
             @enderror
         </div>
 
-        <div class="form-group">
+        <div class="col-2 form-group">
             <label for="status">Status</label>
             <select class="form-control @error('status') is-invalid @enderror" 
                     id="status" 
@@ -66,11 +73,15 @@
                 <div class="invalid-feedback">{{ $message }}</div>
             @enderror
         </div>
+</div>
 
-        <div class="form-group">
-            <button type="submit" class="btn btn-primary">Update Division</button>
-            <a href="{{ route('divisions.index') }}" class="btn btn-secondary ml-2">Cancel</a>
+<div class="form-display">
+            <div class="col-2 form-group">
+            <button type="submit" class="btn btn-success"><i class='fas fa-save'></i> Update Division</button>
+            <a href="{{ route('divisions.index') }}" class="btn btn-danger"><i class='fas fa-times-circle'></i> Cancel</a>
         </div>
-    </form>
+        </div>
+    <p class="copyright">&copy; 2024 HRMS Portal South Sudan Revenue Authority. All Rights Reserved.</p>
+
 </div>
 @endsection

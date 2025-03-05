@@ -9,11 +9,8 @@
         <i class="fas fa-building"></i> Add New Department
         </div>
     </div>
-    <div class="card-body add-page">
-        <div class="justify-content-between align-items-center mb-3">
-            <div class="justify-content-left align-items-center">
-            <!--<p>Add a new department by filling the form below.</p> -->
-                <div class="card shadow-md">
+    
+                <div class="card add-page">
                     <div class="card-body">
                     <form action="{{ route('departments.store') }}" method="POST">
                     @csrf

@@ -20,11 +20,8 @@
         <i class="fas fa-building"></i> Edit Department Details
         </div>
     </div>
-    <div class="card-body add-page">
-        <div class="justify-content-between align-items-center mb-3">
-            <div class="justify-content-left align-items-center">
-                <!-- <p>Update the Information and Communication Technology  department information by editing the details below.</p> -->
-                <div class="card shadow-md">
+    
+                <div class="card add-page">
                             <div class="card-body">
     <form action="{{ route('departments.update', $department->id) }}" method="POST">
         @csrf
@@ -50,7 +47,7 @@
             </div>
 
             <div class="form-group">
-                <label for="division_id">Division</label>
+                <label for="division_id">Division <span class="text-danger">*</label>
                 <select class="form-control" id="division_id" name="division_id" required>
                     <option value="">Select Division</option>
                     @foreach($divisions as $division)

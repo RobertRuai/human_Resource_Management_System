@@ -4,6 +4,8 @@
 <div class="container">
     <h1 class="mb-4">Create Payroll</h1>
 
+   
+
     @if ($errors->any())
         <div class="alert alert-danger alert-dismissible fade show" role="alert">
             <strong>Validation Errors:</strong>
@@ -277,8 +279,17 @@
             <button type="submit" class="btn btn-primary btn-lg">
                 <i class="fas fa-save mr-2"></i>Create Payroll
             </button>
+            <a href="{{ route('payrolls.index') }}" class="btn btn-secondary btn-lg">
+                <i class="fas fa-arrow-left mr-2"></i>Back to Payrolls
+            </a>
         </div>
+
+        
+        
     </form>
+
+    
+
 </div>
 
 <script>

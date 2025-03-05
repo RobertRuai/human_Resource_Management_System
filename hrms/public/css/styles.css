@@ -136,6 +136,10 @@ footer p {
     border-radius: 2px;
 }
 
+.card {
+    font-size: 12px;
+}
+
 .card .card-body .form-display {
     display: flex;
     font-size: 13px;
@@ -217,7 +221,19 @@ footer p {
     padding: 5px 10px;
     transition: background-color 0.3s ease;
 }
-
+.card .card-body .btn-control{
+    display: flex;
+}
+.filter-btn select{
+    margin: 0 5px 5px 0;
+    font-size: 14px;
+    border-radius: 0;
+    background-color: #ecf0f1;
+    padding: 3px 10px;
+}
+.filter-btn select:hover{
+    background-color: #fff;
+}
 /* Form Styles */
 .form-group {
     margin-bottom: 15px;
@@ -239,6 +255,13 @@ footer p {
 .search-area input {
     font-size: 13px;
     border-radius: 0;
+    margin: 0 0 0 10px;
+}
+
+.search-btn button{
+    font-size: 13px;
+    color: #000;
+    margin: 15px 0 0 0;
 }
 
 .card-body .btn {
@@ -246,7 +269,8 @@ footer p {
 }
 
 .card-body .add-btn {
-    margin-left: 650px;
+    margin-left: 700px;
+    margin-bottom: 20px;
 }
 
 .table th, .table td {
@@ -266,6 +290,27 @@ footer p {
 
 .download-btn {
     display: flex;
+}
+
+.download-btn button{
+    margin-left: 4px;
+}
+.employee-details{
+    display: flex;
+}
+.employee-photo, .personal-details, .employment-details, .kin-details{
+    margin-right: 50px;
+}
+
+.qualification-details p a{
+    text-decoration: none;
+    color: #fff;
+    padding: 2px 10px 3px 10px;
+    font-size: 13px;
+}
+
+.qualification-details p a:hover{
+    text-decoration: underline;
 }
 
 .download-btn .download-form a:hover{

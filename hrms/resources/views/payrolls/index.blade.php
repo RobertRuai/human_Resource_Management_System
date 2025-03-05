@@ -1,21 +1,62 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="container-fluid">
-    <div class="row">
-        <div class="col-12">
-            <div class="card">
-                <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
-                    <h2 class="mb-0">
-                        <i class="fas fa-file-invoice-dollar mr-2"></i>Payroll Management
-                    </h2>
-                    <div>
-                        <a href="{{ route('payrolls.create') }}" class="btn btn-success">
-                            <i class="fas fa-plus mr-2"></i>Create New Payroll
-                        </a>
+<div class="col-md-12">
+    <div class="card">
+        <div class="card-header bg-white text-dark">
+            <i class="fas fa-file-invoice-dollar"></i> All Payrolls
+        </div>
+       <!-- Search Area -->
+    <div class=" mt-1 search-area">
+        <div class="row ">
+            <div class="col-md-8">
+            <form action="{{ route('payrolls.index') }}" method="GET">
+                <div class="row">
+                    <div class="col-md-4">
+                        <input type="text" name="search" class="form-control" 
+                               placeholder="Search payrolls..." 
+                               value="{{ request('search') }}">
+                    </div>
+                    
+                    <div class="col-md-2 search-btn">
+                        <button type="submit" class="btn">Search</button>
                     </div>
                 </div>
+            </form>
+            </div>
+        </div>
+        <div class="card-body">
+        <!-- Bulk Generate Button -->
+        <div class="d-flex justify-content-between align-items-center">
+            <a href="{{ route('payrolls.create') }}" class="btn btn-primary add-btn" id="openPopupBtn">
+                <i class="fas fa-user-plus"></i> Add New Payroll
+            </a>
+            <a href="{{ route('payrolls.bulkGenerateForm') }}" class="btn btn-success">
+                <i class="fas fa-calculator"></i> Bulk Generate Payrolls
+            </a>
+        </div>
 
+        <div class="download-btn">
+                    <div class="download-form">
+                        <a href="{{ route('employees.export.pdf', request()->query()) }}" class="list-group-item list-group-item-action">
+                            <i class="fas fa-file-pdf text-danger"></i> PDF
+                        </a>
+                    </div>  
+                    <div class="download-form">
+                        <a href="{{ route('employees.export.excel', request()->query()) }}" class="list-group-item list-group-item-action">
+                            <i class="fas fa-file-excel text-success"></i> Excel
+                        </a>
+                    </div>
+                    <div>
+                        <button class="btn btn-secondary" onclick="window.print()">
+                            <i class="fas fa-print"></i> Print
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <div class="page-description">
+            <!-- <p>The table below shows the current active departments in all the divisions.</p> -->
+        </div>
                 @if (session('success'))
                     <div class="alert alert-success alert-dismissible fade show" role="alert">
                         {{ session('success') }}
@@ -25,13 +66,12 @@
                     </div>
                 @endif
 
-                <div class="card-body">
-                    <div class="table-responsive">
-                        <table class="table table-striped table-hover" id="payrollTable">
-                            <thead class="thead-light">
+                <div class="table-responsive">
+                    <table class="table table-bordered table-striped">
+                        <thead class="thead-dark">
                                 <tr>
                                     <th>
-                                        <input type="checkbox" id="selectAllCheckbox">
+                                        <input type="checkbox" id="selectAll">
                                     </th>
                                     <th>Employee</th>
                                     <th>Basic Salary</th>
@@ -39,7 +79,7 @@
                                     <th>Net Pay</th>
                                     <th>Bank</th>
                                     <th>Account Number</th>
-                                    <th>Actions</th>
+                                    <th>Action</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -48,7 +88,7 @@
                                         <td>
                                             <input type="checkbox" name="selected_payrolls[]" 
                                                    value="{{ $payroll->id }}" 
-                                                   class="payroll-checkbox">
+                                                   class="payroll-checkbox selectItem">
                                         </td>
                                         <td>
                                             <a href="{{ route('payrolls.show', $payroll->id) }}" 
@@ -66,21 +106,14 @@
                                         <td>{{ $payroll->account_number }}</td>
                                         <td>
                                             <div class="btn-group" role="group">
-                                                <a href="{{ route('payrolls.show', $payroll->id) }}" 
-                                                   class="btn btn-info btn-sm" 
-                                                   title="View Details">
-                                                    <i class="fas fa-eye"></i>
-                                                </a>
-                                                <a href="{{ route('payrolls.edit', $payroll->id) }}" 
-                                                   class="btn btn-warning btn-sm" 
-                                                   title="Edit">
-                                                    <i class="fas fa-edit"></i>
-                                                </a>
-                                                <button class="btn btn-danger btn-sm delete-payroll" 
-                                                        data-id="{{ $payroll->id }}"
-                                                        title="Delete">
-                                                    <i class="fas fa-trash"></i>
-                                                </button>
+                                            <a href="{{ route('payrolls.show', $payroll->id) }}" class="btn btn-info btn-sm"><i class="fas fa-eye"></i> View</a>
+                                            <a href="{{ route('payrolls.edit', $payroll->id) }}" class="btn btn-warning btn-sm"><i class="fas fa-edit"></i> Edit</a>
+                                            <form action="{{ route('payrolls.destroy', $payroll->id) }}" method="POST" style="display:inline-block;"
+                                            onsubmit="return confirm('Are you sure you want to delete this payroll?');">
+                                                @csrf
+                                                @method('DELETE')
+                                                <button  type="submit" class="btn btn-danger btn-sm"><i class="fas fa-trash"></i> Delete</button>
+                                            </form>
                                             </div>
                                         </td>
                                     </tr>
@@ -99,32 +132,11 @@
                                 @endforelse
                             </tbody>
                         </table>
-                    </div>
+            
 
-                    @if ($payrolls->count() > 0)
-                        <div class="card-footer">
-                            <div class="row align-items-center">
-                                <div class="col-md-6">
-                                    <div class="form-check">
-                                        <input type="checkbox" class="form-check-input" id="selectAllBottom">
-                                        <label class="form-check-label" for="selectAllBottom">
-                                            Select All
-                                        </label>
-                                    </div>
-                                </div>
-                                <div class="col-md-6 text-right">
-                                    <div class="btn-group" role="group">
-                                        <button class="btn btn-danger" id="bulkDeleteBtn" disabled>
-                                            <i class="fas fa-trash mr-2"></i>Delete Selected
-                                        </button>
-                                        <button class="btn btn-success" id="exportBtn">
-                                            <i class="fas fa-file-excel mr-2"></i>Export to Excel
-                                        </button>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    @endif
+                    </div>
+                    <p class="copyright">&copy; {{ date('Y') }} HRMS Portal South Sudan Revenue Authority. All Rights Reserved.</p>
+                    
                 </div>
             </div>
 
@@ -163,52 +175,156 @@
     </div>
 </div>
 
+
+
 @endsection
 
 @section('scripts')
 <script>
-document.addEventListener('DOMContentLoaded', function() {
-    // Select All Checkboxes
-    const selectAllCheckboxes = document.querySelectorAll('#selectAllCheckbox, #selectAllBottom');
-    const payrollCheckboxes = document.querySelectorAll('.payroll-checkbox');
-    const bulkDeleteBtn = document.getElementById('bulkDeleteBtn');
-
-    selectAllCheckboxes.forEach(checkbox => {
-        checkbox.addEventListener('change', function() {
-            payrollCheckboxes.forEach(cb => {
-                cb.checked = this.checked;
-            });
-            updateBulkDeleteButton();
+// Wait for both DOM and jQuery to be ready
+function initializePayrollScripts() {
+    // Initialize Select2 if the element exists
+    if ($('select[name="selected_employees[]"]').length) {
+        $('select[name="selected_employees[]"]').select2({
+            placeholder: 'Select employees',
+            allowClear: true,
+            width: '100%',
+            dropdownParent: $('#bulkGenerateModal')
         });
-    });
-
-    payrollCheckboxes.forEach(checkbox => {
-        checkbox.addEventListener('change', updateBulkDeleteButton);
-    });
-
-    function updateBulkDeleteButton() {
-        const selectedCheckboxes = document.querySelectorAll('.payroll-checkbox:checked');
-        bulkDeleteBtn.disabled = selectedCheckboxes.length === 0;
     }
 
-    // Delete Single Payroll
-    const deleteButtons = document.querySelectorAll('.delete-payroll');
-    const deleteConfirmModal = $('#deleteConfirmModal');
-    const deletePayrollForm = document.getElementById('deletePayrollForm');
-
-    deleteButtons.forEach(button => {
-        button.addEventListener('click', function() {
-            const payrollId = this.getAttribute('data-id');
-            deletePayrollForm.action = `/payrolls/${payrollId}`;
-            deleteConfirmModal.modal('show');
+    // Handle generation type change if the element exists
+    if ($('#generationType').length) {
+        $('#generationType').on('change', function() {
+            var selectedType = $(this).val();
+            
+            // Hide all sections first
+            $('#selectedEmployeesSection, #departmentSection').hide();
+            
+            // Show relevant section based on selection
+            if (selectedType === 'selected') {
+                $('#selectedEmployeesSection').show();
+            } else if (selectedType === 'department') {
+                $('#departmentSection').show();
+            }
         });
-    });
+    }
 
-    // Export Button (placeholder)
-    const exportBtn = document.getElementById('exportBtn');
-    exportBtn.addEventListener('click', function() {
-        alert('Export functionality to be implemented');
-    });
-});
+    // Handle form submission if the form exists
+    if ($('#bulkGenerateForm').length) {
+        $('#bulkGenerateForm').on('submit', function(e) {
+            e.preventDefault();
+            
+            // Basic validation
+            var selectedType = $('#generationType').val();
+            var isValid = true;
+            var errorMessage = '';
+
+            if (selectedType === 'selected') {
+                var selectedEmployees = $('select[name="selected_employees[]"]').val();
+                if (!selectedEmployees || selectedEmployees.length === 0) {
+                    errorMessage = 'Please select at least one employee';
+                    isValid = false;
+                }
+            } else if (selectedType === 'department') {
+                var departmentId = $('select[name="department_id"]').val();
+                if (!departmentId) {
+                    errorMessage = 'Please select a department';
+                    isValid = false;
+                }
+            }
+
+            if (!isValid) {
+                alert(errorMessage);
+                return false;
+            }
+
+            // If validation passes, submit the form
+            this.submit();
+        });
+    }
+
+    // Handle bulk delete functionality if the elements exist
+    if ($('#selectAll').length) {
+        $('#selectAll').on('change', function() {
+            $('.payroll-checkbox').prop('checked', $(this).prop('checked'));
+            updateBulkDeleteButton();
+        });
+    }
+
+    if ($('.payroll-checkbox').length) {
+        $('.payroll-checkbox').on('change', function() {
+            updateBulkDeleteButton();
+        });
+    }
+
+    function updateBulkDeleteButton() {
+        var selectedCount = $('.payroll-checkbox:checked').length;
+        if ($('#bulkDeleteBtn').length) {
+            $('#bulkDeleteBtn').prop('disabled', selectedCount === 0);
+        }
+    }
+
+    // Handle single delete if the elements exist
+    if ($('.delete-payroll').length) {
+        $('.delete-payroll').on('click', function() {
+            var payrollId = $(this).data('id');
+            if ($('#deletePayrollForm').length) {
+                $('#deletePayrollForm').attr('action', '/payrolls/' + payrollId);
+                $('#deleteConfirmModal').modal('show');
+            }
+        });
+    }
+
+    // Handle bulk delete if the button exists
+    if ($('#bulkDeleteBtn').length) {
+        $('#bulkDeleteBtn').on('click', function() {
+            var selectedIds = [];
+            $('.payroll-checkbox:checked').each(function() {
+                selectedIds.push($(this).val());
+            });
+
+            if (selectedIds.length > 0) {
+                if (confirm('Are you sure you want to delete the selected payroll records?')) {
+                    var form = $('<form>', {
+                        'method': 'POST',
+                        'action': '{{ route("payrolls.bulkDestroy") }}'
+                    });
+
+                    form.append($('<input>', {
+                        'type': 'hidden',
+                        'name': '_token',
+                        'value': '{{ csrf_token() }}'
+                    }));
+
+                    form.append($('<input>', {
+                        'type': 'hidden',
+                        'name': 'selected_payrolls[]',
+                        'value': selectedIds.join(',')
+                    }));
+
+                    $('body').append(form);
+                    form.submit();
+                }
+            } else {
+                alert('Please select at least one payroll record to delete.');
+            }
+        });
+    }
+
+    // Handle export to Excel if the button exists
+    if ($('#exportToExcel').length) {
+        $('#exportToExcel').on('click', function() {
+            window.location.href = '{{ route('payrolls.export') }}';
+        });
+    }
+}
+
+// Check if jQuery is loaded
+if (typeof jQuery !== 'undefined') {
+    $(document).ready(initializePayrollScripts);
+} else {
+    console.error('jQuery is not loaded');
+}
 </script>
 @endsection

@@ -7,10 +7,8 @@
         <i class="fas fa-user-plus"></i> Add Employee
         </div>
     </div>
-    <div class="card-body add-page">
-        <div class="justify-content-between align-items-center mb-3">
-            <div class="justify-content-left align-items-center">
-                <div class="card shadow-md">
+    
+                <div class="card add-page">
                     <div class="card-body">
     @if ($errors->any())
         <div class="alert alert-danger">

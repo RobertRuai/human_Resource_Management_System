@@ -6,59 +6,68 @@
         <div class="card-header bg-white text-dark">
             <i class="fas fa-users"></i> All Employees
         </div>
-        <!-- Search Area -->
-        <div class="container mt-1 search-area">
-            <div class="row justify-content-center">
-                <div class="col-md-8">
-                <form action="{{ route('employees.index') }}" method="GET">
-                        <div class="row">
-                            <div class="col-md-4">
-                                <input type="text" name="search" class="form-control" 
-                                       placeholder="Search employees..." 
-                                       value="{{ request('search') }}">
-                            </div>
-                            <div class="col-md-4">
-                                <select name="division_id" class="form-control">
-                                    <option value="">All Divisions</option>
-                                    @foreach($departments as $department)
-                                        @if($department->division)
-                                            <option value="{{ $department->division->id }}" 
-                                                {{ request('division_id') == $department->division->id ? 'selected' : '' }}>
-                                                {{ $department->division->name }}
-                                            </option>
-                                        @endif
-                                    @endforeach
-                                </select>
-                            </div>
-                            <div class="col-md-4">
-                                <button type="submit" class="btn btn-primary mr-2">Search</button>
-                                <a href="{{ route('employees.index') }}" class="btn btn-secondary">Reset</a>
-                            </div>
-                        </div>
-                    </form>
+       <!-- Search Area -->
+    <div class=" mt-1 search-area">
+        <div class="row ">
+            <div class="col-md-8">
+            <form action="{{ route('employees.index') }}" method="GET">
+                <div class="row">
+                    <div class="col-md-4">
+                        <input type="text" name="search" class="form-control" 
+                               placeholder="Search employees..." 
+                               value="{{ request('search') }}">
+                    </div>
+                    
+                    <div class="col-md-2 search-btn">
+                        <button type="submit" class="btn">Search</button>
+                    </div>
                 </div>
+            </form>
             </div>
         </div>
-        <div class="card-body">
-            <!-- Add New employee Button -->
-            <div class="d-flex justify-content-between align-items-center mb-3">
+    <div class="card-body">
+        <!-- Add New Department Button -->
+        <div class="d-flex justify-content-between align-items-center">
             <a href="{{ route('employees.create') }}" class="btn btn-primary add-btn" id="openPopupBtn"><i class="fas fa-user-plus"></i> Add New Employee</a>
-            </div>
-            <div class="col-md-5 download-btn">
-                <div class="download-form">
-                <a href="{{ route('employees.export.pdf') }}" class="btn btn-danger">
-                    <i class="fas fa-file-pdf text-danger"></i> Export to PDF
-                </a>
-                <a href="{{ route('employees.export.excel') }}" class="btn btn-success">
-                    <i class="fas fa-file-excel text-success"></i> Export to Excel
-                </a>
+        </div>
+            <div class="btn-control">
+                <div class="filter-btn">
+                    <select name="division_id" class="form-control">
+                        <option value="">~ Select Employee ~</option>
+                        @foreach($departments as $department)
+                            @if($department->division)
+                                <option value="{{ $department->division->id }}" 
+                                    {{ request('division_id') == $department->division->id ? 'selected' : '' }}>
+                                    {{ $department->division->name }}
+                                </option>
+                            @endif
+                        @endforeach
+                    </select>
                 </div>
-                    <button class="btn btn-secondary" onclick="window.print()">
-                        <i class="fas fa-print"></i> Print Page
-                    </button>
+
+                    
+                <div class="download-btn">
+                    <div class="download-form">
+                        <a href="{{ route('employees.export.pdf', request()->query()) }}" class="list-group-item list-group-item-action">
+                            <i class="fas fa-file-pdf text-danger"></i> PDF
+                        </a>
+                    </div>  
+                    <div class="download-form">
+                        <a href="{{ route('employees.export.excel', request()->query()) }}" class="list-group-item list-group-item-action">
+                            <i class="fas fa-file-excel text-success"></i> Excel
+                        </a>
+                    </div>
+                    <div>
+                        <button class="btn btn-secondary" onclick="window.print()">
+                            <i class="fas fa-print"></i> Print
+                        </button>
+                    </div>
                 </div>
             </div>
-            
+            <div class="page-description">
+            <!-- <p>The table below shows the current active departments in all the divisions.</p> -->
+        </div>
+
             @if(session('success'))
                 <div class="alert alert-success">{{ session('success') }}</div>
             @endif
@@ -76,7 +85,7 @@
                                 <th>Division</th>
                                 <th>Department</th>
                                 <th>Position</th>
-                                <th>Actions</th>
+                                <th>Action</th>
 
                             </tr>
                         </thead>

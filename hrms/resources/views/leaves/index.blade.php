@@ -8,28 +8,21 @@
             <i class="fas fa-calendar-alt"></i> All Leaves
         </div>
         <!-- Search Area -->
-        <div class="container mt-1 search-area">
-            <div class="row justify-content-center">
-                <div class="col-md-8">
-                <form action="{{ route('leaves.index') }}" method="GET" class="mb-3">
-            <div class="row">
-                <div class="col-md-4">
-                    <input type="text" name="search" class="form-control" placeholder="Search by employee name" value="{{ request('search') }}">
+    <div class=" mt-1 search-area">
+        <div class="row ">
+            <div class="col-md-8">
+            <form action="{{ route('leaves.index') }}" method="GET">
+                <div class="row">
+                    <div class="col-md-4">
+                        <input type="text" name="search" class="form-control" 
+                               placeholder="Search leaves..." 
+                               value="{{ request('search') }}">
+                    </div>
+                    <div class="col-md-2 search-btn">
+                        <button type="submit" class="btn">Search</button>
+                    </div>
                 </div>
-                <div class="col-md-4">
-                    <select name="status" class="form-control">
-                        <option value="">All Statuses</option>
-                        <option value="approved" {{ request('status') == 'approved' ? 'selected' : '' }}>Approved</option>
-                        <option value="rejected" {{ request('status') == 'rejected' ? 'selected' : '' }}>Rejected</option>
-                        <option value="pending" {{ request('status') == 'pending' ? 'selected' : '' }}>Pending</option>
-                    </select>
-                </div>
-                <div class="col-md-4">
-                    <button type="submit" class="btn btn-primary">Filter</button>
-                </div>
-            </div>
-        </form>
-                </div>
+            </form>
             </div>
         </div>
         <div class="card-body">
@@ -37,33 +30,37 @@
             <div class="d-flex justify-content-between align-items-center mb-3">
             <a href="{{ route('leaves.create') }}" class="btn btn-primary add-btn" id="openPopupBtn"><i class="fas fa-calendar-plus"></i> Request New Leave</a>
             </div>
-            <div class="col-md-5 download-btn">
-                <div class="download-form">
-                    <a href="#" class="list-group-item list-group-item-action">
-                        <i class="fas fa-file-pdf text-danger"></i> PDF
-                    </a>
+        <div class="btn-control">
+        <div class="filter-btn">
+                    <select name="status" class="form-control">
+                        <option value="">~ Select Status ~</option>
+                        <option value="approved" {{ request('status') == 'approved' ? 'selected' : '' }}>Approved</option>
+                        <option value="rejected" {{ request('status') == 'rejected' ? 'selected' : '' }}>Rejected</option>
+                        <option value="pending" {{ request('status') == 'pending' ? 'selected' : '' }}>Pending</option>
+                    </select>
                 </div>
-                <div class="download-form">
-                    <a href="#" class="list-group-item list-group-item-action">
-                        <i class="fas fa-file-excel text-success"></i> Excel
-                    </a>
-                </div>
-                    <button class="btn btn-secondary" onclick="window.print()">
-                        <i class="fas fa-print"></i> Print Page
-                    </button>
+        
+            <div class="download-btn">
+                    <div class="download-form">
+                        <a href="{{ route('employees.export.pdf', request()->query()) }}" class="list-group-item list-group-item-action">
+                            <i class="fas fa-file-pdf text-danger"></i> PDF
+                        </a>
+                    </div>  
+                    <div class="download-form">
+                        <a href="{{ route('employees.export.excel', request()->query()) }}" class="list-group-item list-group-item-action">
+                            <i class="fas fa-file-excel text-success"></i> Excel
+                        </a>
+                    </div>
+                    <div>
+                        <button class="btn btn-secondary" onclick="window.print()">
+                            <i class="fas fa-print"></i> Print
+                        </button>
+                    </div>
                 </div>
             </div>
-            <div class="">
-                <select class="form-control select-option" id="monthSelector">
-                    <option selected>Filter Leaves by Division</option>
-                    <option>Corporate Service Division (CSD)</option>
-                    <option>Domestic Tax Revenue Division (DTRD)</option>
-                    <option>Customs Revenue Division (CRD)</option>
-                    <option>Internal Audit Division (IAD)</option>
-                    <option>Internal Affairs Division (INAD)</option>
-                    <option>Information and Communication Technology Division (ICTD)</option>
-                </select>
-            </div>
+            <div class="page-description">
+            <!-- <p>The table below shows the current active departments in all the divisions.</p> -->
+        </div>
 
     @if($leaves->isEmpty())
         <p>No leave records found.</p>
@@ -79,7 +76,7 @@
                     <th>Start Date</th>
                     <th>End Date</th>
                     <th>Status</th>
-                    <th>Actions</th>
+                    <th>Action</th>
                 </tr>
             </thead>
             <tbody>
@@ -99,7 +96,7 @@
                         </span>
                     </td>
                     <td>
-                        <a href="{{ route('leaves.show', $leave) }}" class="btn btn-sm btn-info">View</a>
+                        <a href="{{ route('leaves.show', $leave) }}" class="btn btn-sm btn-info"><i class="fas fa-eye"></i> View</a>
                         @if($leave->status == 'pending' && auth()->user()->hasRole('Supervisor'))
                                 <a href="{{ route('leaves.supervisor-review', $leave->id) }}" class="btn btn-sm btn-primary">Review</a>
                             @elseif($leave->status == 'hr_review' && auth()->user()->hasRole('HR Manager'))

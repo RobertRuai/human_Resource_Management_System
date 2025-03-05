@@ -8,12 +8,16 @@
         <i class="fas fa-calendar-alt"></i> Leave Request Details
         </div>
     </div>
-    <div class="card-body add-page">
-        <div class="justify-content-between align-items-center mb-3">
-            <div class="justify-content-left align-items-center">
-                <div class="card shadow-md">
-                        <div class="card">
-                            <div class="card-body">
+    
+                            <div class="card add-page">
+                                <div class="card">
+                                    <div class="card-body">
+                                        <div class="employee-photo">
+                                            <div class="text-left mb-4">
+                                                
+                                            </div>
+                                        </div>
+                                        <div class="personal-details">
                                         <p class="card-text"><strong>Employee Name:</strong> {{ $leaf->employee->first_name }}</p>
                                         <p class="card-text"><strong>Division:</strong> {{ $leaf->employee->department->division->name ?? '' }}</p>
                                         <p class="card-text"><strong>Department:</strong> {{ $leaf->employee->department->name ?? '' }}</p>
@@ -31,6 +35,7 @@
                                         @endif
                                         <a href="{{ route('leaves.edit', $leaf->id) }}" class="btn btn-warning"><i class='fas fa-edit'></i> Edit Leave</a>
                                         <a href="{{ route('leaves.index') }}" class="btn btn-secondary"><i class='fas fa-arrow-alt-circle-left'></i> Back to Leaves</a>
+                                        </div>
                                 <p class="copyright">&copy; {{ date('Y')}} HRMS Portal South Sudan Revenue Authority. All Rights Reserved.</p>
                             </div>
                          </div>

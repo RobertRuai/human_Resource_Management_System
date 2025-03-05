@@ -38,6 +38,7 @@
                                 <i class="fas fa-file-excel text-success"></i> Excel
                             </a>
                         </div>
+                        <div>
                             <button class="btn btn-secondary" onclick="window.print()">
                                 <i class="fas fa-print"></i> Print Page
                             </button>

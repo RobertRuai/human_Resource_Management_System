@@ -4,7 +4,12 @@ namespace App\Http\Controllers;
 
 use App\Models\Payroll;
 use App\Models\Employee;
+use App\Models\Department;
 use Illuminate\Http\Request;
+use Maatwebsite\Excel\Facades\Excel;
+use App\Exports\PayrollsExport;
+use Illuminate\Support\Facades\DB;
+use Carbon\Carbon;
 
 class PayrollController extends Controller
 {
@@ -13,12 +18,20 @@ class PayrollController extends Controller
         $payrolls = Payroll::with('employee')
         ->latest()
         ->paginate(10);
-        return view('payrolls.index', compact('payrolls'));
+
+        // Additional data for bulk generation modal
+        $employees = Employee::all();
+        $departments = Department::all();
+    
+
+        return view('payrolls.index', compact('payrolls', 'employees', 'departments'));
     }
 
     public function create()
     {
         $employees = Employee::all();
+        $departments = Department::all();
+        #$designations = Designation::all();
 
         // Predefined calculation rates (you can adjust these as needed)
         $calculationRates = [
@@ -32,7 +45,8 @@ class PayrollController extends Controller
             'pension_rate' => 0.08 // 8% pension contribution
         ];
 
-        return view('payrolls.create', compact('employees', 'calculationRates'));
+        return view('payrolls.create', compact('employees', 'departments', 
+         'calculationRates'));
     }
 
     public function store(Request $request)
@@ -185,11 +199,165 @@ class PayrollController extends Controller
         $payroll = Payroll::findOrFail($id);
         $payroll->delete();
 
-        return redirect()->route('payrolls.index')
-            ->with('success', 'Payroll record deleted successfully.');
+        return redirect()->route('payrolls.index')->with('success', 'Payroll deleted successfully.');
     }
 
-    // Optional: Bulk delete method
+    public function showBulkGenerateForm()
+    {
+        $employees = Employee::all();
+        $departments = Department::all();
+        return view('payrolls.bulk-generate', compact('employees', 'departments'));
+    }
+
+    public function bulkGenerate(Request $request)
+    {
+        // Validate input
+        $validated = $request->validate([
+            'generation_type' => 'required|in:all,selected,department',
+            'selected_employees' => 'nullable|array',
+            'selected_employees.*' => 'exists:employees,id',
+            'department_id' => 'nullable|exists:departments,id',
+            'month' => 'required|integer|min:1|max:12',
+            'year' => 'required|integer|min:2000|max:2099',
+        ]);
+
+        // Determine which employees to process
+        $query = Employee::query();
+
+        switch ($validated['generation_type']) {
+            case 'selected':
+                $query->whereIn('id', $validated['selected_employees'] ?? []);
+                break;
+            case 'department':
+                $query->where('department_id', $validated['department_id']);
+                break;
+            default: // all
+                // No additional filtering
+        }
+
+        // Fetch eligible employees
+        $employees = $query->get();
+
+        // Validate employee count
+        if ($employees->isEmpty()) {
+            return redirect()->back()->with('error', 'No employees found for payroll generation.');
+        }
+
+        // Start bulk generation
+        $generatedPayrolls = [];
+        $duplicateCount = 0;
+
+        DB::beginTransaction();
+        try {
+            foreach ($employees as $employee) {
+                // Check if payroll already exists for the month/year
+                $existingPayroll = Payroll::where('employee_id', $employee->id)
+                    ->whereYear('created_at', $validated['year'])
+                    ->whereMonth('created_at', $validated['month'])
+                    ->first();
+
+                if ($existingPayroll) {
+                    $duplicateCount++;
+                    continue;
+                }
+
+                // Calculate payroll details
+                $payrollData = $this->calculatePayrollDetails($employee, $validated['month'], $validated['year']);
+
+                // Create payroll record
+                $payroll = Payroll::create($payrollData);
+                $generatedPayrolls[] = $payroll;
+            }
+
+            DB::commit();
+
+            // Prepare success message
+            $successMessage = sprintf(
+                'Payroll generated successfully. %d payrolls created, %d skipped due to existing records.',
+                count($generatedPayrolls),
+                $duplicateCount
+            );
+
+            return redirect()->route('payrolls.index')
+                ->with('success', $successMessage);
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return redirect()->back()
+                ->with('error', 'Failed to generate payrolls: ' . $e->getMessage());
+        }
+    }
+
+    protected function calculatePayrollDetails(Employee $employee, $month, $year)
+    {
+        // Comprehensive payroll calculation logic
+        $basicSalary = $employee->basic_salary;
+
+        // Calculation rates (can be moved to configuration)
+        $rates = [
+            'cola_rate' => 0.05,
+            'rep_rate' => 0.03,
+            'resp_rate' => 0.02,
+            'hse_rate' => 0.10,
+            'ag_rate' => 0.02,
+            'job_spec_rate' => 0.03,
+            'tax_rate' => 0.15,
+            'pension_rate' => 0.08
+        ];
+
+        // Calculate allowances
+        $cola = $basicSalary * $rates['cola_rate'];
+        $rep = $basicSalary * $rates['rep_rate'];
+        $resp = $basicSalary * $rates['resp_rate'];
+        $hse = $basicSalary * $rates['hse_rate'];
+        $ag = $basicSalary * $rates['ag_rate'];
+        $jobSpec = $basicSalary * $rates['job_spec_rate'];
+
+        // Calculate gross salary
+        $grossSalary = $basicSalary + $cola + $rep + $resp + $hse + $ag + $jobSpec;
+
+        // Calculate deductions
+        $penContr = $grossSalary * $rates['pension_rate'];
+        $taxableAmount = $grossSalary;
+        $pit = $taxableAmount * $rates['tax_rate'];
+
+        // Calculate net pay
+        $netPay = $grossSalary - ($penContr + $pit);
+
+        return [
+            'employee_id' => $employee->id,
+            'basic_salary' => $basicSalary,
+            'cola' => $cola,
+            'rep' => $rep,
+            'resp' => $resp,
+            'hse' => $hse,
+            'ag' => $ag,
+            'job_spec' => $jobSpec,
+            'gross_salary' => $grossSalary,
+            'pen_contr' => $penContr,
+            'tax_exempt' => 0,
+            'taxable_amount' => $taxableAmount,
+            'pit' => $pit,
+            'sal_adv' => 0,
+            'other_ded' => 0,
+            'net_pay' => $netPay,
+            'account_number' => $employee->account_number,
+            'bank' => $employee->bank,
+            'created_at' => Carbon::create($year, $month, 1)
+        ];
+    }
+
+    public function select(Request $request)
+    {
+        $selectedPayrolls = Payroll::whereIn('id', $request->payroll_ids)->get();
+        // Handle the selected payrolls as needed
+        return view('payrolls.index', compact('selectedPayrolls'));
+    }
+
+    public function exportToExcel()
+    {
+        return Excel::download(new PayrollsExport, 'payrolls.xlsx');
+    }
+
     public function bulkDestroy(Request $request)
     {
         $validated = $request->validate([

@@ -1,9 +1,6 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="container">
-    <h1 class="mb-4">Edit Payroll for {{ $payroll->employee->first_name }} {{ $payroll->employee->last_name }}</h1>
-
     @if ($errors->any())
         <div class="alert alert-danger alert-dismissible fade show" role="alert">
             <strong>Validation Errors:</strong>
@@ -18,6 +15,14 @@
         </div>
     @endif
 
+    <div class="col-md-12">
+    <div class="card">
+        <div class="card-header bg-white text-dark">
+        <i class="fas fa-file-invoice-dollar"></i> Edit Payroll for {{ $payroll->employee->first_name }} {{ $payroll->employee->last_name }}
+        </div>
+    </div>
+        <div class="card add-page">
+            <div class="card-body">
     <form id="payrollForm" action="{{ route('payrolls.update', $payroll->id) }}" method="POST">
         @csrf
         @method('PUT')
@@ -25,9 +30,9 @@
         <div class="row">
             <div class="col-md-6">
                 <div class="card mb-4">
-                    <div class="card-header bg-primary text-white">
-                        <i class="fas fa-user-tie mr-2"></i>Employee Details
-                    </div>
+                    <div class="card-header">
+                        <i class="fas fa-user-tie mr-2"></i> <strong>Employee Details</strong>
+                    </div><hr>
                     <div class="card-body">
                         <div class="form-group">
                             <label for="employee_id">
@@ -67,9 +72,9 @@
 
             <div class="col-md-6">
                 <div class="card mb-4">
-                    <div class="card-header bg-info text-white">
-                        <i class="fas fa-university mr-2"></i>Banking Details
-                    </div>
+                    <div class="card-header">
+                        <i class="fas fa-university mr-2"></i> <strong>Banking Details</strong>
+                    </div><hr>
                     <div class="card-body">
                         <div class="form-group">
                             <label for="account_number">
@@ -99,9 +104,9 @@
 
         <!-- Allowances Section (Similar to Create View) -->
         <div class="card mb-4">
-            <div class="card-header bg-success text-white">
-                <i class="fas fa-calculator mr-2"></i>Allowances
-            </div>
+            <div class="card-header">
+                <i class="fas fa-calculator mr-2"></i> Allowances
+            </div><hr>
             <div class="card-body">
                 <div class="row">
                     <div class="col-md-4">
@@ -121,9 +126,9 @@
 
         <!-- Deductions & Tax Section -->
         <div class="card mb-4">
-            <div class="card-header bg-warning text-white">
-                <i class="fas fa-file-invoice-dollar mr-2"></i>Deductions & Tax
-            </div>
+            <div class="card-header">
+                <i class="fas fa-file-invoice-dollar mr-2"></i> Deductions & Tax
+            </div><hr>
             <div class="card-body">
                 <div class="row">
                     <div class="col-md-4">
@@ -159,8 +164,8 @@
 
         <!-- Payroll Summary Section -->
         <div class="card mb-4">
-            <div class="card-header bg-info text-white">
-                <i class="fas fa-receipt mr-2"></i>Payroll Summary
+            <div class="card-header">
+                <i class="fas fa-receipt mr-2"></i> Payroll Summary
             </div>
             <div class="card-body">
                 <div class="row">
