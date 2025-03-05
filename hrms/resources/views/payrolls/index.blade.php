@@ -7,53 +7,103 @@
             <i class="fas fa-file-invoice-dollar"></i> All Payrolls
         </div>
        <!-- Search Area -->
-    <div class=" mt-1 search-area">
-        <div class="row ">
-            <div class="col-md-8">
-            <form action="{{ route('payrolls.index') }}" method="GET">
-                <div class="row">
-                    <div class="col-md-4">
-                        <input type="text" name="search" class="form-control" 
-                               placeholder="Search payrolls..." 
-                               value="{{ request('search') }}">
-                    </div>
-                    
-                    <div class="col-md-2 search-btn">
-                        <button type="submit" class="btn">Search</button>
-                    </div>
-                </div>
-            </form>
-            </div>
-        </div>
         <div class="card-body">
-        <!-- Bulk Generate Button -->
-        <div class="d-flex justify-content-between align-items-center">
-            <a href="{{ route('payrolls.create') }}" class="btn btn-primary add-btn" id="openPopupBtn">
-                <i class="fas fa-user-plus"></i> Add New Payroll
-            </a>
-            <a href="{{ route('payrolls.bulkGenerateForm') }}" class="btn btn-success">
-                <i class="fas fa-calculator"></i> Bulk Generate Payrolls
-            </a>
-        </div>
+            <!-- Search and Filters Section -->
+            <div class="row mb-4">
+                <div class="col-12">
+                    <form action="{{ route('payrolls.index') }}" method="GET" class="card">
+                        <div class="card-body">
+                            <div class="row g-3">
+                                <!-- Search Field -->
+                                <div class="col-md-3">
+                                    <div class="form-group">
+                                        <label for="search" class="form-label">Search Employee</label>
+                                        <div class="input-group">
+                                            <span class="input-group-text">
+                                                <i class="fas fa-search"></i>
+                                            </span>
+                                            <input type="text" name="search" id="search" class="form-control" 
+                                                   placeholder="Search by name..." 
+                                                   value="{{ request('search') }}">
+                                        </div>
+                                    </div>
+                                </div>
 
-        <div class="download-btn">
-                    <div class="download-form">
-                        <a href="{{ route('employees.export.pdf', request()->query()) }}" class="list-group-item list-group-item-action">
-                            <i class="fas fa-file-pdf text-danger"></i> PDF
-                        </a>
-                    </div>  
-                    <div class="download-form">
-                        <a href="{{ route('employees.export.excel', request()->query()) }}" class="list-group-item list-group-item-action">
-                            <i class="fas fa-file-excel text-success"></i> Excel
-                        </a>
-                    </div>
-                    <div>
-                        <button class="btn btn-secondary" onclick="window.print()">
-                            <i class="fas fa-print"></i> Print
-                        </button>
+                                <!-- Division Filter -->
+                                <div class="col-md-3">
+                                    <div class="form-group">
+                                        <label for="division_id" class="form-label">Division</label>
+                                        <select name="division_id" id="division_id" class="form-select">
+                                            <option value="">All Divisions</option>
+                                            @foreach($divisions as $division)
+                                                <option value="{{ $division->id }}" 
+                                                    {{ request('division_id') == $division->id ? 'selected' : '' }}>
+                                                    {{ $division->name }}
+                                                </option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <!-- Department Filter -->
+                                <div class="col-md-3">
+                                    <div class="form-group">
+                                        <label for="department_id" class="form-label">Department</label>
+                                        <select name="department_id" id="department_id" class="form-select">
+                                            <option value="">All Departments</option>
+                                            @foreach($departments as $department)
+                                                <option value="{{ $department->id }}"
+                                                    {{ request('department_id') == $department->id ? 'selected' : '' }}>
+                                                    {{ $department->name }}
+                                                </option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <!-- Search Button -->
+                                <div class="col-md-3 d-flex align-items-end gap-2">
+                                    <button type="submit" class="btn btn-primary flex-grow-1">
+                                        <i class="fas fa-search"></i> Search
+                                    </button>
+                                    <a href="{{ route('payrolls.index') }}" class="btn btn-secondary">
+                                        <i class="fas fa-undo"></i> Reset
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="row mb-4">
+                <div class="col-12">
+                <div class="d-flex justify-content-between align-items-center">
+                        <div class="d-flex gap-2">
+                            <a href="{{ route('payrolls.create') }}" class="btn btn-primary">
+                                <i class="fas fa-user-plus"></i> Add New Payroll
+                            </a>
+                            <a href="{{ route('payrolls.bulkGenerateForm') }}" class="btn btn-success">
+                                <i class="fas fa-calculator"></i> Bulk Generate
+                            </a>
+                        </div>
+                        <div class="d-flex gap-2">
+                            <a href="{{ route('employees.export.pdf', request()->query()) }}" class="btn btn-danger">
+                                <i class="fas fa-file-pdf"></i> Export PDF
+                            </a>
+                            <a href="{{ route('employees.export.excel', request()->query()) }}" class="btn btn-success">
+                                <i class="fas fa-file-excel"></i> Export Excel
+                            </a>
+                            <button class="btn btn-secondary" onclick="window.print()">
+                                <i class="fas fa-print"></i> Print
+                            </button>
+                        </div>
                     </div>
                 </div>
             </div>
+
+
             <div class="page-description">
             <!-- <p>The table below shows the current active departments in all the divisions.</p> -->
         </div>
@@ -183,6 +233,28 @@
 <script>
 // Wait for both DOM and jQuery to be ready
 function initializePayrollScripts() {
+    // Handle division change to load departments
+    $('#division_id').on('change', function() {
+        var divisionId = $(this).val();
+        var departmentSelect = $('#department_id');
+        
+        // Clear current departments
+        departmentSelect.html('<option value="">All Departments</option>');
+        
+        if (divisionId) {
+            // Fetch departments for selected division
+            $.get('/divisions/' + divisionId + '/departments', function(departments) {
+                departments.forEach(function(department) {
+                    departmentSelect.append(
+                        $('<option></option>')
+                            .val(department.id)
+                            .text(department.name)
+                    );
+                });
+            });
+        }
+    });
+
     // Initialize Select2 if the element exists
     if ($('select[name="selected_employees[]"]').length) {
         $('select[name="selected_employees[]"]').select2({

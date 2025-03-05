@@ -13,18 +13,43 @@ use Carbon\Carbon;
 
 class PayrollController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $payrolls = Payroll::with('employee')
-        ->latest()
-        ->paginate(10);
+        $query = Payroll::with(['employee', 'employee.department', 'employee.department.division'])
+            ->latest();
 
-        // Additional data for bulk generation modal
-        $employees = Employee::all();
-        $departments = Department::all();
-    
+        // Search by employee name
+        if ($request->filled('search')) {
+            $search = $request->search;
+            $query->whereHas('employee', function($q) use ($search) {
+                $q->where('first_name', 'like', "%{$search}%")
+                  ->orWhere('last_name', 'like', "%{$search}%");
+            });
+        }
 
-        return view('payrolls.index', compact('payrolls', 'employees', 'departments'));
+        // Filter by division
+        if ($request->filled('division_id')) {
+            $query->whereHas('employee.department.division', function($q) use ($request) {
+                $q->where('id', $request->division_id);
+            });
+        }
+
+        // Filter by department
+        if ($request->filled('department_id')) {
+            $query->whereHas('employee.department', function($q) use ($request) {
+                $q->where('id', $request->department_id);
+            });
+        }
+
+        $payrolls = $query->paginate(10);
+
+        // Get divisions and departments for filters
+        $divisions = \App\Models\Division::all();
+        $departments = $request->filled('division_id') 
+            ? \App\Models\Department::where('division_id', $request->division_id)->get()
+            : collect();
+
+        return view('payrolls.index', compact('payrolls', 'divisions', 'departments'));
     }
 
     public function create()
