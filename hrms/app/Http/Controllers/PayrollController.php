@@ -10,6 +10,8 @@ use Maatwebsite\Excel\Facades\Excel;
 use App\Exports\PayrollsExport;
 use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
+use Maatwebsite\Excel\Concerns\FromArray;
+
 
 class PayrollController extends Controller
 {
@@ -59,73 +61,58 @@ class PayrollController extends Controller
         #$designations = Designation::all();
 
         // Predefined calculation rates (you can adjust these as needed)
-        $calculationRates = [
-            'cola_rate' => 0.05,  // 5% of basic salary
-            'rep_rate' => 0.03,   // 3% of basic salary
-            'resp_rate' => 0.02,  // 2% of basic salary
-            'hse_rate' => 0.10,   // 10% of basic salary
-            'ag_rate' => 0.02,    // 2% of basic salary
-            'job_spec_rate' => 0.03, // 3% of basic salary
-            'tax_rate' => 0.15,   // 15% tax rate
-            'pension_rate' => 0.08 // 8% pension contribution
-        ];
+        #$calculationRates = [
+        #   'cola_rate' => 0.05,  // 5% of basic salary
+        #    'rep_rate' => 0.03,   // 3% of basic salary
+        #    'resp_rate' => 0.02,  // 2% of basic salary
+        #    'hse_rate' => 0.10,   // 10% of basic salary
+        #    'ag_rate' => 0.02,    // 2% of basic salary
+        #    'job_spec_rate' => 0.03, // 3% of basic salary
+        #    'tax_rate' => 0.15,   // 15% tax rate
+        #    'pension_rate' => 0.08 // 8% pension contribution
+        #];
 
-        return view('payrolls.create', compact('employees', 'departments', 
-         'calculationRates'));
+        return view('payrolls.create', compact('employees', 'departments'));
     }
 
     public function store(Request $request)
     {
         $validatedData = $request->validate([
             'employee_id' => [
-            'required', 
-            'exists:employees,id',
-            function ($attribute, $value, $fail) {
-                // Additional custom validation
-                $employee = Employee::find($value);
-                if (!$employee) {
-                    $fail('Selected employee does not exist.');
+                'required', 
+                'exists:employees,id',
+                function ($attribute, $value, $fail) {
+                    $employee = Employee::find($value);
+                    if (!$employee) {
+                        $fail('Selected employee does not exist.');
+                    }
                 }
-            }
-        ],
-        'basic_salary' => [
-            'required', 
-            'numeric', 
-            'min:0', 
-            function ($attribute, $value, $fail) {
-                if ($value <= 0) {
-                    $fail('Basic salary must be a positive number.');
-                }
-            }
-        ],
-        'account_number' => [
-            'required', 
-            'string', 
-            'min:8', 
-            'max:20',
-            function ($attribute, $value, $fail) {
-                // Optional: Add regex for account number format
-                if (!preg_match('/^[0-9]+$/', $value)) {
-                    $fail('Account number must contain only numbers.');
-                }
-            }
-        ],
-        'bank' => [
-            'required', 
-            'string', 
-            'min:2', 
-            'max:100'
-        ],
+            ],
+            'basic_salary' => [
+                'required', 
+                'numeric', 
+                'min:0'
+            ],
+            'account_number' => [
+                'required', 
+                'string', 
+                'min:8', 
+                'max:20'
+            ],
+            'bank_name' => [
+                'required', 
+                'string', 
+                'min:2', 
+                'max:100'
+            ],
+            'month' => 'required|string',
+            'year' => 'required|numeric',
             'cola' => 'nullable|numeric',
             'rep' => 'nullable|numeric',
-            'resp' => 'nullable|numeric',
             'hse' => 'nullable|numeric',
-            'ag' => 'nullable|numeric',
-            'job_spec' => 'nullable|numeric',
             'gross_salary' => 'required|numeric',
             'taxable_amount' => 'required|numeric',
-            'pen_contr' => 'nullable|numeric',
-            'pit' => 'nullable|numeric',
+            'pit' => 'required|numeric',
             'tax_exempt' => 'nullable|numeric',
             'sal_adv' => 'nullable|numeric',
             'other_ded' => 'nullable|numeric',
@@ -142,12 +129,8 @@ class PayrollController extends Controller
         ]);
 
         try {
-            // Additional business logic validation
             $this->validatePayrollBusinessRules($validatedData);
-    
-            // Create Payroll Record
             $payroll = Payroll::create($validatedData);
-    
             return redirect()->route('payrolls.index')
                 ->with('success', 'Payroll created successfully.');
         } catch (\Exception $e) {
@@ -157,17 +140,13 @@ class PayrollController extends Controller
         }
     }
 
-    // Optional: Additional business logic validation
     protected function validatePayrollBusinessRules(array $data)
     {
-        // Example: Ensure net pay is not negative
         if ($data['net_pay'] < 0) {
             throw new \Exception('Net pay cannot be negative.');
         }
 
-        // Example: Ensure deductions do not exceed gross salary
         $totalDeductions = 
-            ($data['pen_contr'] ?? 0) + 
             ($data['pit'] ?? 0) + 
             ($data['sal_adv'] ?? 0) + 
             ($data['other_ded'] ?? 0);
@@ -187,18 +166,18 @@ class PayrollController extends Controller
         $employees = Employee::all();
 
         // Predefined calculation rates (you can adjust these as needed)
-        $calculationRates = [
-            'cola_rate' => 0.05,  // 5% of basic salary
-            'rep_rate' => 0.03,   // 3% of basic salary
-            'resp_rate' => 0.02,  // 2% of basic salary
-            'hse_rate' => 0.10,   // 10% of basic salary
-            'ag_rate' => 0.02,    // 2% of basic salary
-            'job_spec_rate' => 0.03, // 3% of basic salary
-            'tax_rate' => 0.15,   // 15% tax rate
-            'pension_rate' => 0.08 // 8% pension contribution
-        ];
+        #$calculationRates = [
+        #    'cola_rate' => 0.05,  // 5% of basic salary
+        #    'rep_rate' => 0.03,   // 3% of basic salary
+        #    'resp_rate' => 0.02,  // 2% of basic salary
+        #    'hse_rate' => 0.10,   // 10% of basic salary
+        #    'ag_rate' => 0.02,    // 2% of basic salary
+        #    'job_spec_rate' => 0.03, // 3% of basic salary
+        #    'tax_rate' => 0.15,   // 15% tax rate
+        #    'pension_rate' => 0.08 // 8% pension contribution
+        #];
 
-        return view('payrolls.edit', compact('payroll', 'employees', 'calculationRates'));
+        return view('payrolls.edit', compact('payroll', 'employees'));
     }
 
     public function update(Request $request, Payroll $payroll)
@@ -211,12 +190,27 @@ class PayrollController extends Controller
             'pit' => 'required|numeric',
             'net_pay' => 'required|numeric',
             'account_number' => 'required|string',
-            'bank' => 'required|string',
+            'bank_name' => 'required|string',
+            'month' => 'required|string',
+            'year' => 'required|numeric',
+            'cola' => 'nullable|numeric',
+            'rep' => 'nullable|numeric',
+            'hse' => 'nullable|numeric',
+            'tax_exempt' => 'nullable|numeric',
+            'sal_adv' => 'nullable|numeric',
+            'other_ded' => 'nullable|numeric',
         ]);
 
-        $payroll->update($validatedData);
-
-        return redirect()->route('payrolls.index')->with('success', 'Payroll updated successfully.');
+        try {
+            $this->validatePayrollBusinessRules($validatedData);
+            $payroll->update($validatedData);
+            return redirect()->route('payrolls.index')
+                ->with('success', 'Payroll updated successfully.');
+        } catch (\Exception $e) {
+            return redirect()->back()
+                ->withErrors(['error' => $e->getMessage()])
+                ->withInput();
+        }
     }
 
     public function destroy($id)
@@ -314,51 +308,30 @@ class PayrollController extends Controller
 
     protected function calculatePayrollDetails(Employee $employee, $month, $year)
     {
-        // Comprehensive payroll calculation logic
         $basicSalary = $employee->basic_salary;
 
-        // Calculation rates (can be moved to configuration)
-        $rates = [
-            'cola_rate' => 0.05,
-            'rep_rate' => 0.03,
-            'resp_rate' => 0.02,
-            'hse_rate' => 0.10,
-            'ag_rate' => 0.02,
-            'job_spec_rate' => 0.03,
-            'tax_rate' => 0.15,
-            'pension_rate' => 0.08
-        ];
-
         // Calculate allowances
-        $cola = $basicSalary * $rates['cola_rate'];
-        $rep = $basicSalary * $rates['rep_rate'];
-        $resp = $basicSalary * $rates['resp_rate'];
-        $hse = $basicSalary * $rates['hse_rate'];
-        $ag = $basicSalary * $rates['ag_rate'];
-        $jobSpec = $basicSalary * $rates['job_spec_rate'];
+        $cola = $employee->calculateCOLA();
+        $rep = $employee->calculateREP();
+        $hse = $employee->calculateHSE();
 
         // Calculate gross salary
-        $grossSalary = $basicSalary + $cola + $rep + $resp + $hse + $ag + $jobSpec;
+        $grossSalary = $basicSalary + $cola + $rep + $hse;
 
-        // Calculate deductions
-        $penContr = $grossSalary * $rates['pension_rate'];
+        // Calculate taxable amount and deductions
         $taxableAmount = $grossSalary;
-        $pit = $taxableAmount * $rates['tax_rate'];
-
-        // Calculate net pay
-        $netPay = $grossSalary - ($penContr + $pit);
+        $pit = $taxableAmount * 0.20; // 20% tax rate
+        $netPay = $grossSalary - $pit;
 
         return [
             'employee_id' => $employee->id,
+            'month' => $month,
+            'year' => $year,
             'basic_salary' => $basicSalary,
             'cola' => $cola,
             'rep' => $rep,
-            'resp' => $resp,
             'hse' => $hse,
-            'ag' => $ag,
-            'job_spec' => $jobSpec,
             'gross_salary' => $grossSalary,
-            'pen_contr' => $penContr,
             'tax_exempt' => 0,
             'taxable_amount' => $taxableAmount,
             'pit' => $pit,
@@ -366,8 +339,8 @@ class PayrollController extends Controller
             'other_ded' => 0,
             'net_pay' => $netPay,
             'account_number' => $employee->account_number,
-            'bank' => $employee->bank,
-            'created_at' => Carbon::create($year, $month, 1)
+            'bank_name' => $employee->bank_name,
+            'status' => 'pending'
         ];
     }
 
@@ -394,5 +367,54 @@ class PayrollController extends Controller
 
         return redirect()->route('payrolls.index')
             ->with('success', 'Selected payroll records deleted successfully.');
+    }
+
+    public function downloadTemplate()
+    {
+        $headers = ['Employee ID', 'Month', 'Year', 'Basic Salary', 'COLA', 'REP', 'HSE', 'Tax Exempt', 'Salary Advance', 'Other Deductions'];
+        $templateData = [
+            $headers,
+            // Example row
+            ['123', 'January', '2023', '5000', '2000', '1500', '1000', '0', '0', '0']
+        ];
+
+        return Excel::download(new class($templateData) implements \Maatwebsite\Excel\Concerns\FromArray {
+            private $data;
+            public function __construct(array $data) { $this->data = $data; }
+            public function array(): array { return $this->data; }
+        }, 'payroll_template.xlsx');
+    }
+
+    public function uploadExcel(Request $request)
+    {
+        $request->validate([
+            'payroll_excel' => 'required|file|mimes:xlsx'
+        ]);
+
+        $path = $request->file('payroll_excel')->getRealPath();
+        $data = Excel::toArray([], $path);
+
+        foreach ($data[0] as $key => $row) {
+            if ($key === 0) continue; // Skip header row
+
+            Payroll::create([
+                'employee_id' => $row[0],
+                'month' => $row[1],
+                'year' => $row[2],
+                'basic_salary' => $row[3],
+                'cola' => $row[4],
+                'rep' => $row[5],
+                'hse' => $row[6],
+                'tax_exempt' => $row[7],
+                'sal_adv' => $row[8],
+                'other_ded' => $row[9],
+                'gross_salary' => $row[3] + $row[4] + $row[5] + $row[6],
+                'taxable_amount' => $row[3] + $row[4] + $row[5] + $row[6] - $row[7],
+                'pit' => ($row[3] + $row[4] + $row[5] + $row[6] - $row[7]) * 0.20,
+                'net_pay' => $row[3] + $row[4] + $row[5] + $row[6] - (($row[3] + $row[4] + $row[5] + $row[6] - $row[7]) * 0.20) - $row[8] - $row[9],
+            ]);
+        }
+
+        return redirect()->route('payrolls.index')->with('success', 'Payroll records uploaded successfully.');
     }
 }

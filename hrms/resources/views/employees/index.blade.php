@@ -84,9 +84,12 @@
                                 <th>Email</th>
                                 <th>Division</th>
                                 <th>Department</th>
-                                <th>Position</th>
-                                <th>Action</th>
-
+                                <th>Job Title</th>
+                                <th>Grade</th>
+                                <th>Basic Salary</th>
+                                <th>Bank Name</th>
+                                <th>Status</th>
+                                <th width="280px">Action</th>
                             </tr>
                         </thead>
                     <tbody>
@@ -100,6 +103,14 @@
                             <td>{{ $employee->department->division->name ?? 'N/A' }}</td>
                             <td>{{ $employee->department->name }}</td>
                             <td>{{ $employee->job_title }}</td>
+                            <td>{{ $employee->grade }}</td>
+                            <td>₦{{ number_format($employee->basic_salary, 2) }}</td>
+                            <td>{{ $employee->bank_name }}</td>
+                            <td>
+                                <span class="badge {{ $employee->status == 'Active' ? 'bg-success' : 'bg-danger' }}">
+                                    {{ $employee->status }}
+                                </span>
+                            </td>
                             <td>
                                 <a href="{{ route('employees.show', $employee->id) }}" class="btn btn-info btn-sm"><i class="fas fa-eye"></i> View</a>
                                 <a href="{{ route('employees.edit', $employee->id) }}" class="btn btn-warning btn-sm"><i class="fas fa-edit"></i> Edit</a>
@@ -127,7 +138,11 @@
                                 <th>Email</th>
                                 <th>Division</th>
                                 <th>Department</th>
-                                <th>Position</th>
+                                <th>Job Title</th>
+                                <th>Grade</th>
+                                <th>Basic Salary</th>
+                                <th>Bank Name</th>
+                                <th>Status</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -142,6 +157,14 @@
                                         <td>{{ $employee->department->division->name ?? 'N/A' }}</td>
                                         <td>{{ $employee->department->name }}</td>
                                         <td>{{ $employee->job_title }}</td>
+                                        <td>{{ $employee->grade }}</td>
+                                        <td>₦{{ number_format($employee->basic_salary, 2) }}</td>
+                                        <td>{{ $employee->bank_name }}</td>
+                                        <td>
+                                            <span class="badge {{ $employee->status == 'Active' ? 'bg-success' : 'bg-danger' }}">
+                                                {{ $employee->status }}
+                                            </span>
+                                        </td>
                                         <td>
                                             <a href="{{ route('employees.show', $employee->id) }}" class="btn btn-info btn-sm"><i class="fas fa-eye"></i> View</a>
                                             <a href="{{ route('employees.edit', $employee->id) }}" class="btn btn-warning btn-sm"><i class="fas fa-edit"></i> Edit</a>

@@ -49,7 +49,14 @@
                                         </div>
                                         <div class="kin-details">
                                         <p><strong>Next of Kin Details</strong></p><hr>
-                                        <p class="card-text"><strong>Next of Kin:</strong> {{ $employee->next_of_kin }}</p>
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <p><strong>Next of Kin:</strong> {{ $employee->next_of_kin }}</p>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <p><strong>Marital Status:</strong> {{ $employee->marital_status }}</p>
+                                            </div>
+                                        </div>
                                         </div>
                                         <div class="qualification-details">
                                         <p><strong>Qualification Details</strong></p><hr>
@@ -58,6 +65,26 @@
                                         @endif
                                         </div>
                                         </div>
+
+                                        <!-- Salary and Bank Information -->
+                                        <h5 class="mt-4 mb-3">Salary and Bank Information</h5>
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <p><strong>Basic Salary:</strong> ₦{{ number_format($employee->basic_salary, 2) }}</p>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <p><strong>Bank Name:</strong> {{ $employee->bank_name }}</p>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <p><strong>Account Number:</strong> {{ $employee->account_number }}</p>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <p><strong>TIN Registration Number:</strong> {{ $employee->tin_no ?? 'Not provided' }}</p>
+                                            </div>
+                                        </div>
+
                                         <p class="copyright">&copy; {{ date('Y') }} HRMS Portal South Sudan Revenue Authority. All Rights Reserved.</p>
                                     </div>
                                 </div>

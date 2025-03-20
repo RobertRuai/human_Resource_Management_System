@@ -13,6 +13,7 @@ return new class extends Migration
     {
         Schema::create('employees', function (Blueprint $table) {
             $table->id();
+            $table->string('file_no')->nullable();
             $table->unsignedBigInteger('user_id')->nullable()->default(null);
             $table->unsignedBigInteger('department_id');
             $table->string('first_name', 50);
@@ -21,6 +22,10 @@ return new class extends Migration
             $table->date('date_of_birth')->nullable();
             $table->string('phone', 15)->nullable();
             $table->string('email', 100)->unique();
+            $table->string('tin_no')->nullable();
+            $table->decimal('basic_salary', 12, 2)->default(0.00);
+            $table->string('bank_name')->nullable();
+            $table->string('account_number')->nullable();
             $table->string('city', 50);
             $table->string('address', 100);
             $table->string('postal_code', 10);
@@ -34,8 +39,7 @@ return new class extends Migration
             $table->string('location', 50);
             $table->string('gender', 10);
             $table->string('marital_status', 20);
-            $table->string('next_of_kin', 100);
-            #$table->decimal('salary', 10, 2);           
+            $table->string('next_of_kin', 100);         
             $table->string('photo')->nullable();
             $table->string('credentials')->nullable();
             $table->timestamps();

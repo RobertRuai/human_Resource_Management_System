@@ -75,6 +75,8 @@ Route::middleware(['auth', 'role:Admin|HR Manager'])->group(function () {
     Route::delete('/payrolls/bulk-destroy', [PayrollController::class, 'bulkDestroy'])->name('payrolls.bulkDestroy');
     Route::post('/payrolls/select', [PayrollController::class, 'select'])->name('payrolls.select');
     Route::get('/payrolls/export', [PayrollController::class, 'exportToExcel'])->name('payrolls.export');
+    Route::get('/payrolls/download-template', [PayrollController::class, 'downloadTemplate'])->name('payrolls.downloadTemplate');
+    Route::post('/payrolls/upload-excel', [PayrollController::class, 'uploadExcel'])->name('payrolls.uploadExcel');
      // Resource route should come last
      Route::resource('payrolls', PayrollController::class);
 });

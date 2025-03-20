@@ -33,8 +33,12 @@
         <div class="form-display">
             <div class="col-2 form-group">
                 <label for="training_category" class="form-label">Training Category <span class="text-danger">*</span></label>
-                <input type="text" name="training_category" id="training_category" class="form-control" 
-                    value="{{ old('training_category',$training->training_category) }}" required>
+                <select name="training_category" id="training_category" class="form-control" required>
+                    <option value="">Select Category</option>
+                    <option value="Internal" {{ old('training_category', $training->training_category) == 'Internal' ? 'selected' : '' }}>Internal (within the institution)</option>
+                    <option value="External" {{ old('training_category', $training->training_category) == 'External' ? 'selected' : '' }}>External (outside the institution)</option>
+                    <option value="International" {{ old('training_category', $training->training_category) == 'International' ? 'selected' : '' }}>International (outside the country)</option>
+                </select>
             </div>
 
             <div class="col-2 form-group">
@@ -84,15 +88,36 @@
                 </select>
             </div>
 
-            <div class="col-2 form-group">
-                <label for="employees" class="form-label">Select Employees</label>
-                <select name="employees[]" id="employees" class="form-control" multiple required>
+
+            <div class="form-group">
+                <label for="selected_employees">Selected Employees</label>
+                <select name="selected_employees[]" id="selected_employees" class="form-control select2" multiple>
                     @foreach($employees as $employee)
-                        <option value="{{ $employee->id }}">{{ $employee->first_name }} {{ $employee->last_name }}</option>
+                        <option value="{{ $employee->id }}" 
+                            {{ in_array($employee->id, $selectedEmployees) ? 'selected' : '' }}>
+                            {{ $employee->first_name }} {{ $employee->last_name }}
+                        </option>
                     @endforeach
                 </select>
-                <small class="text-muted">Hold CTRL (Windows) or CMD (Mac) to select multiple employees.</small>
+                <small class="form-text text-muted">
+                    Hold down the Ctrl (Windows) or Command (Mac) button to select multiple options.
+                </small>
             </div>
+
+            <div class="form-group">
+                <label for="available_employees">Available Employees</label>
+                <select name="available_employees[]" id="available_employees" class="form-control select2" multiple>
+                    @foreach($availableEmployees as $availableEmployee)
+                        <option value="{{ $availableEmployee->id }}">
+                            {{ $availableEmployee->first_name }} {{ $availableEmployee->last_name }}
+                        </option>
+                    @endforeach
+                </select>
+                <small class="form-text text-muted">
+                    Select employees to add to the training.
+                </small>
+            </div>
+            <button type="button" class="btn btn-info" id="addEmployeesBtn">Add Selected Employees</button>
         </div>
 
         <div class="form-display">
@@ -105,4 +130,28 @@
     </form>
             <p class="copyright">&copy; {{ date('Y')}} HRMS Portal South Sudan Revenue Authority. All Rights Reserved.</p>
         </div>
+
+@section('scripts')
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+<script>
+$(document).ready(function() {
+    $('.select2').select2();
+
+    $('#addEmployeesBtn').click(function() {
+        const selectedEmployees = $('#available_employees').val();
+        if (selectedEmployees.length > 0) {
+            selectedEmployees.forEach(function(employeeId) {
+                const option = $('#available_employees option[value="' + employeeId + '"]');
+                option.prop('selected', false);
+                $('#selected_employees').append(option);
+            });
+            $('#selected_employees').select2().trigger('change');
+            $('#available_employees').select2().trigger('change');
+        } else {
+            alert('Please select at least one employee to add.');
+        }
+    });
+});
+</script>
+@endsection
 @endsection

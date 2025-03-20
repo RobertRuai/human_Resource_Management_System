@@ -297,10 +297,47 @@
             </div>
 
             <div class="col-2 form-group">
-                <label for="next_of_kin">Next Of Kin <span class="text-danger">*</span></label>
-                <input type="text" name="next_of_kin" id="next_of_kin" class="form-control"
-                value="{{ old('next_of_kin', $employee->next_of_kin) }}">
+                <label for="next_of_kin">Next of Kin <span class="text-danger">*</span></label>
+                <input type="text" name="next_of_kin" id="next_of_kin" class="form-control" value="{{ old('next_of_kin', $employee->next_of_kin) }}" required>
                 @error('next_of_kin')
+                    <div class="text-danger">{{ $message }}</div>
+                @enderror
+            </div>
+        </div>
+
+        <!-- Salary and Bank Information -->
+        <div class="form-display">
+            <div class="col-2 form-group">
+                <label for="basic_salary">Basic Salary <span class="text-danger">*</span></label>
+                <div class="input-group">
+                    <span class="input-group-text">₦</span>
+                    <input type="number" step="0.01" name="basic_salary" id="basic_salary" class="form-control" value="{{ old('basic_salary', $employee->basic_salary) }}" required>
+                </div>
+                @error('basic_salary')
+                    <div class="text-danger">{{ $message }}</div>
+                @enderror
+            </div>
+
+            <div class="col-2 form-group">
+                <label for="bank_name">Bank Name <span class="text-danger">*</span></label>
+                <input type="text" name="bank_name" id="bank_name" class="form-control" value="{{ old('bank_name', $employee->bank_name) }}" required>
+                @error('bank_name')
+                    <div class="text-danger">{{ $message }}</div>
+                @enderror
+            </div>
+
+            <div class="col-2 form-group">
+                <label for="account_number">Account Number <span class="text-danger">*</span></label>
+                <input type="text" name="account_number" id="account_number" class="form-control" value="{{ old('account_number', $employee->account_number) }}" required>
+                @error('account_number')
+                    <div class="text-danger">{{ $message }}</div>
+                @enderror
+            </div>
+
+            <div class="col-2 form-group">
+                <label for="tin_no">TIN Registration Number</label>
+                <input type="text" name="tin_no" id="tin_no" class="form-control" value="{{ old('tin_no', $employee->tin_no) }}">
+                @error('tin_no')
                     <div class="text-danger">{{ $message }}</div>
                 @enderror
             </div>

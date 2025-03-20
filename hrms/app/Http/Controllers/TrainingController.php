@@ -14,8 +14,8 @@ class TrainingController extends Controller
     // Display a listing of the trainings
     public function index()
     {
-        $trainings = training::with('employee')->get();
-        #$trainings = training::all();
+        #$trainings = training::with('employee')->get();
+        $trainings = training::all();
         return view('trainings.index', compact('trainings'));
     }
 
@@ -37,7 +37,7 @@ class TrainingController extends Controller
             'commencement_date' => 'required|date',
             'end_date' => 'required|date|after_or_equal:commencement_date',
             'justification' => 'required|string',
-            'status' => 'required|in:pending,in_progress,finished',
+            'status' => 'nullable|in:pending,in_progress,finished',
             'employees' => 'required|array',
             'employees.*' => 'exists:employees,id',
         ]);
@@ -85,9 +85,9 @@ class TrainingController extends Controller
         $training = training::findOrFail($id);
         $employees = Employee::all();
         $training = training::with('employee')->findOrFail($id);
-        $selectedEmployeeIds = $training->employee->pluck('id')->toArray();
-        $employees = Employee::whereNotIn('id', $selectedEmployeeIds)->get();
-        return view('trainings.edit', compact('training', 'employees'));
+        $selectedEmployees = $training->employee->pluck('id')->toArray();
+        $availableEmployees = Employee::whereNotIn('id', $selectedEmployees)->get();
+        return view('trainings.edit', compact('training', 'employees', 'selectedEmployees', 'availableEmployees'));
     }
 
     // Update the specified training in storage
@@ -102,8 +102,8 @@ class TrainingController extends Controller
             'end_date' => 'required|date|after_or_equal:commencement_date',
             'justification' => 'required|string',
             'status' => 'required|in:pending,in_progress,finished',
-             'employees' => 'nullable|array', 
-             'employees.*' => 'exists:employees,id',
+            'selected_employees' => 'required|array',
+            'selected_employees.*' => 'exists:employees,id',
         ]);
 
         $training = training::findOrFail($id);
@@ -120,6 +120,9 @@ class TrainingController extends Controller
 
         // Attach employees to the training
         $training->employee()->syncWithoutDetaching($request->employees);
+
+        // Sync selected employees
+        $training->employee()->sync($validatedData['selected_employees']);
 
         audit_log::create([
             'user_id' => auth()->id(),

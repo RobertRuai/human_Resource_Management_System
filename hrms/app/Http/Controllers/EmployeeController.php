@@ -78,7 +78,7 @@ class EmployeeController extends Controller
      */
     public function store(Request $request)
     {
-        $employee = Employee::with('user', 'department')->get();
+        #$employee = Employee::with('user', 'department')->get();
         $validatedData = $request->validate([
             'user_id' => 'required|exists:users,id',
             'department_id' => 'required|exists:departments,id',
@@ -88,6 +88,10 @@ class EmployeeController extends Controller
             'date_of_birth' => 'required|date',
             'phone' => 'required|string|max:15',
             'email' => 'required|email|unique:users,email',
+            'tin_no' => 'nullable|string',
+            'basic_salary' => 'required|numeric|min:0',
+            'bank_name' => 'required|string|max:100',
+            'account_number' => 'required|string|max:20',
             'city' => 'required|string|max:50',
             'address' => 'required|string|max:100',
             'postal_code' => 'required|string|max:10',
@@ -114,10 +118,7 @@ class EmployeeController extends Controller
             $validatedData['credentials'] = $request->file('credentials')->store('credentials', 'public');
         }
 
-        #$validatedData['date_of_birth'] = \Carbon\Carbon::createFromFormat('m/d/Y', $validatedData['date_of_birth'])->format('Y-d-m');
-        #$validatedData['date_of_employment'] = \Carbon\Carbon::createFromFormat('m/d/Y', $validatedData['date_of_employment'])->format('Y-d-m');
-
-       $employee = Employee::create($validatedData);
+        $employee = Employee::create($validatedData);
 
         audit_log::create([
             'user_id' => auth()->id(), // Current logged-in user
@@ -170,7 +171,7 @@ class EmployeeController extends Controller
             return response()->json(['error' => 'Unauthorized'], 401);
         }
 
-            $validatedData = $request->validate([
+        $validatedData = $request->validate([
             'user_id' => 'nullable|exists:users,id',
             'department_id' => 'required|exists:departments,id',
             'first_name' => 'required|string|max:50',
@@ -178,7 +179,11 @@ class EmployeeController extends Controller
             'last_name' => 'required|string|max:50',
             'date_of_birth' => 'required|date',
             'phone' => 'required|string|max:15',
-            'email' => 'required|email|unique:users,email',
+            'email' => 'required|email|unique:users,email,' . $employee->id,
+            'tin_no' => 'nullable|string',
+            'basic_salary' => 'required|numeric|min:0',
+            'bank_name' => 'required|string|max:100',
+            'account_number' => 'required|string|max:20',
             'city' => 'required|string|max:50',
             'address' => 'required|string|max:100',
             'postal_code' => 'required|string|max:10',
@@ -204,9 +209,6 @@ class EmployeeController extends Controller
         if ($request->hasFile('credentials')) {
             $validatedData['credentials'] = $request->file('credentials')->store('credentials', 'public');
         }
-
-        #$validatedData['date_of_birth'] = \Carbon\Carbon::createFromFormat('m/d/Y', $validatedData['date_of_birth'])->format('Y-d-m');
-        #$validatedData['date_of_employment'] = \Carbon\Carbon::createFromFormat('m/d/Y', $validatedData['date_of_employment'])->format('Y-d-m');
 
         $employee->update($validatedData);
 

@@ -19,8 +19,12 @@
                                 <div class="form-display">
                                     <div class="col-2 form-group">
                                         <label for="training_category" class="form-label">Training Category <span class="text-danger">*</span></label>
-                                        <input type="text" name="training_category" id="training_category" class="form-control" 
-                                            value="{{ old('training_category') }}" required>
+                                        <select name="training_category" id="training_category" class="form-control" required>
+                                            <option value="">Select Category</option>
+                                            <option value="Internal" {{ old('training_category') == 'Internal' ? 'selected' : '' }}>Internal (within the institution)</option>
+                                            <option value="External" {{ old('training_category') == 'External' ? 'selected' : '' }}>External (outside the institution)</option>
+                                            <option value="International" {{ old('training_category') == 'International' ? 'selected' : '' }}>International (outside the country)</option>
+                                        </select>
                                     </div>
                                 
                                     <div class="col-2 form-group">
@@ -60,14 +64,7 @@
                                         <textarea name="justification" id="justification" class="form-control" rows="4" required>{{ old('justification') }}</textarea>
                                     </div>
                                 
-                                    <div class="col-2 form-group">
-                                        <label for="status">Status</label>
-                                        <select class="form-control" id="status" name="status">
-                                            <option value="pending">Pending</option>
-                                            <option value="in_progress">In Progress</option>
-                                            <option value="finished">Finished</option>
-                                        </select>
-                                    </div>
+                                    
                                 
                                     <div class="col-2 form-group">
                                         <label for="employees" class="form-label">Select Employees</label>
