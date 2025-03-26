@@ -23,6 +23,7 @@
                     <select name="generation_type" id="generationType" class="form-control" required>
                         <option value="all">All Employees</option>
                         <option value="selected">Selected Employees</option>
+                        <option value="division">By Division</option>
                         <option value="department">By Department</option>
                     </select>
                 </div>
@@ -33,6 +34,18 @@
                         @foreach($employees as $employee)
                             <option value="{{ $employee->id }}">
                                 {{ $employee->first_name }} {{ $employee->last_name }}
+                            </option>
+                        @endforeach
+                    </select>
+                </div>
+
+                <div id="divisionSection" class="form-group" style="display:none;">
+                    <label>Select Division</label>
+                    <select name="division_id" class="form-control">
+                        <option value="">Select a division</option>
+                        @foreach($divisions as $division)
+                            <option value="{{ $division->id }}">
+                                {{ $division->name }}
                             </option>
                         @endforeach
                     </select>
@@ -101,13 +114,16 @@ $(document).ready(function() {
         var selectedType = $(this).val();
         
         // Hide all sections first
-        $('#selectedEmployeesSection, #departmentSection').hide();
+        $('#selectedEmployeesSection, #departmentSection, #divisionSection').hide();
         
         // Show relevant section based on selection
         if (selectedType === 'selected') {
             $('#selectedEmployeesSection').show();
         } else if (selectedType === 'department') {
             $('#departmentSection').show();
+        }
+        else if (selectedType === 'division') {
+            $('#divisionSection').show();
         }
     });
 
@@ -127,6 +143,12 @@ $(document).ready(function() {
             var departmentId = $('select[name="department_id"]').val();
             if (!departmentId) {
                 errorMessage = 'Please select a department';
+                isValid = false;
+            }
+        } else if (selectedType === 'division') {
+            var divisionId = $('select[name="division_id"]').val();
+            if (!divisionId) {
+                errorMessage = 'Please select a division';
                 isValid = false;
             }
         }

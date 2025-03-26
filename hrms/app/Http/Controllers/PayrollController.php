@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Payroll;
 use App\Models\Employee;
+use App\Models\Division;
 use App\Models\Department;
 use Illuminate\Http\Request;
 use Maatwebsite\Excel\Facades\Excel;
@@ -224,17 +225,19 @@ class PayrollController extends Controller
     public function showBulkGenerateForm()
     {
         $employees = Employee::all();
+        $divisions = Division::all();
         $departments = Department::all();
-        return view('payrolls.bulk-generate', compact('employees', 'departments'));
+        return view('payrolls.bulk-generate', compact('employees', 'departments', 'divisions'));
     }
 
     public function bulkGenerate(Request $request)
     {
         // Validate input
         $validated = $request->validate([
-            'generation_type' => 'required|in:all,selected,department',
+            'generation_type' => 'required|in:all,selected,division,department',
             'selected_employees' => 'nullable|array',
             'selected_employees.*' => 'exists:employees,id',
+            'division_id' => 'nullable|exists:divisions,id',
             'department_id' => 'nullable|exists:departments,id',
             'month' => 'required|integer|min:1|max:12',
             'year' => 'required|integer|min:2000|max:2099',
@@ -246,6 +249,14 @@ class PayrollController extends Controller
         switch ($validated['generation_type']) {
             case 'selected':
                 $query->whereIn('id', $validated['selected_employees'] ?? []);
+                break;
+            case 'division':
+                $query->whereHas('department.division', function ($q) use ($validated) {
+                    $q->where('id', $validated['division_id']);
+                });
+                if ($request->filled('department_id')) {
+                    $query->where('department_id', $validated['department_id']);
+                }
                 break;
             case 'department':
                 $query->where('department_id', $validated['department_id']);
