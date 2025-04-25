@@ -12,7 +12,7 @@
             <div class="row mb-4">
                 <div class="col-12">
                     <form action="{{ route('payrolls.index') }}" method="GET" class="card">
-                        <div class="card-body">
+                    <div class="card-body">
                             <div class="row g-3">
                                 <!-- Search Field -->
                                 <div class="col-md-3">
@@ -29,9 +29,10 @@
                                     </div>
                                 </div>
 
+
                                 <!-- Division Filter -->
                                 <div class="col-md-3">
-                                    <div class="form-group">
+                                <div class="form-group">
                                         <label for="division_id" class="form-label">Division</label>
                                         <select name="division_id" id="division_id" class="form-select">
                                             <option value="">All Divisions</option>
@@ -41,11 +42,21 @@
                                                     {{ $division->name }}
                                                 </option>
                                             @endforeach
-                                        </select>
+                                            </select>
                                     </div>
                                 </div>
+                                
+                                 <!-- Search Button -->
+                                <div class="col-md-3 d-flex align-items-end gap-2">
+                                    <button type="submit" class="btn btn-primary flex-grow-1">
+                                        <i class="fas fa-search"></i> Search
+                                    </button>
+                                    <a href="{{ route('payrolls.index') }}" class="btn btn-secondary">
+                                        <i class="fas fa-undo"></i> Reset
+                                    </a>
+                                </div>
 
-                                <!-- Department Filter -->
+                                <!-- Department Filter 
                                 <div class="col-md-3">
                                     <div class="form-group">
                                         <label for="department_id" class="form-label">Department</label>
@@ -60,16 +71,10 @@
                                         </select>
                                     </div>
                                 </div>
-                                
+                                -->
                                 <!-- Search Button -->
-                                <div class="col-md-3 d-flex align-items-end gap-2">
-                                    <button type="submit" class="btn btn-primary flex-grow-1">
-                                        <i class="fas fa-search"></i> Search
-                                    </button>
-                                    <a href="{{ route('payrolls.index') }}" class="btn btn-secondary">
-                                        <i class="fas fa-undo"></i> Reset
-                                    </a>
-                                </div>
+    
+                                
                             </div>
                         </div>
                     </form>
