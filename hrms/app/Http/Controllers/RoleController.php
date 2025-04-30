@@ -8,11 +8,12 @@ use Illuminate\Http\Request;
 
 class RoleController extends Controller
 {
-    // Display a listing of the roles
+    // Display a listing of the roles with permissions and all permissions
     public function index()
     {
-        $roles = Role::all();
-        return view('roles.index', compact('roles'));
+        $roles = \Spatie\Permission\Models\Role::with('permissions')->get();
+        $permissions = \Spatie\Permission\Models\Permission::all();
+        return view('roles.index', compact('roles', 'permissions'));
     }
 
     // Show the form for creating a new role
@@ -40,6 +41,35 @@ class RoleController extends Controller
         ]);
 
         return redirect()->route('roles.index')->with('success', 'Role created successfully.');
+    }
+
+    // Add (merge) permissions to a role without removing existing ones
+    public function assignPermissions(Request $request)
+    {
+        $request->validate([
+            'role_id' => 'required|exists:roles,id',
+            'permissions' => 'required|array',
+            'permissions.*' => 'exists:permissions,name',
+        ]);
+
+        $role = \Spatie\Permission\Models\Role::findOrFail($request->role_id);
+        $role->givePermissionTo($request->permissions); // Adds, does not remove existing
+
+        return redirect()->route('roles.index')->with('success', 'Permissions added to role!');
+    }
+
+    // Remove a specific permission from a role
+    public function removePermission(Request $request)
+    {
+        $request->validate([
+            'role_id' => 'required|exists:roles,id',
+            'permission' => 'required|exists:permissions,name',
+        ]);
+
+        $role = \Spatie\Permission\Models\Role::findOrFail($request->role_id);
+        $role->revokePermissionTo($request->permission);
+
+        return redirect()->route('roles.index')->with('success', 'Permission removed from role!');
     }
 
     // Display the specified role

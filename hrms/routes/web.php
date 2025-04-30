@@ -32,10 +32,13 @@ Route::middleware(['auth', 'role:Admin'])->group(function () {
     Route::get('/admin', function () {
         return view('admin.index');
     })->name('admin.index');
+    Route::get('/admin/roles-permissions', [\App\Http\Controllers\Admin\RolesPermissionsController::class, 'index'])->name('admin.roles_permissions.index');
+    Route::post('/admin/roles-permissions/assign', [\App\Http\Controllers\Admin\RolesPermissionsController::class, 'assign'])->name('admin.roles_permissions.assign');
 });
 
 Route::middleware('auth')->group(function () {
     Route::resource('audit_logs', AuditLogController::class);
+    Route::get('notifications/{id}/mark-as-read', [NotificationController::class, 'markAsRead'])->name('notifications.markAsRead');
     Route::resource('divisions', DivisionController::class);
     Route::resource('departments', DepartmentController::class);
     Route::get('divisions/{division}/departments', [DepartmentController::class, 'byDivision'])
@@ -49,17 +52,21 @@ Route::middleware(['auth', 'role:Admin|HR Manager|Supervisor|Employee'])->group(
     Route::get('employees/export/excel', [EmployeeController::class, 'exportExcel'])->name('employees.export.excel');
 });
 
-Route::middleware('auth')->group(function () {
+Route::middleware('auth', 'role:Admin|HR Manager|Supervisor|Employee')->group(function () {
     Route::resource('leaves', LeaveController::class);
+    Route::get('leaves/export/pdf', [LeaveController::class, 'exportPdf'])->name('leaves.export.pdf');
+    Route::get('leaves/export/excel', [LeaveController::class, 'exportExcel'])->name('leaves.export.excel');
     Route::resource('employees', EmployeeController::class);
     Route::post('leaves/{leave}/supervisor-review', [LeaveController::class, 'supervisorReview'])->name('leaves.supervisor-review');
     Route::post('leaves/{leave}/hr-review', [LeaveController::class, 'hrReview'])->name('leaves.hr-review');
     Route::resource('notifications', NotificationController::class);
     #Route::resource('payrolls', PayrollController::class);
     Route::resource('roles', RoleController::class);
+    Route::post('/roles/assign-permissions', [App\Http\Controllers\RoleController::class, 'assignPermissions'])->name('roles.assignPermissions')->middleware('role:Admin');
+Route::post('/roles/remove-permission', [App\Http\Controllers\RoleController::class, 'removePermission'])->name('roles.removePermission')->middleware('role:Admin');
+    Route::resource('users', UserController::class)->middleware('role:Admin');
     Route::resource('salaries', SalaryController::class);
     Route::resource('trainings', TrainingController::class);
-    Route::resource('users', UserController::class);
 
     Route::get('/hr/leaves', [LeaveApprovalController::class, 'index'])->name('hr.leaves.index');
     Route::get('/hr/leaves/{id}/approveLeave', [LeaveApprovalController::class, 'approveLeave'])->name('hr.leaves.approve');
@@ -69,7 +76,7 @@ Route::middleware('auth')->group(function () {
     Route::get('departments/export/excel', [DepartmentController::class, 'exportExcel'])->name('departments.export.excel');
 });
 
-Route::middleware(['auth', 'role:Admin|HR Manager'])->group(function () {
+Route::middleware(['auth', 'role:Admin|HR Manager|Supervisor|Employee'])->group(function () {
     Route::get('/payrolls/bulk-generate', [PayrollController::class, 'showBulkGenerateForm'])->name('payrolls.bulkGenerateForm');
     Route::post('/payrolls/bulk-generate', [PayrollController::class, 'bulkGenerate'])->name('payrolls.bulkGenerate');
     Route::delete('/payrolls/bulk-destroy', [PayrollController::class, 'bulkDestroy'])->name('payrolls.bulkDestroy');
@@ -78,9 +85,13 @@ Route::middleware(['auth', 'role:Admin|HR Manager'])->group(function () {
     Route::get('/payrolls/download-template', [PayrollController::class, 'downloadTemplate'])->name('payrolls.downloadTemplate');
     Route::post('/payrolls/upload-excel', [PayrollController::class, 'uploadExcel'])->name('payrolls.uploadExcel');
      // Resource route should come last
-     Route::resource('payrolls', PayrollController::class);
+     #Route::resource('payrolls', PayrollController::class);
 });
 
+Route::middleware('auth', 'can:view payroll')->group(function () {
+    // routes here
+    Route::resource('payrolls', PayrollController::class);
+});
 Route::middleware(['auth', 'role:HR Manager'])->group(function () {
     // Add HR Manager routes here
     Route::get('leaves/{leave}/hr-review', [LeaveController::class, 'showHrReview'])->name('leaves.hr-review');

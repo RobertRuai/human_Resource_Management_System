@@ -6,66 +6,72 @@
         <div class="card-header bg-white text-dark">
             <i class="fas fa-users"></i> All Employees
         </div>
-       <!-- Search Area -->
-    <div class=" mt-1 search-area">
-        <div class="row ">
-            <div class="col-md-8">
-            <form action="{{ route('employees.index') }}" method="GET">
-                <div class="row">
-                    <div class="col-md-4">
-                        <input type="text" name="search" class="form-control" 
-                               placeholder="Search employees..." 
-                               value="{{ request('search') }}">
+
+        <div class="card-body">
+            <!-- Add New Employee Button -->
+            <div class="d-flex justify-content-between align-items-center">
+                <a href="{{ route('employees.create') }}" class="btn btn-primary add-btn" id="openPopupBtn"><i class="fas fa-user-plus"></i> Add New Employee</a>
+            </div>            
+            <div class="page-description">
+            <!-- <p>The table below shows the current active departments in all the divisions.</p> -->
+        
+            <!-- Search and Filter Area -->
+            <form action="{{ route('employees.index') }}" method="GET" class="card mb-4">
+                <div class="row g-3 align-items-end">
+                    <!-- Division Filter -->
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <label for="division_id" class="form-label">Division</label>
+                            <select name="division_id" id="division_id" class="form-select">
+                                <option value="">All Divisions</option>
+                                @foreach($departments as $department)
+                                    @if($department->division)
+                                        <option value="{{ $department->division->id }}" {{ request('division_id') == $department->division->id ? 'selected' : '' }}>
+                                            {{ $department->division->name }}
+                                        </option>
+                                    @endif
+                                @endforeach
+                            </select>
+                        </div>
                     </div>
-                    
-                    <div class="col-md-2 search-btn">
-                        <button type="submit" class="btn">Search</button>
+                    <!-- Search Field -->
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <label for="search" class="form-label">Search Employee</label>
+                            <div class="input-group">
+                                <span class="input-group-text">
+                                    <i class="fas fa-search"></i>
+                                </span>
+                                <input type="text" name="search" id="search" class="form-control" placeholder="Search by name..." value="{{ request('search') }}">
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Buttons and Export/Print -->
+                    <div class="col-md-6">
+                        <div class="d-flex justify-content-between align-items-end w-100 gap-2">
+                            <div class="d-flex gap-2">
+                                <button type="submit" class="btn btn-primary flex-grow-1">
+                                    <i class="fas fa-search"></i> Search
+                                </button>
+                                <a href="{{ route('employees.index') }}" class="btn btn-secondary flex-grow-1">
+                                    <i class="fas fa-eraser"></i> Reset
+                                </a>
+                            </div>
+                            <div class="d-flex gap-2">
+                                <a href="{{ route('employees.export.pdf', request()->query()) }}" class="btn btn-danger">
+                                    <i class="fas fa-file-pdf"></i> PDF
+                                </a>
+                                <a href="{{ route('employees.export.excel', request()->query()) }}" class="btn btn-success">
+                                    <i class="fas fa-file-excel"></i> Excel
+                                </a>
+                                <button class="btn btn-secondary" onclick="window.print(); return false;">
+                                    <i class="fas fa-print"></i> Print
+                                </button>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </form>
-            </div>
-        </div>
-    <div class="card-body">
-        <!-- Add New Department Button -->
-        <div class="d-flex justify-content-between align-items-center">
-            <a href="{{ route('employees.create') }}" class="btn btn-primary add-btn" id="openPopupBtn"><i class="fas fa-user-plus"></i> Add New Employee</a>
-        </div>
-            <div class="btn-control">
-                <div class="filter-btn">
-                    <select name="division_id" class="form-control">
-                        <option value="">~ Select Employee ~</option>
-                        @foreach($departments as $department)
-                            @if($department->division)
-                                <option value="{{ $department->division->id }}" 
-                                    {{ request('division_id') == $department->division->id ? 'selected' : '' }}>
-                                    {{ $department->division->name }}
-                                </option>
-                            @endif
-                        @endforeach
-                    </select>
-                </div>
-
-                    
-                <div class="download-btn">
-                    <div class="download-form">
-                        <a href="{{ route('employees.export.pdf', request()->query()) }}" class="list-group-item list-group-item-action">
-                            <i class="fas fa-file-pdf text-danger"></i> PDF
-                        </a>
-                    </div>  
-                    <div class="download-form">
-                        <a href="{{ route('employees.export.excel', request()->query()) }}" class="list-group-item list-group-item-action">
-                            <i class="fas fa-file-excel text-success"></i> Excel
-                        </a>
-                    </div>
-                    <div>
-                        <button class="btn btn-secondary" onclick="window.print()">
-                            <i class="fas fa-print"></i> Print
-                        </button>
-                    </div>
-                </div>
-            </div>
-            <div class="page-description">
-            <!-- <p>The table below shows the current active departments in all the divisions.</p> -->
         </div>
 
             @if(session('success'))

@@ -34,16 +34,20 @@ class NotificationController extends Controller
             'is_read' => 'boolean:0,1,false,true',
         ]);
 
-        $notification = notification::create($validatedData);
+        // Send notification using Laravel's Notification system
+        $recipient = User::findOrFail($request->user_id);
+        $sender = auth()->user();
+        $recipient->notify(new \App\Notifications\UserMessage($sender, $request->message));
+
         audit_log::create([
-            'user_id' => auth()->id(), // Current logged-in user
+            'user_id' => $sender->id, // Current logged-in user
             'action' => 'create',
             'model' => 'Notification',
-            'model_id' => $notification->id,
-            'description' => 'Created a new notification with ID ' . $notification->id,
+            'model_id' => $recipient->id,
+            'description' => 'Sent a user-to-user notification to user ID ' . $recipient->id,
         ]);
 
-        return redirect()->route('notifications.index')->with('success', 'Notification created successfully.');
+        return redirect()->route('notifications.index')->with('success', 'Notification sent successfully.');
     }
 
     // Display the specified notification
@@ -58,6 +62,16 @@ class NotificationController extends Controller
     {
         $users = User::all();
         return view('notifications.edit', compact('notification', 'users'));
+    }
+
+    // Mark a notification as read
+    public function markAsRead($id)
+    {
+        $notification = auth()->user()->notifications()->where('id', $id)->first();
+        if ($notification) {
+            $notification->markAsRead();
+        }
+        return redirect()->back();
     }
 
     // Update the specified notification in storage

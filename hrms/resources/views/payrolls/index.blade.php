@@ -1,6 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
+@can('view payroll')
 <div class="col-md-12">
     <div class="card">
         <div class="card-header bg-white text-dark">
@@ -28,7 +29,7 @@
                                         </div>
                                     </div>
                                 </div>
-
+                                
 
                                 <!-- Division Filter -->
                                 <div class="col-md-3">
@@ -232,6 +233,9 @@
         </div>
     </div>
 </div>
+@endcan
+
+@endsection
 
 @push('scripts')
 <script>
@@ -267,5 +271,3 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 </script>
 @endpush
-
-@endsection

@@ -1,7 +1,9 @@
 <!-- resources/views/users/index.blade.php -->
 @extends('layouts.app')
 
+
 @section('content')
+    @can('view users')
 <div class="col-md-12">
     <div class="card">
         <div class="card-header bg-white text-dark">
@@ -90,4 +92,5 @@
         </table>
         <p class="copyright">&copy; {{ date('Y')}} HRMS Portal South Sudan Revenue Authority. All Rights Reserved.</p>
     @endif
+    @endcan
 @endsection

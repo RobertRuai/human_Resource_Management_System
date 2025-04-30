@@ -27,15 +27,15 @@ class LeaveRequestRejected extends Notification
      *
      * @return array<int, string>
      */
-    public function via(object $notifiable): array
+    public function via($notifiable)
     {
-        return ['mail'];
+        return ['database', 'mail'];
     }
 
     /**
      * Get the mail representation of the notification.
      */
-    public function toMail(object $notifiable): MailMessage
+    public function toMail($notifiable): MailMessage
     {
         return (new MailMessage)
                     ->subject('Leave Request Rejected')

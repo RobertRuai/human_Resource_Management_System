@@ -13,13 +13,25 @@ class AdminSeeder extends Seeder
      */
     public function run(): void
     {
+        // Remove existing users if present
+        User::where('username', 'Admin1')->orWhere('email', 'admin1@gmail.com')->delete();
+        User::where('username', 'HR1')->orWhere('email', 'hr1@gmail.com')->delete();
+        User::where('username', 'Supervisor1')->orWhere('email', 'supervisor1@gmail.com')->delete();
+        User::where('username', 'User1')->orWhere('email', 'user1@gmail.com')->delete();
+
         $user1 = User::create([
             'username' => 'Admin1',
             'email' => 'admin1@gmail.com',
             'email_verified_at' => now(),
-            'password' => '123456',
+            'password' => bcrypt('123456'),
             'role_id' => '1',
         ]);
+
+        // Ensure admin role assignment using Spatie
+        $adminRole = \App\Models\Role::where('name', 'Admin')->first();
+        if ($adminRole && !$user1->hasRole('Admin')) {
+            $user1->assignRole($adminRole->name);
+        }
 
         $user2 = User::create([
             'username' => 'HR1',

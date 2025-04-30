@@ -6,7 +6,9 @@ use App\Models\Employee;
 use App\Models\User;
 use App\Models\training;
 use App\Models\Leave;
+use App\Models\Division;
 use App\Models\Department;
+use App\Models\Payroll;
 use App\Models\Role;
 
 use Illuminate\Http\Request;
@@ -19,6 +21,8 @@ class DashboardController extends Controller
         $employeeCount = Employee::count();
         $userCount = User::count();
         $departmentCount = Department::count();
+        $divisionsCount = Division::count();
+        $payrollsCount = Payroll::count();
         $pendingLeavesCount = Leave::where('status', 'Pending')->count();
 
         // Department distribution
@@ -53,8 +57,8 @@ class DashboardController extends Controller
         ];
 
         return view('dashboard', compact(
-            'employeeCount', 'userCount', 'pendingLeavesCount', 'departmentCount',
-            'departmentData', 'leaveStatusData', 'trainingData', 'roleData'
+            'employeeCount', 'userCount', 'pendingLeavesCount', 'divisionsCount', 'departmentCount',
+            'departmentData', 'leaveStatusData', 'trainingData', 'roleData', 'payrollsCount'
         ));
     }
 }

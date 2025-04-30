@@ -2,13 +2,38 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="col-md-12">
-    <div class="card">
-        <div class="card-header bg-white text-dark">
-            <i class="fas fa-bell"></i> All Notifications
-        </div>
-        <!-- Search Area -->
-        <div class="container mt-1 search-area">
+<div class="container">
+    <h2>Notifications</h2>
+    <h4>Unread Notifications</h4>
+    <ul class="list-group mb-4">
+        @forelse(auth()->user()->unreadNotifications as $notification)
+            <li class="list-group-item d-flex justify-content-between align-items-center">
+                @if(isset($notification->data['from_user_name']))
+                    <strong>{{ $notification->data['from_user_name'] }}:</strong>
+                @endif
+                {{ $notification->data['message'] ?? ($notification->data['title'] ?? '') }}
+                <span>
+                    <a href="{{ route('notifications.markAsRead', $notification->id) }}" class="btn btn-sm btn-success">Mark as read</a>
+                </span>
+            </li>
+        @empty
+            <li class="list-group-item">No unread notifications.</li>
+        @endforelse
+    </ul>
+    <h4>Read Notifications</h4>
+    <ul class="list-group">
+        @forelse(auth()->user()->readNotifications as $notification)
+            <li class="list-group-item">
+                @if(isset($notification->data['from_user_name']))
+                    <strong>{{ $notification->data['from_user_name'] }}:</strong>
+                @endif
+                {{ $notification->data['message'] ?? ($notification->data['title'] ?? '') }}
+            </li>
+        @empty
+            <li class="list-group-item">No read notifications.</li>
+        @endforelse
+    </ul>
+</div>
             <div class="row justify-content-center">
                 <div class="col-md-8">
                     <div class="input-group">

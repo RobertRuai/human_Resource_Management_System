@@ -57,6 +57,14 @@ class TrainingController extends Controller
             // Attach employees to the training
             $training->employee()->syncWithoutDetaching($request->employees);
 
+            // Notify selected employees
+            $employees = Employee::whereIn('id', $request->employees)->with('user')->get();
+            foreach ($employees as $employee) {
+                if ($employee->user) {
+                    $employee->user->notify(new \App\Notifications\TrainingSelected($training));
+                }
+            }
+
             audit_log::create([
                 'user_id' => auth()->id(), // Current logged-in user
                 'action' => 'create',

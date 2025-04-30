@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
-
+@can('view dashboard')
 <style>
     .top-menu li a {
         color: #707070;
@@ -31,36 +31,44 @@
     <!-- Statistics Cards -->
     <div class="row justify-content-center">
         <!-- Total Divisions -->
-        <div class="col-md-4">
-            <div class="card text-white bg-primary mb-3">
-                <div class="card-body">
-                    <div class="d-flex align-items-center">
-                        <i class="fas fa-home fa-2x me-3"></i>
-                        <div>
-                            <h6 class="card-title">Divisions</h6>
-                            <p class="card-text">{{ $departmentCount }}</p>
-                        </div>
-                    </div>
+        <div class="col-md-3 mb-4">
+            <div class="card shadow-sm">
+                <div class="card-body text-center">
+                    <h6 class="card-title">Divisions</h6>
+                    <h2 class="display-4">{{ $divisionsCount }}</h2>
                 </div>
             </div>
         </div>
-        <!-- Total Users -->
-        <div class="col-md-4">
-            <div class="card text-white bg-success mb-3">
-                <div class="card-body">
-                    <div class="d-flex align-items-center">
-                        <i class="fas fa-users fa-2x me-3"></i>
-                        <div>
-                            <h6 class="card-title">Employees</h6>
-                            <p class="card-text">{{ $employeeCount }}</p>
-                        </div>
-                    </div>
+        <!-- Total Departments -->
+        <div class="col-md-3 mb-4">
+            <div class="card shadow-sm">
+                <div class="card-body text-center">
+                    <h6 class="card-title">Departments</h6>
+                    <h2 class="display-4">{{ $departmentCount ?? 0 }}</h2>
+                </div>
+            </div>
+        </div>
+        <!-- Total Employees -->
+        <div class="col-md-3 mb-4">
+            <div class="card shadow-sm">
+                <div class="card-body text-center">
+                    <h6 class="card-title">Employees</h6>
+                    <h2 class="display-4">{{ $employeeCount ?? 0 }}</h2>
+                </div>
+            </div>
+        </div>
+        <!-- Total Payrolls -->
+        <div class="col-md-3 mb-4">
+            <div class="card shadow-sm">
+                <div class="card-body text-center">
+                    <h6 class="card-title">Payrolls</h6>
+                    <h2 class="display-4">{{ $payrollsCount ?? 0 }}</h2>
                 </div>
             </div>
         </div>
         <!-- Pending Leaves -->
-        <div class="col-md-4">
-            <div class="card text-white bg-warning mb-3">
+        <div class="col-md-3 mb-4">
+            <div class="card text-black bg-white mb-3">
                 <div class="card-body">
                     <div class="d-flex align-items-center">
                         <i class="fas fa-calendar-alt fa-2x me-3"></i>
@@ -113,7 +121,10 @@
             </div>
         </div>
     </div>
+    @endcan
+@endsection
 
+@section('scripts')
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script>
         const departmentData = @json($departmentData);
@@ -192,6 +203,4 @@
     </script>
     <p class="copyright">&copy; {{ date('Y') }} HRMS Portal South Sudan Revenue Authority. All Rights Reserved.</p>
 </div>
-@endsection
-@section('scripts')
 @endsection

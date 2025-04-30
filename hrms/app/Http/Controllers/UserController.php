@@ -40,6 +40,11 @@ class UserController extends Controller
         $validatedData['password'] = Hash::make($validatedData['password']);
 
         $user = User::create($validatedData);
+        // Assign role
+        $role = \Spatie\Permission\Models\Role::find($request->role_id);
+        if ($role) {
+            $user->syncRoles([$role->name]);
+        }
 
         audit_log::create([
             'user_id' => auth()->id(), // Current logged-in user
@@ -82,6 +87,11 @@ class UserController extends Controller
         }
 
         $user->update($validatedData);
+        // Assign role
+        $role = \Spatie\Permission\Models\Role::find($request->role_id);
+        if ($role) {
+            $user->syncRoles([$role->name]);
+        }
 
         audit_log::create([
             'user_id' => auth()->id(), // Current logged-in user

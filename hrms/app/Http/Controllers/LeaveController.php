@@ -15,35 +15,79 @@ use Carbon\Carbon;
 
 class LeaveController extends Controller
 {
+    // Export leaves as PDF
+    public function exportPdf(Request $request)
+    {
+        $query = Leave::with('employee');
+        if ($request->filled('status')) {
+            $query->where('status', $request->input('status'));
+        }
+        if ($request->filled('search')) {
+            $search = $request->input('search');
+            $query->whereHas('employee', function ($q) use ($search) {
+                $q->where('first_name', 'like', "%{$search}%")
+                  ->orWhere('last_name', 'like', "%{$search}%");
+            });
+        }
+        $leaves = $query->get();
+        $pdf = \PDF::loadView('leaves.pdf', compact('leaves'));
+        return $pdf->download('leaves.pdf');
+    }
+
+    // Export leaves as Excel (stub, requires LeavesExport class)
+    public function exportExcel(Request $request)
+    {
+        return \Excel::download(new \App\Exports\LeavesExport($request->input('status'), $request->input('search')), 'leaves.xlsx');
+    }
+
     // Display a listing of the leaves
     public function index(Request $request)
     {
         $user = Auth::user();
-        if ($user->hasRole('Admin') || $user->hasRole('HR Manager') || $user->hasRole('Supervisor')) {
-            // Admin, HR Manager, and Supervisor can view all employees
-            $query = Employee::query();
-        } else {
-            // Regular employees can only view their own details
-            $query = Employee::where('user_id', $user->id);
-        }
+        $query = Leave::with('employee');
 
-        // Search functionality
-        if ($request->filled('search')) {
-            $query->whereHas('employee', function ($q) use ($request) {
-                $q->where('first_name', 'like', '%' . $request->search . '%')
-                  ->orWhere('last_name', 'like', '%' . $request->search . '%');
+        // Restrict to own leaves if not admin/HR/Supervisor
+        if (!($user->hasRole('Admin') || $user->hasRole('HR Manager') || $user->hasRole('Supervisor'))) {
+            $query->whereHas('employee', function($q) use ($user) {
+                $q->where('user_id', $user->id);
             });
         }
 
-        // Filter by status
-        if ($request->filled('status')) {
-            $query->where('status', $request->status);
+        // Search by employee name
+        if ($request->filled('search')) {
+            $search = $request->input('search');
+            $query->whereHas('employee', function ($q) use ($search) {
+                $q->where('first_name', 'like', "%{$search}%")
+                  ->orWhere('last_name', 'like', "%{$search}%");
+            });
         }
 
-        $leaves = Leave::with('employee')->get();
-        #$leaves = $query->get();
+        // Filter by division
+        if ($request->filled('division')) {
+            $divisionId = $request->input('division');
+            $query->whereHas('employee.department.division', function($q) use ($divisionId) {
+                $q->where('id', $divisionId);
+            });
+        }
+
+        // Filter by department
+        if ($request->filled('department')) {
+            $departmentId = $request->input('department');
+            $query->whereHas('employee.department', function($q) use ($departmentId) {
+                $q->where('id', $departmentId);
+            });
+        }
+
+        // Filter by leave status
+        if ($request->filled('status')) {
+            $query->where('status', $request->input('status'));
+        }
+
+        #$leaves = Leave::with('employee')->get();       
+        $leaves = $query->get();
         $departments = Department::all();
-        return view('leaves.index', compact('leaves', 'departments'));
+        $divisions = \App\Models\Division::all();
+        return view('leaves.index', compact('leaves', 'departments', 'divisions'));
     }
 
     // Show the form for creating a new leave

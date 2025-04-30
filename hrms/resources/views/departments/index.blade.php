@@ -13,17 +13,31 @@
             </div>
             <div class="col-md-12">
                 <div class="btn-control">
-                    <div class="filter-btn">
-                        <select name="division_id" class="form-control">
-                            <option value="">~ Select Department ~</option>
-                            @foreach($divisions as $division)
-                            <option value="{{ $division->id }}" 
-                                        {{ request('division_id') == $division->id ? 'selected' : '' }}>
-                                        {{ $division->name }}
-                            </option>
-                            @endforeach
-                        </select>
-                    </div>
+                    <form action="{{ route('departments.index') }}" method="GET" class="form-inline w-100">
+                        <div class="row w-100">
+                            <div class="col-md-4 mb-2">
+                                <select name="division_id" class="form-control w-100">
+                                    <option value="">Select Division</option>
+                                    @foreach($divisions as $division)
+                                        <option value="{{ $division->id }}" {{ request('division_id') == $division->id ? 'selected' : '' }}>
+                                            {{ $division->name }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                            </div>
+                            <div class="col-md-4 mb-2">
+                                <input type="text" name="search" class="form-control w-100" placeholder="Search departments..." value="{{ request('search') }}">
+                            </div>
+                            <div class="col-md-4 mb-2 d-flex gap-2">
+                                <button type="submit" class="btn btn-primary mr-2">
+                                    <i class="fas fa-search"></i> Search
+                                </button>
+                                <a href="{{ route('departments.index') }}" class="btn btn-secondary">
+                                    <i class="fas fa-undo"></i> Reset
+                                </a>
+                            </div>
+                        </div>
+                    </form>
                     <div class="download-btn">
                         <div class="download-form">
                             <a href="{{ route('departments.export.pdf', request()->query()) }}" class="list-group-item list-group-item-action">
@@ -41,35 +55,13 @@
                             </button>
                         </div>
                     </div>
-                    <!-- Search Area -->
-                    <div class=" mt-1 search-area">
-                        <div class="row ">
-                            <div class="col-md-12">
-                            <form action="{{ route('departments.index') }}" method="GET">
-                                <div class="row">
-                                    <div class="col-md-12">
-                                        <input type="text" name="search" class="form-control" 
-                                            placeholder="Search departments..." 
-                                            value="{{ request('search') }}">
-                                    </div>
-                                    
-                                    <div class="col-md-12 search-btn">
-                                        <button type="submit" class="btn">Search</button>
-                                    </div>
-                                </div>
-                            </form>
-                            </div>
-                        </div>
-                    </div>
                 </div>
-                    @if($departments->isEmpty())
+                @if($departments->isEmpty())
                     <p><i class="fas fa fa-warning text-warning"></i> No departments found.</p>
-                    @else
-                </div>
-            <div class="table-responsive">
-                <table class="table table-bordered table-striped">
-                    <thead class="thead-dark">
-                <thead>
+                @else
+                <div class="table-responsive">
+                    <table class="table table-bordered table-striped">
+                        <thead class="thead-dark">
                     <tr>
                         <th>ID</th>
                         <th>Name</th>
