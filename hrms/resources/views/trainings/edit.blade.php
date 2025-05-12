@@ -89,12 +89,32 @@
             </div>
 
 
+            <!-- Division Filter -->
+            <div class="col-1 form-group">
+                <label for="division_id" class="form-label">Division</label>
+                <select id="division_id" class="form-control">
+                    <option value="">All Divisions</option>
+                    @foreach($divisions as $division)
+                        <option value="{{ $division->id }}">{{ $division->name }}</option>
+                    @endforeach
+                </select>
+            </div>
+            <!-- Department Filter -->
+            <div class="col-1 form-group">
+                <label for="department_id" class="form-label">Department</label>
+                <select id="department_id" class="form-control">
+                    <option value="">All Departments</option>
+                    @foreach($departments as $department)
+                        <option value="{{ $department->id }}" data-division="{{ $department->division_id }}">{{ $department->name }}</option>
+                    @endforeach
+                </select>
+            </div>
+            <!-- Employees Multi-Select -->
             <div class="form-group">
                 <label for="selected_employees">Selected Employees</label>
                 <select name="selected_employees[]" id="selected_employees" class="form-control select2" multiple>
                     @foreach($employees as $employee)
-                        <option value="{{ $employee->id }}" 
-                            {{ in_array($employee->id, $selectedEmployees) ? 'selected' : '' }}>
+                        <option value="{{ $employee->id }}" data-division="{{ $employee->department->division_id ?? '' }}" data-department="{{ $employee->department_id }}" {{ in_array($employee->id, $selectedEmployees) ? 'selected' : '' }}>
                             {{ $employee->first_name }} {{ $employee->last_name }}
                         </option>
                     @endforeach
@@ -136,6 +156,79 @@
 <script>
 $(document).ready(function() {
     $('.select2').select2();
+
+    // Filtering logic for Division/Department/Employees
+    const divisionSelect = document.getElementById('division_id');
+    const departmentSelect = document.getElementById('department_id');
+    const employeesSelect = document.getElementById('selected_employees');
+
+    const allDepartments = Array.from(departmentSelect.options);
+    const allEmployees = Array.from(employeesSelect.options);
+
+    // Preselect division and department based on first selected employee
+    let selectedEmployeeOption = allEmployees.find(opt => opt.selected);
+    if (selectedEmployeeOption) {
+        let preDiv = selectedEmployeeOption.getAttribute('data-division');
+        let preDept = selectedEmployeeOption.getAttribute('data-department');
+        if (preDiv) divisionSelect.value = preDiv;
+        filterDepartments();
+        if (preDept) departmentSelect.value = preDept;
+        filterEmployees();
+    } else {
+        filterDepartments();
+        filterEmployees();
+    }
+
+    function filterDepartments() {
+        const divisionId = divisionSelect.value;
+        departmentSelect.innerHTML = '';
+        // Always add the 'All Departments' option
+        const allOption = allDepartments.find(opt => opt.value === '');
+        if (allOption) departmentSelect.appendChild(allOption.cloneNode(true));
+        allDepartments.forEach(option => {
+            if (option.value === '') return;
+            if (!divisionId || option.getAttribute('data-division') === divisionId) {
+                departmentSelect.appendChild(option.cloneNode(true));
+            }
+        });
+        // Reset department if not in filtered list
+        if (!Array.from(departmentSelect.options).some(opt => opt.value === departmentSelect.value)) {
+            departmentSelect.value = '';
+        }
+    }
+
+    function filterEmployees() {
+        const divisionId = divisionSelect.value;
+        const departmentId = departmentSelect.value;
+        const selectedIds = Array.from(employeesSelect.selectedOptions).map(opt => opt.value);
+        // Remove all options
+        $(employeesSelect).empty();
+        // Add filtered options
+        allEmployees.forEach(option => {
+            const empDivision = option.getAttribute('data-division');
+            const empDept = option.getAttribute('data-department');
+            if (
+                (!divisionId || empDivision === divisionId) &&
+                (!departmentId || empDept === departmentId)
+            ) {
+                const clone = option.cloneNode(true);
+                if (selectedIds.includes(option.value)) {
+                    clone.selected = true;
+                }
+                employeesSelect.appendChild(clone);
+            }
+        });
+        // Destroy and re-initialize select2 to fix select/deselect
+        $(employeesSelect).select2('destroy');
+        $(employeesSelect).select2();
+    }
+
+    divisionSelect.addEventListener('change', function() {
+        filterDepartments();
+        filterEmployees();
+    });
+    departmentSelect.addEventListener('change', filterEmployees);
+
 
     $('#addEmployeesBtn').click(function() {
         const selectedEmployees = $('#available_employees').val();

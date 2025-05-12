@@ -2,53 +2,57 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="card">
+<div class="col-md-12">
+    <div class="card">
             <div class="card-header bg-white text-dark">
                 <i class="fas fa fa-file-alt"></i> All Audit Logs
             </div>
-            <!-- Search Area -->
-            <div class="container mt-1 search-area">
-                <div class="row justify-content-center">
-                    <div class="col-md-8">
-                        <div class="input-group">
-                            <input type="text" class="form-control" placeholder="Search logs.." aria-label="Search" aria-describedby="button-search">
-                            <div class="input-group-append">
-                                <button class="btn btn-white" type="button" id="button-search">
-                                    <i class="fas fa-search"></i> Search
-                                </button>
-                            </div>
-                        </div>
-                    </div>
+            <div class="card-body">
+            <form action="{{ route('audit_logs.index') }}" method="GET" style="margin-bottom: 5px;">
+    <div class="row col-md-12 align-items-center justify-content-between">
+
+        <!-- Left Control: Search + Reset -->
+        <div class="left-control d-flex align-items-center col-md-4">
+            <div class="search-area me-2 flex-grow-1">
+                <input type="text" name="search" class="form-control" placeholder="Search logs by user, action, model..." value="{{ request('search') }}">
+            </div>
+            <div class="search-icon ">
+                <button type="submit" class="btn btn-outline-primary">
+                    <i class="fas fa-search"></i>
+                </button>
+            </div>
+            <div class="search-icon">
+                <a href="{{ route('audit_logs.index') }}" class="btn btn-outline-success text-success">
+                    <i class="fas fa-sync-alt"></i> Reset
+                </a>
+            </div>
+        </div>
+
+        <!-- Right Control: Downloads + Print -->
+        <div class="col-md-8">
+            <div class="download-btn d-flex justify-content-end align-items-center">
+                <div class="download-form me-2">
+                    <a href="#" class="list-group-item list-group-item-action">
+                        <i class="fas fa-file-pdf text-danger"></i> PDF
+                    </a>
+                </div>
+                <div class="download-form me-2">
+                    <a href="#" class="list-group-item list-group-item-action">
+                        <i class="fas fa-file-excel text-success"></i> Excel
+                    </a>
+                </div>
+                <div class="print">
+                    <button type="button" class="btn btn-secondary" onclick="window.print()">
+                        <i class="fas fa-print"></i> Print
+                    </button>
                 </div>
             </div>
-            <div class="card-body">
-                <div class="col-md-5 download-btn">
-                    <div class="download-form">
-                        <a href="#" class="list-group-item list-group-item-action">
-                            <i class="fas fa-file-pdf text-danger"></i> PDF
-                        </a>
-                    </div>
-                    <div class="download-form">
-                        <a href="#" class="list-group-item list-group-item-action">
-                            <i class="fas fa-file-excel text-success"></i> Excel
-                        </a>
-                    </div>
-                        <button class="btn btn-secondary" onclick="window.print()">
-                            <i class="fas fa-print"></i> Print Page
-                        </button>
-                    </div>
-                </div>
-                <div class="">
-                    <select class="form-control select-option" id="monthSelector">
-                        <option selected>Filter Logs by Users</option>
-                        <option>Corporate Service Division (CSD)</option>
-                        <option>Domestic Tax Revenue Division (DTRD)</option>
-                        <option>Customs Revenue Division (CRD)</option>
-                        <option>Internal Audit Division (IAD)</option>
-                        <option>Internal Affairs Division (INAD)</option>
-                        <option>Information and Communication Technology Division (ICTD)</option>
-                    </select>
-                </div>
+        </div>
+
+    </div>
+</form>
+
+           
     @if($auditLogs->isEmpty())
         <p>No Logs Available.</p>
     @else

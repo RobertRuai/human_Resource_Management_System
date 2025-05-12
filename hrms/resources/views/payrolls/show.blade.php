@@ -1,56 +1,51 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="container">
-    <div class="card mb-4">
-        <div class="card-header bg-primary text-white">
-            <i class="fas fa-file-invoice-dollar mr-2"></i>Payroll Details
+<div class="col-md-12">
+    <div class="card">
+        <div class="card-header bg-white text-dark">
+            <i class="fas fa-file-invoice-dollar"></i> Payroll Details
         </div>
+    </div>
+    <div class="card add-page">
         <div class="card-body">
-            <div class="row">
-                <!-- Employee Information -->
-                <div class="col-md-6">
-                    <h5 class="mb-3">Employee Information</h5>
-                    <table class="table table-bordered">
-                        <tr>
-                            <th>Employee Name:</th>
-                            <td>{{ $payroll->employee->first_name }} {{ $payroll->employee->last_name }}</td>
-                        </tr>
-                        <tr>
-                            <th>Period:</th>
-                            <td>{{ $payroll->month }} {{ $payroll->year }}</td>
-                        </tr>
-                        <tr>
-                            <th>Basic Salary:</th>
-                            <td>{{ number_format($payroll->basic_salary, 2) }}</td>
-                        </tr>
-                    </table>
-                </div>
-
-                <!-- Bank Details -->
-                <div class="col-md-6">
-                    <h5 class="mb-3">Bank Details</h5>
-                    <table class="table table-bordered">
-                        <tr>
-                            <th>Account Number:</th>
-                            <td>{{ $payroll->account_number }}</td>
-                        </tr>
-                        <tr>
-                            <th>Bank Name:</th>
-                            <td>{{ $payroll->bank_name }}</td>
-                        </tr>
-                        <tr>
-                            <th>Status:</th>
-                            <td><span class="{{ $payroll->status_badge }}">{{ ucfirst($payroll->status) }}</span></td>
-                        </tr>
-                    </table>
-                </div>
+        <div class="row d-flex">
+            <div class="col-md-6 card-header bg-white text-dark">
+            <i class="fas fa-user-tie mr-2"></i> Employee Information
+                <table class="table table-bordered">
+                <tr>
+                    <th>Employee Name:</th>
+                    <td>{{ $payroll->employee->first_name }} {{ $payroll->employee->last_name }}</td>
+                </tr>
+                <tr>
+                    <th>Period:</th>
+                    <td>{{ $payroll->month }} {{ $payroll->year }}</td>
+                </tr>
+                <tr>
+                    <th>Basic Salary:</th>
+                    <td>{{ number_format($payroll->basic_salary, 2) }}</td>
+                </tr>
+                </table>
             </div>
-
-            <div class="row mt-4">
-                <!-- Allowances -->
-                <div class="col-md-6">
-                    <h5 class="mb-3">Allowances</h5>
+            <div class="col-md-6 card-header bg-white text-dark">
+                <i class="fas fa-bank"></i> Bank Details
+                <table class="table table-bordered">
+                    <tr>
+                        <th>Account Number:</th>
+                        <td>{{ $payroll->account_number }}</td>
+                    </tr>
+                    <tr>
+                        <th>Bank Name:</th>
+                        <td>{{ $payroll->bank_name }}</td>
+                    </tr>
+                    <tr>
+                        <th>Status:</th>
+                        <td><span class="{{ $payroll->status_badge }}">{{ ucfirst($payroll->status) }}</span></td>
+                    </tr>
+                </table>
+            </div>
+            <div class="col-md-6 card-header bg-white text-dark">
+            <i class="fas fa-money-bill-wave mr-2"></i> Allowances
                     <table class="table table-bordered">
                         <tr>
                             <th>COLA:</th>
@@ -67,9 +62,8 @@
                     </table>
                 </div>
 
-                <!-- Deductions -->
-                <div class="col-md-6">
-                    <h5 class="mb-3">Deductions</h5>
+                <div class="col-md-6 card-header bg-white text-dark">
+                <i class="fas fa-minus-circle mr-2"></i> Deductions
                     <table class="table table-bordered">
                         <tr>
                             <th>Tax Exemption:</th>
@@ -91,10 +85,8 @@
                 </div>
             </div>
 
-            <!-- Summary -->
-            <div class="row mt-4">
-                <div class="col-12">
-                    <h5 class="mb-3">Summary</h5>
+            <div class="col-md-6 card-header bg-white text-dark">
+            <i class="fas fa-calculator mr-2"></i> Summary
                     <table class="table table-bordered">
                         <tr>
                             <th>Gross Salary:</th>
@@ -110,17 +102,18 @@
                         </tr>
                     </table>
                 </div>
-            </div>
 
-            <div class="text-center mt-4">
+            <div class="col-md-6 card-header bg-white text-dark">
                 <a href="{{ route('payrolls.edit', $payroll->id) }}" class="btn btn-warning btn-lg">
-                    <i class="fas fa-edit mr-2"></i>Edit Payroll
+                    <i class="fas fa-edit mr-2"></i> Edit Payroll
                 </a>
                 <a href="{{ route('payrolls.index') }}" class="btn btn-secondary btn-lg ml-2">
-                    <i class="fas fa-arrow-left mr-2"></i>Back to Payrolls
+                    <i class="fas fa-arrow-left mr-2"></i> Back to Payrolls
                 </a>
             </div>
         </div>
-    </div>
+<p class="copyright">&copy; {{ date('Y') }} HRMS Portal South Sudan Revenue Authority. All Rights Reserved.</p>
 </div>
+</div>
+
 @endsection

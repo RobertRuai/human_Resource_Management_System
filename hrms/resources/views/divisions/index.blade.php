@@ -7,8 +7,7 @@
         <i class="fas fa-building"></i> All Divisions
     </div>
     <div class="card-body">
-        <!-- Add New Divisions Button -->
-        <div class="d-flex justify-content-between align-items-center mt-2">
+        <div class="d-flex justify-content-between align-items-center">
             <a href="{{ route('divisions.create') }}" class="btn btn-primary add-btn" id="openPopupBtn"><i class="fas fa-building"></i> Add New Division</a>
         </div>
         @if(session('success'))
@@ -18,7 +17,7 @@
             <table class="table table-bordered table-striped">
                 <thead class="thead-dark">
                     <tr>
-                        <th>Name</th>
+                        <th>Division Name</th>
                         <th>Description</th>
                         <th>Head of Division</th>
                         <th>Departments</th>

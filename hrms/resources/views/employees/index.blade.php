@@ -6,65 +6,76 @@
         <div class="card-header bg-white text-dark">
             <i class="fas fa-users"></i> All Employees
         </div>
-
         <div class="card-body">
-            <!-- Add New Employee Button -->
             <div class="d-flex justify-content-between align-items-center">
                 <a href="{{ route('employees.create') }}" class="btn btn-primary add-btn" id="openPopupBtn"><i class="fas fa-user-plus"></i> Add New Employee</a>
             </div>            
-            <div class="page-description">
-            <!-- <p>The table below shows the current active departments in all the divisions.</p> -->
-        
-            <!-- Search and Filter Area -->
-            <form action="{{ route('employees.index') }}" method="GET" class="card mb-4">
-                <div class="row g-3 align-items-end">
-                    <!-- Division Filter -->
-                    <div class="col-md-3">
-                        <div class="form-group">
-                            <label for="division_id" class="form-label">Division</label>
+            
+            <form action="{{ route('employees.index') }}" method="GET" style="margin-bottom: 5px;">
+                <div class="row col-md-12 align-items-center justify-content-between">
+
+                    <!-- Left Control: Filters + Search -->
+                    <div class="left-control d-flex align-items-center flex-wrap col-md-6">
+
+                        <!-- Division Filter -->
+                        <div class="filter-btn">
                             <select name="division_id" id="division_id" class="form-select">
-                                <option value="">All Divisions</option>
-                                @foreach($departments as $department)
-                                    @if($department->division)
-                                        <option value="{{ $department->division->id }}" {{ request('division_id') == $department->division->id ? 'selected' : '' }}>
-                                            {{ $department->division->name }}
-                                        </option>
-                                    @endif
+                                <option value="">Filter by Division</option>
+                                @foreach($departments->pluck('division')->unique('id')->filter() as $division)
+                                    <option value="{{ $division->id }}" {{ request('division_id') == $division->id ? 'selected' : '' }}>
+                                        {{ $division->name }}
+                                    </option>
                                 @endforeach
                             </select>
                         </div>
-                    </div>
-                    <!-- Search Field -->
-                    <div class="col-md-3">
-                        <div class="form-group">
-                            <label for="search" class="form-label">Search Employee</label>
-                            <div class="input-group">
-                                <span class="input-group-text">
-                                    <i class="fas fa-search"></i>
-                                </span>
-                                <input type="text" name="search" id="search" class="form-control" placeholder="Search by name..." value="{{ request('search') }}">
-                            </div>
+
+                        <!-- Department Filter -->
+                        <div class="filter-btn">
+                            <select name="department_id" id="department_id" class="form-select">
+                                <option value="">Filter by Department</option>
+                                @foreach($departments as $department)
+                                    <option value="{{ $department->id }}" data-division="{{ $department->division_id }}" {{ request('department_id') == $department->id ? 'selected' : '' }}>
+                                        {{ $department->name }}
+                                    </option>
+                                @endforeach
+                            </select>
+                        </div>
+
+                        <!-- Search Input -->
+                        <div class="search-area flex-grow-1">
+                            <input type="text" name="search" class="form-control" placeholder="Search employees..." value="{{ request('search') }}">
+                        </div>
+
+                        <!-- Search Button -->
+                        <div class="search-icon">
+                            <button type="submit" class="btn btn-outline-primary">
+                                <i class="fas fa-search"></i>
+                            </button>
+                        </div>
+
+                        <!-- Reset Button -->
+                        <div class="search-icon">
+                            <a href="{{ route('employees.index') }}" class=" btn-outline-success text-success">
+                                <i class="fas fa-sync-alt"></i> Reset
+                            </a>
                         </div>
                     </div>
-                    <!-- Buttons and Export/Print -->
+
+                    <!-- Right Control: Downloads + Print -->
                     <div class="col-md-6">
-                        <div class="d-flex justify-content-between align-items-end w-100 gap-2">
-                            <div class="d-flex gap-2">
-                                <button type="submit" class="btn btn-primary flex-grow-1">
-                                    <i class="fas fa-search"></i> Search
-                                </button>
-                                <a href="{{ route('employees.index') }}" class="btn btn-secondary flex-grow-1">
-                                    <i class="fas fa-eraser"></i> Reset
+                        <div class="download-btn d-flex justify-content-end align-items-center">
+                            <div class="download-form">
+                                <a href="{{ route('employees.export.pdf', request()->query()) }}" class="list-group-item list-group-item-action">
+                                    <i class="fas fa-file-pdf text-danger"></i> PDF
                                 </a>
                             </div>
-                            <div class="d-flex gap-2">
-                                <a href="{{ route('employees.export.pdf', request()->query()) }}" class="btn btn-danger">
-                                    <i class="fas fa-file-pdf"></i> PDF
+                            <div class="download-form">
+                                <a href="{{ route('employees.export.excel', request()->query()) }}" class="list-group-item list-group-item-action">
+                                    <i class="fas fa-file-excel text-success"></i> Excel
                                 </a>
-                                <a href="{{ route('employees.export.excel', request()->query()) }}" class="btn btn-success">
-                                    <i class="fas fa-file-excel"></i> Excel
-                                </a>
-                                <button class="btn btn-secondary" onclick="window.print(); return false;">
+                            </div>
+                            <div class="print">
+                                <button type="button" class="btn btn-secondary" onclick="window.print(); return false;">
                                     <i class="fas fa-print"></i> Print
                                 </button>
                             </div>
@@ -72,7 +83,6 @@
                     </div>
                 </div>
             </form>
-        </div>
 
             @if(session('success'))
                 <div class="alert alert-success">{{ session('success') }}</div>
@@ -195,3 +205,32 @@
     </div>
 </div>
 @endsection
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const divisionSelect = document.getElementById('division_id');
+        const departmentSelect = document.getElementById('department_id');
+        if (!divisionSelect || !departmentSelect) return;
+        const allOptions = Array.from(departmentSelect.options);
+
+        function filterDepartments() {
+            const divisionId = divisionSelect.value;
+            departmentSelect.innerHTML = '';
+            // Always add the 'All Departments' option
+            const allOption = allOptions.find(opt => opt.value === '');
+            if (allOption) departmentSelect.appendChild(allOption.cloneNode(true));
+            allOptions.forEach(option => {
+                if (option.value === '') return; // skip 'All'
+                if (!divisionId || option.getAttribute('data-division') === divisionId) {
+                    departmentSelect.appendChild(option.cloneNode(true));
+                }
+            });
+            // If the selected department is not in the filtered list, reset selection
+            if (!Array.from(departmentSelect.options).some(opt => opt.value === departmentSelect.value)) {
+                departmentSelect.value = '';
+            }
+        }
+        divisionSelect.addEventListener('change', filterDepartments);
+        filterDepartments(); // Initial filter on page load
+    });
+</script>

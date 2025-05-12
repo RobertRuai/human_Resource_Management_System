@@ -10,44 +10,14 @@
         <div class="card-header bg-white text-dark">
             <i class="fas fa-user-tag"></i> All Roles
                 </div>
-                <!-- Search Area -->
-                <div class="container mt-1 search-area">
-                    <div class="row justify-content-center">
-                        <div class="col-md-8">
-                            <div class="input-group">
-                                <input type="text" class="form-control" placeholder="Search roles.." aria-label="Search" aria-describedby="button-search">
-                                <div class="input-group-append">
-                                    <button class="btn btn-white" type="button" id="button-search">
-                                        <i class="fas fa-search"></i> Search
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                
                 <div class="card-body">
-                    <!-- Add New employee Button -->
+                    <!-- Add New Role Button -->
                     <div class="d-flex justify-content-between align-items-center mb-3">
                     <a href="{{ route('roles.create') }}" class="btn btn-primary add-btn" id="openPopupBtn"><i class="fas fa-user-tag"></i> Add New Role</a>
                     </div>
-                    <div class="col-md-5 download-btn">
-                        <div class="download-form">
-                            <a href="#" class="list-group-item list-group-item-action">
-                                <i class="fas fa-file-pdf text-danger"></i> PDF
-                            </a>
-                        </div>
-                        <div class="download-form">
-                            <a href="#" class="list-group-item list-group-item-action">
-                                <i class="fas fa-file-excel text-success"></i> Excel
-                            </a>
-                        </div>
-                            <button class="btn btn-secondary" onclick="window.print()">
-                                <i class="fas fa-print"></i> Print Page
-                            </button>
-                        </div>
-                    </div>
-                    <div class="page-description">
-                    </div>
+                    
+                   
 
     @if($roles->isEmpty())
         <p>No Roles found.</p>

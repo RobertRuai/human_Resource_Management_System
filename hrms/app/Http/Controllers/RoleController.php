@@ -9,11 +9,39 @@ use Illuminate\Http\Request;
 class RoleController extends Controller
 {
     // Display a listing of the roles with permissions and all permissions
-    public function index()
+    public function index(Request $request)
     {
-        $roles = \Spatie\Permission\Models\Role::with('permissions')->get();
+        $query = \Spatie\Permission\Models\Role::with('permissions');
+        if ($request->filled('search')) {
+            $search = $request->input('search');
+            $query->where('name', 'like', "%$search%");
+        }
+        $roles = $query->get();
         $permissions = \Spatie\Permission\Models\Permission::all();
         return view('roles.index', compact('roles', 'permissions'));
+    }
+
+    public function exportPdf(Request $request)
+    {
+        $query = \Spatie\Permission\Models\Role::with('permissions');
+        if ($request->filled('search')) {
+            $search = $request->input('search');
+            $query->where('name', 'like', "%$search%");
+        }
+        $roles = $query->get();
+        $pdf = \Barryvdh\DomPDF\Facade\Pdf::loadView('roles.pdf', compact('roles'));
+        return $pdf->download('roles.pdf');
+    }
+
+    public function exportExcel(Request $request)
+    {
+        $query = \Spatie\Permission\Models\Role::with('permissions');
+        if ($request->filled('search')) {
+            $search = $request->input('search');
+            $query->where('name', 'like', "%$search%");
+        }
+        $roles = $query->get();
+        return \Maatwebsite\Excel\Facades\Excel::download(new \App\Exports\RolesExport($roles), 'roles.xlsx');
     }
 
     // Show the form for creating a new role

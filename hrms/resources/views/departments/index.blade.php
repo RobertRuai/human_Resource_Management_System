@@ -7,55 +7,71 @@
             <i class="fas fa-building"></i> All Departments
         </div>
         <div class="card-body">
-            <!-- Add New Department Button -->
-            <div class="d-flex justify-content-between align-items-center mt-2">
+            <div class="d-flex justify-content-between align-items-center">
                 <a href="{{ route('departments.create') }}" class="btn btn-primary add-btn" id="openPopupBtn"><i class="fas fa-building"></i> Add New Department</a>
             </div>
-            <div class="col-md-12">
-                <div class="btn-control">
-                    <form action="{{ route('departments.index') }}" method="GET" class="form-inline w-100">
-                        <div class="row w-100">
-                            <div class="col-md-4 mb-2">
-                                <select name="division_id" class="form-control w-100">
-                                    <option value="">Select Division</option>
-                                    @foreach($divisions as $division)
-                                        <option value="{{ $division->id }}" {{ request('division_id') == $division->id ? 'selected' : '' }}>
-                                            {{ $division->name }}
-                                        </option>
-                                    @endforeach
-                                </select>
-                            </div>
-                            <div class="col-md-4 mb-2">
-                                <input type="text" name="search" class="form-control w-100" placeholder="Search departments..." value="{{ request('search') }}">
-                            </div>
-                            <div class="col-md-4 mb-2 d-flex gap-2">
-                                <button type="submit" class="btn btn-primary mr-2">
-                                    <i class="fas fa-search"></i> Search
-                                </button>
-                                <a href="{{ route('departments.index') }}" class="btn btn-secondary">
-                                    <i class="fas fa-undo"></i> Reset
-                                </a>
-                            </div>
-                        </div>
-                    </form>
-                    <div class="download-btn">
-                        <div class="download-form">
-                            <a href="{{ route('departments.export.pdf', request()->query()) }}" class="list-group-item list-group-item-action">
-                                <i class="fas fa-file-pdf text-danger"></i> PDF
-                            </a>
-                        </div>  
-                        <div class="download-form">
-                            <a href="{{ route('departments.export.excel', request()->query()) }}" class="list-group-item list-group-item-action">
-                                <i class="fas fa-file-excel text-success"></i> Excel
-                            </a>
-                        </div>
-                        <div>
-                            <button class="btn btn-secondary" onclick="window.print()">
-                                <i class="fas fa-print"></i> Print
-                            </button>
-                        </div>
-                    </div>
+            <form action="{{ route('departments.index') }}" method="GET" style="margin-bottom: 5px;">
+                <div class="row col-md-12 align-items-center justify-content-between">
+
+                <!-- Left Control: Filter + Search -->
+                <div class="left-control d-flex align-items-center flex-wrap col-md-4">
+
+                <!-- Division Filter -->
+                <div class="filter-btn">
+                    <select name="division_id" id="division_id" class="form-select">
+                        <option value="">Filter by Division</option>
+                    @foreach($departments->pluck('division')->unique('id')->filter() as $division)
+                        <option value="{{ $division->id }}" {{ request('division_id') == $division->id ? 'selected' : '' }}>
+                            {{ $division->name }}
+                        </option>
+                    @endforeach
+                </select>
+            </div>
+
+            <!-- Search Input -->
+            <div class="search-area  flex-grow-1">
+                <input type="text" name="search" class="form-control" placeholder="Search departments..." value="{{ request('search') }}">
+            </div>
+
+            <!-- Search Button -->
+            <div class="search-icon">
+                <button type="submit" class="btn btn-outline-primary">
+                    <i class="fas fa-search"></i>
+                </button>
+            </div>
+
+            <!-- Reset Button -->
+            <div class="search-icon">
+                <a href="{{ route('departments.index') }}" class=" btn-outline-success text-success">
+                    <i class="fas fa-sync-alt"></i> Reset
+                </a>
+            </div>
+        </div>
+
+        <!-- Right Control: Downloads + Print -->
+        <div class="col-md-8">
+            <div class="download-btn d-flex justify-content-end align-items-center">
+                <div class="download-form">
+                    <a href="{{ route('departments.export.pdf', request()->query()) }}" class="list-group-item list-group-item-action">
+                        <i class="fas fa-file-pdf text-danger"></i> PDF
+                    </a>
                 </div>
+                <div class="download-form">
+                    <a href="{{ route('departments.export.excel', request()->query()) }}" class="list-group-item list-group-item-action">
+                        <i class="fas fa-file-excel text-success"></i> Excel
+                    </a>
+                </div>
+                <div class="print">
+                    <button type="button" class="btn btn-secondary" onclick="window.print(); return false;">
+                        <i class="fas fa-print"></i> Print
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+
+                        
                 @if($departments->isEmpty())
                     <p><i class="fas fa fa-warning text-warning"></i> No departments found.</p>
                 @else
@@ -64,7 +80,7 @@
                         <thead class="thead-dark">
                     <tr>
                         <th>ID</th>
-                        <th>Name</th>
+                        <th>Department Name</th>
                         <th>Description</th>
                         <th>Division</th>
                         <th>Action</th>
@@ -95,7 +111,7 @@
                         @endforeach
                     </tbody>
                 </table>
-                <!-- Pagination -->
+                <!-- Pagination 
                 <div class="container mt-4 ">
                     <nav aria-label="Page navigation example">
                         <ul class="pagination justify-content-center">
@@ -118,7 +134,7 @@
                             </li>
                         </ul>
                     </nav>
-                </div>
+                </div>-->
                 <p class="copyright">&copy; 2024 HRMS Portal South Sudan Revenue Authority. All Rights Reserved.</p>
             </div>
         </div>

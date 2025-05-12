@@ -46,8 +46,8 @@
                                         <p class="card-text"><strong>Type of Employment:</strong> {{ $employee->type_of_employment }}</p>
                                         <p class="card-text"><strong>Division:</strong> {{ $employee->division }}</p>
                                         <p class="card-text"><strong>Location:</strong> {{ $employee->location }}</p>
-                                        </div>
-                                        <div class="kin-details">
+                                    </div>
+                                    <div class="kin-details">
                                         <p><strong>Next of Kin Details</strong></p><hr>
                                         <div class="row">
                                             <div class="col-md-6">
@@ -57,7 +57,7 @@
                                                 <p><strong>Marital Status:</strong> {{ $employee->marital_status }}</p>
                                             </div>
                                         </div>
-                                        </div>
+                                    </div>
                                         <div class="qualification-details">
                                         <p><strong>Qualification Details</strong></p><hr>
                                         @if($employee->credentials)
@@ -66,8 +66,8 @@
                                         </div>
                                         </div>
 
-                                        <!-- Salary and Bank Information -->
-                                        <h5 class="mt-4 mb-3">Salary and Bank Information</h5>
+                                    <div class="salary-details">
+                                        <p><strong>Salary Details</strong></p><hr>
                                         <div class="row">
                                             <div class="col-md-6">
                                                 <p><strong>Basic Salary:</strong> ₦{{ number_format($employee->basic_salary, 2) }}</p>
@@ -84,6 +84,7 @@
                                                 <p><strong>TIN Registration Number:</strong> {{ $employee->tin_no ?? 'Not provided' }}</p>
                                             </div>
                                         </div>
+                                    </div>
 
                                         <p class="copyright">&copy; {{ date('Y') }} HRMS Portal South Sudan Revenue Authority. All Rights Reserved.</p>
                                     </div>

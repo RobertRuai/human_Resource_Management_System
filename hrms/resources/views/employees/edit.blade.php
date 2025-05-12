@@ -4,7 +4,7 @@
 <div class="col-md-12">
     <div class="card">
         <div class="card-header bg-white text-dark">
-        <i class="fas fa-user"></i> Edit Employee Details
+             <i class="fas fa-user"></i> Edit Employee Details
         </div>
     </div>
                         <div class="card add-page">

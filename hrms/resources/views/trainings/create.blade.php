@@ -66,11 +66,34 @@
                                 
                                     
                                 
+                                    <!-- Division Filter -->
+                                    <div class="col-2 form-group">
+                                        <label for="division_id" class="form-label">Division</label>
+                                        <select id="division_id" class="form-control">
+                                            <option value="">All Divisions</option>
+                                            @foreach($divisions as $division)
+                                                <option value="{{ $division->id }}">{{ $division->name }}</option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                    <!-- Department Filter -->
+                                    <div class="col-2 form-group">
+                                        <label for="department_id" class="form-label">Department</label>
+                                        <select id="department_id" class="form-control">
+                                            <option value="">All Departments</option>
+                                            @foreach($departments as $department)
+                                                <option value="{{ $department->id }}" data-division="{{ $department->division_id }}">{{ $department->name }}</option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                    <!-- Employees Multi-Select -->
                                     <div class="col-2 form-group">
                                         <label for="employees" class="form-label">Select Employees</label>
                                         <select name="employees[]" id="employees" class="form-control" multiple required>
                                             @foreach($employees as $employee)
-                                                <option value="{{ $employee->id }}">{{ $employee->first_name }} {{ $employee->last_name }}</option>
+                                                <option value="{{ $employee->id }}" data-division="{{ $employee->department->division_id ?? '' }}" data-department="{{ $employee->department_id }}">
+                                                    {{ $employee->first_name }} {{ $employee->last_name }}
+                                                </option>
                                             @endforeach
                                         </select>
                                         <small class="text-muted">Hold CTRL (Windows) or CMD (Mac) to select multiple employees.</small>
@@ -93,3 +116,58 @@
     </div>
 </div>
 @endsection
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const divisionSelect = document.getElementById('division_id');
+        const departmentSelect = document.getElementById('department_id');
+        const employeesSelect = document.getElementById('employees');
+
+        const allDepartments = Array.from(departmentSelect.options);
+        const allEmployees = Array.from(employeesSelect.options);
+
+        function filterDepartments() {
+            const divisionId = divisionSelect.value;
+            departmentSelect.innerHTML = '';
+            // Always add the 'All Departments' option
+            const allOption = allDepartments.find(opt => opt.value === '');
+            if (allOption) departmentSelect.appendChild(allOption.cloneNode(true));
+            allDepartments.forEach(option => {
+                if (option.value === '') return;
+                if (!divisionId || option.getAttribute('data-division') === divisionId) {
+                    departmentSelect.appendChild(option.cloneNode(true));
+                }
+            });
+            // Reset department if not in filtered list
+            if (!Array.from(departmentSelect.options).some(opt => opt.value === departmentSelect.value)) {
+                departmentSelect.value = '';
+            }
+        }
+
+        function filterEmployees() {
+            const divisionId = divisionSelect.value;
+            const departmentId = departmentSelect.value;
+            employeesSelect.innerHTML = '';
+            allEmployees.forEach(option => {
+                const empDivision = option.getAttribute('data-division');
+                const empDept = option.getAttribute('data-department');
+                if (
+                    (!divisionId || empDivision === divisionId) &&
+                    (!departmentId || empDept === departmentId)
+                ) {
+                    employeesSelect.appendChild(option.cloneNode(true));
+                }
+            });
+        }
+
+        divisionSelect.addEventListener('change', function() {
+            filterDepartments();
+            filterEmployees();
+        });
+        departmentSelect.addEventListener('change', filterEmployees);
+
+        // Initial filter
+        filterDepartments();
+        filterEmployees();
+    });
+</script>

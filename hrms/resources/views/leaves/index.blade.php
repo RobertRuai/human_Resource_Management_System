@@ -15,118 +15,85 @@
                     <i class="fas fa-calendar-plus"></i> Request New Leave
                 </a>
             </div>
-            <form action="{{ route('leaves.index') }}" method="GET" class="card mb-4">
-                <div class="card-body">
-                    <div class="row g-3 align-items-end">
+
+            <form action="{{ route('leaves.index') }}" method="GET" style="margin-bottom: 5px;">
+                <div class="row col-md-12 align-items-center justify-content-between">
+
+                    <!-- Left Control: Filters + Search -->
+                    <div class="left-control d-flex align-items-center flex-wrap col-md-8">
+
                         <!-- Division Filter -->
-                        <div class="col-md-2">
-                            <div class="form-group">
-                                <label for="division" class="form-label">Division</label>
-                                <select name="division" id="division" class="form-select">
-                                    <option value="">All Divisions</option>
+                        <div class="filter-btn">
+                        <select name="division" id="division" class="form-select">
+                                    <option value="">Filter by Division</option>
                                     @foreach($divisions ?? [] as $division)
                                         <option value="{{ $division->id }}" {{ request('division') == $division->id ? 'selected' : '' }}>{{ $division->name }}</option>
                                     @endforeach
                                 </select>
-                            </div>
                         </div>
+
                         <!-- Department Filter -->
-                        <div class="col-md-2">
-                            <div class="form-group">
-                                <label for="department" class="form-label">Department</label>
-                                <select name="department" id="department" class="form-select">
-                                    <option value="">All Departments</option>
+                        <div class="filter-btn">
+                        <select name="department" id="department" class="form-select">
+                                    <option value="">Filter by Department</option>
                                     @foreach($departments ?? [] as $department)
                                         <option value="{{ $department->id }}" data-division="{{ $department->division_id }}" {{ request('department') == $department->id ? 'selected' : '' }}>{{ $department->name }}</option>
                                     @endforeach
                                 </select>
-                                <script>
-                                document.addEventListener('DOMContentLoaded', function() {
-                                    const divisionSelect = document.getElementById('division');
-                                    const departmentSelect = document.getElementById('department');
-                                    const allOptions = Array.from(departmentSelect.options);
-
-                                    function filterDepartments() {
-                                        const divisionId = divisionSelect.value;
-                                        departmentSelect.innerHTML = '';
-                                        // Always add the 'All Departments' option
-                                        const allOption = allOptions.find(opt => opt.value === '');
-                                        departmentSelect.appendChild(allOption.cloneNode(true));
-                                        allOptions.forEach(option => {
-                                            if (option.value === '') return; // skip 'All'
-                                            if (!divisionId || option.getAttribute('data-division') === divisionId) {
-                                                departmentSelect.appendChild(option.cloneNode(true));
-                                            }
-                                        });
-                                        // If the selected department is not in the filtered list, reset selection
-                                        if (!Array.from(departmentSelect.options).some(opt => opt.value === departmentSelect.value)) {
-                                            departmentSelect.value = '';
-                                        }
-                                    }
-                                    divisionSelect.addEventListener('change', filterDepartments);
-                                    filterDepartments(); // Initial filter on page load
-                                });
-                                </script>
-                            </div>
                         </div>
+
                         <!-- Status Filter -->
-                        <div class="col-md-2">
-                            <div class="form-group">
-                                <label for="status" class="form-label">Status</label>
-                                <select name="status" id="status" class="form-select">
-                                    <option value="">All Statuses</option>
+                        <div class="filter-btn">
+                        <select name="status" id="status" class="form-select">
+                                    <option value="">Statuses</option>
                                     <option value="approved" {{ request('status') == 'approved' ? 'selected' : '' }}>Approved</option>
                                     <option value="rejected" {{ request('status') == 'rejected' ? 'selected' : '' }}>Rejected</option>
                                     <option value="pending" {{ request('status') == 'pending' ? 'selected' : '' }}>Pending</option>
                                 </select>
-                            </div>
                         </div>
-                        <!-- Search Field -->
-                        <div class="col-md-3">
-                            <div class="form-group">
-                                <label for="search" class="form-label">Search Leaves</label>
-                                <div class="input-group">
-                                    <span class="input-group-text">
-                                        <i class="fas fa-search"></i>
-                                    </span>
-                                    <input type="text" name="search" id="search" class="form-control" placeholder="Employee Name..." value="{{ request('search') }}">
-                                </div>
-                            </div>
+
+                        <!-- Search Input -->
+                        <div class="search-area flex-grow-1">
+                            <input type="text" name="search" class="form-control" placeholder="Search leaves..." value="{{ request('search') }}">
                         </div>
-                        <!-- Buttons and Export/Print -->
-                        <div class="col-md-6">
-                            <div class="d-flex justify-content-between align-items-end w-100 gap-2">
-                                <div class="d-flex gap-2">
-                                <a href="{{ route('leaves.export.pdf', request()->query()) }}" class="btn btn-danger">
-                                        <i class="fas fa-file-pdf"></i> PDF
-                                    </a>
-                                    <a href="{{ route('leaves.export.excel', request()->query()) }}" class="btn btn-success">
-                                        <i class="fas fa-file-excel"></i> Excel
-                                    </a>
-                                    <button class="btn btn-secondary" onclick="window.print(); return false;">
-                                        <i class="fas fa-print"></i> Print
-                                    </button>  
-                                </div>
-                                <div class="d-flex gap-2">
-                                <button type="submit" class="btn btn-primary flex-grow-1">
-                                        <i class="fas fa-search"></i> Search
-                                    </button>
-                                    <a href="{{ route('leaves.index') }}" class="btn btn-secondary flex-grow-1">
-                                        <i class="fas fa-eraser"></i> Reset
-                                    </a>
-                                    
-                                </div>
-                            </div>
+
+                        <!-- Search Button -->
+                        <div class="search-icon">
+                            <button type="submit" class="btn btn-outline-primary">
+                                <i class="fas fa-search"></i>
+                            </button>
                         </div>
+
+                        <!-- Reset Button -->
+                        <div class="search-icon">
+                            <a href="{{ route('leaves.index') }}" class=" btn-outline-success text-success">
+                                <i class="fas fa-sync-alt"></i> Reset
+                            </a>
+                        </div>
+                    </div>
+
+                    <!-- Right Control: Downloads + Print -->
+                    <div class="col-md-4">
+                        <div class="download-btn d-flex justify-content-end align-items-center">
+                            <div class="download-form">
+                                <a href="{{ route('leaves.export.pdf', request()->query()) }}" class="list-group-item list-group-item-action">
+                                    <i class="fas fa-file-pdf text-danger"></i> PDF
+                                </a>
+                            </div>
+                            <div class="download-form">
+                                <a href="{{ route('leaves.export.excel', request()->query()) }}" class="list-group-item list-group-item-action">
+                                    <i class="fas fa-file-excel text-success"></i> Excel
+                                </a>
+                            </div>
+                            <div class="print">
+                                <button type="button" class="btn btn-secondary" onclick="window.print(); return false;">
+                                    <i class="fas fa-print"></i> Print
+                                </button>
+                            </div>
+                      </div>
                     </div>
                 </div>
             </form>
-        </div>
-        <div class="card-body">
-
-            <div class="page-description">
-            <!-- <p>The table below shows the current active departments in all the divisions.</p> -->
-        </div>
 
         @if($leaves->isEmpty())
             <p>No leave records found.</p>
@@ -181,3 +148,31 @@
         </div>
     @endif
 @endsection
+
+<script>
+                                document.addEventListener('DOMContentLoaded', function() {
+                                    const divisionSelect = document.getElementById('division');
+                                    const departmentSelect = document.getElementById('department');
+                                    const allOptions = Array.from(departmentSelect.options);
+
+                                    function filterDepartments() {
+                                        const divisionId = divisionSelect.value;
+                                        departmentSelect.innerHTML = '';
+                                        // Always add the 'All Departments' option
+                                        const allOption = allOptions.find(opt => opt.value === '');
+                                        departmentSelect.appendChild(allOption.cloneNode(true));
+                                        allOptions.forEach(option => {
+                                            if (option.value === '') return; // skip 'All'
+                                            if (!divisionId || option.getAttribute('data-division') === divisionId) {
+                                                departmentSelect.appendChild(option.cloneNode(true));
+                                            }
+                                        });
+                                        // If the selected department is not in the filtered list, reset selection
+                                        if (!Array.from(departmentSelect.options).some(opt => opt.value === departmentSelect.value)) {
+                                            departmentSelect.value = '';
+                                        }
+                                    }
+                                    divisionSelect.addEventListener('change', filterDepartments);
+                                    filterDepartments(); // Initial filter on page load
+                                });
+                                </script>

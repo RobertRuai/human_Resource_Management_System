@@ -9,11 +9,20 @@ use Illuminate\Http\Request;
 class AuditLogController extends Controller
 {
     // Display a listing of the audit logs
-    public function index()
+    public function index(Request $request)
     {
-        $user = User::all();
-        $auditLogs = audit_log::with('user')->latest()->get();
-        #$auditLogs = audit_log::all();
+        $query = audit_log::with('user')->latest();
+        if ($request->filled('search')) {
+            $search = $request->input('search');
+            $query->where(function($q) use ($search) {
+                $q->whereHas('user', function($uq) use ($search) {
+                        $uq->where('username', 'like', "%$search%");
+                    })
+                  ->orWhere('action', 'like', "%$search%")
+                  ->orWhere('model', 'like', "%$search%");
+            });
+        }
+        $auditLogs = $query->get();
         return view('audit_logs.index', compact('auditLogs'));
     }
 

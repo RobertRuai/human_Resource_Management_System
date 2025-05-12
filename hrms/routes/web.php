@@ -62,11 +62,17 @@ Route::middleware('auth', 'role:Admin|HR Manager|Supervisor|Employee')->group(fu
     Route::resource('notifications', NotificationController::class);
     #Route::resource('payrolls', PayrollController::class);
     Route::resource('roles', RoleController::class);
+Route::get('roles/export/pdf', [App\Http\Controllers\RoleController::class, 'exportPdf'])->name('roles.export.pdf');
+Route::get('roles/export/excel', [App\Http\Controllers\RoleController::class, 'exportExcel'])->name('roles.export.excel');
     Route::post('/roles/assign-permissions', [App\Http\Controllers\RoleController::class, 'assignPermissions'])->name('roles.assignPermissions')->middleware('role:Admin');
 Route::post('/roles/remove-permission', [App\Http\Controllers\RoleController::class, 'removePermission'])->name('roles.removePermission')->middleware('role:Admin');
     Route::resource('users', UserController::class)->middleware('role:Admin');
+    Route::get('users/export/pdf', [App\Http\Controllers\UserController::class, 'exportPdf'])->name('users.export.pdf');
+    Route::get('users/export/excel', [App\Http\Controllers\UserController::class, 'exportExcel'])->name('users.export.excel');
     Route::resource('salaries', SalaryController::class);
     Route::resource('trainings', TrainingController::class);
+    Route::get('trainings/export/pdf', [TrainingController::class, 'exportPdf'])->name('trainings.export.pdf');
+    Route::get('trainings/export/excel', [TrainingController::class, 'exportExcel'])->name('trainings.export.excel');
 
     Route::get('/hr/leaves', [LeaveApprovalController::class, 'index'])->name('hr.leaves.index');
     Route::get('/hr/leaves/{id}/approveLeave', [LeaveApprovalController::class, 'approveLeave'])->name('hr.leaves.approve');

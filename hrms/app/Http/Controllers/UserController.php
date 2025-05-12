@@ -11,12 +11,78 @@ use Illuminate\Support\Facades\Hash;
 class UserController extends Controller
 {
     // Display a listing of the users
-    public function index()
+    public function index(Request $request)
     {
-        #$users = User::all();
         $roles = Role::all();
-        $users = User::with('roles')->get();
+        $query = User::with('roles');
+        if ($request->filled('search')) {
+            $search = $request->input('search');
+            $query->where(function($q) use ($search) {
+                $q->where('username', 'like', "%$search%")
+                  ->orWhere('email', 'like', "%$search%")
+                  ->orWhereHas('roles', function($qr) use ($search) {
+                      $qr->where('name', 'like', "%$search%") ;
+                  });
+            });
+        }
+        if ($request->filled('role')) {
+            $roleId = $request->input('role');
+            $query->whereHas('roles', function($q) use ($roleId) {
+                $q->where('id', $roleId);
+            });
+        }
+        $users = $query->paginate(15)->appends($request->query());
         return view('users.index', compact('users', 'roles'));
+    }
+
+    // Export filtered users as PDF
+    public function exportPdf(Request $request)
+    {
+        $roles = Role::all();
+        $query = User::with('roles');
+        if ($request->filled('search')) {
+            $search = $request->input('search');
+            $query->where(function($q) use ($search) {
+                $q->where('username', 'like', "%$search%")
+                  ->orWhere('email', 'like', "%$search%")
+                  ->orWhereHas('roles', function($qr) use ($search) {
+                      $qr->where('name', 'like', "%$search%") ;
+                  });
+            });
+        }
+        if ($request->filled('role')) {
+            $roleId = $request->input('role');
+            $query->whereHas('roles', function($q) use ($roleId) {
+                $q->where('id', $roleId);
+            });
+        }
+        $users = $query->get();
+        $pdf = \Barryvdh\DomPDF\Facade\Pdf::loadView('users.pdf', compact('users', 'roles'));
+        return $pdf->download('users.pdf');
+    }
+
+    // Export filtered users as Excel
+    public function exportExcel(Request $request)
+    {
+        $query = User::with('roles');
+        if ($request->filled('search')) {
+            $search = $request->input('search');
+            $query->where(function($q) use ($search) {
+                $q->where('username', 'like', "%$search%")
+                  ->orWhere('email', 'like', "%$search%")
+                  ->orWhereHas('roles', function($qr) use ($search) {
+                      $qr->where('name', 'like', "%$search%") ;
+                  });
+            });
+        }
+        if ($request->filled('role')) {
+            $roleId = $request->input('role');
+            $query->whereHas('roles', function($q) use ($roleId) {
+                $q->where('id', $roleId);
+            });
+        }
+        $users = $query->get();
+        return \Maatwebsite\Excel\Facades\Excel::download(new \App\Exports\UsersExport($users), 'users.xlsx');
     }
 
     // Show the form for creating a new user

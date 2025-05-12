@@ -32,37 +32,37 @@
     <div class="row justify-content-center">
         <!-- Total Divisions -->
         <div class="col-md-3 mb-4">
-            <div class="card shadow-sm">
-                <div class="card-body text-center">
-                    <h6 class="card-title">Divisions</h6>
-                    <h2 class="display-4">{{ $divisionsCount }}</h2>
+            <div class="card text-black bg-white mb-3">
+                <div class="card-body">
+                        <i class="fas fa-building fa-2x me-3"></i>
+                        <div>
+                            <h5 class="card-title">Divisions</h5>
+                            <p class="card-paragraph display-4">{{ $divisionsCount }}</p>
+                        </div>
                 </div>
             </div>
         </div>
         <!-- Total Departments -->
         <div class="col-md-3 mb-4">
-            <div class="card shadow-sm">
-                <div class="card-body text-center">
-                    <h6 class="card-title">Departments</h6>
-                    <h2 class="display-4">{{ $departmentCount ?? 0 }}</h2>
+            <div class="card text-black bg-white mb-3">
+                <div class="card-body">
+                        <i class="fas fa-house fa-2x me-3"></i>
+                        <div>
+                            <h5 class="card-title">Departments</h5>
+                            <p class="card-paragraph display-4">{{ $departmentCount ?? 0 }}</p>
+                        </div>
                 </div>
             </div>
         </div>
         <!-- Total Employees -->
         <div class="col-md-3 mb-4">
-            <div class="card shadow-sm">
-                <div class="card-body text-center">
-                    <h6 class="card-title">Employees</h6>
-                    <h2 class="display-4">{{ $employeeCount ?? 0 }}</h2>
-                </div>
-            </div>
-        </div>
-        <!-- Total Payrolls -->
-        <div class="col-md-3 mb-4">
-            <div class="card shadow-sm">
-                <div class="card-body text-center">
-                    <h6 class="card-title">Payrolls</h6>
-                    <h2 class="display-4">{{ $payrollsCount ?? 0 }}</h2>
+            <div class="card text-black bg-white mb-3">
+                <div class="card-body">
+                        <i class="fas fa-users fa-2x me-3"></i>
+                        <div>
+                            <h5 class="card-title">Employees</h5>
+                            <p class="card-paragraph display-4">{{ $employeeCount ?? 0 }}</p>
+                        </div>
                 </div>
             </div>
         </div>
@@ -70,13 +70,11 @@
         <div class="col-md-3 mb-4">
             <div class="card text-black bg-white mb-3">
                 <div class="card-body">
-                    <div class="d-flex align-items-center">
                         <i class="fas fa-calendar-alt fa-2x me-3"></i>
                         <div>
-                            <h6 class="card-title">Pending Leaves</h6>
-                            <p class="card-text">{{ $pendingLeavesCount }}</p>
+                            <h5 class="card-title">Pending Leaves</h5>
+                            <p class="card-paragraph display-4">{{ $pendingLeavesCount }}</p>
                         </div>
-                    </div>
                 </div>
             </div>
         </div>

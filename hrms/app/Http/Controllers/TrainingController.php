@@ -9,21 +9,144 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 
 
+use Barryvdh\DomPDF\Facade\Pdf;
+use Maatwebsite\Excel\Facades\Excel;
+
 class TrainingController extends Controller
 {
     // Display a listing of the trainings
-    public function index()
+    public function index(Request $request)
     {
-        #$trainings = training::with('employee')->get();
-        $trainings = training::all();
-        return view('trainings.index', compact('trainings'));
+        // Get all divisions and departments for filters
+        $divisions = \App\Models\Division::all();
+        $departments = \App\Models\Department::all();
+
+        // Start the query
+        $query = training::with(['employee.department.division']);
+
+        // Filter by division
+        if ($request->filled('division')) {
+            $divisionId = $request->input('division');
+            $query->whereHas('employee.department', function($q) use ($divisionId) {
+                $q->where('division_id', $divisionId);
+            });
+        }
+
+        // Filter by department
+        if ($request->filled('department')) {
+            $departmentId = $request->input('department');
+            $query->whereHas('employee', function($q) use ($departmentId) {
+                $q->where('department_id', $departmentId);
+            });
+        }
+
+        // Filter by status
+        if ($request->filled('status')) {
+            $query->where('status', $request->input('status'));
+        }
+
+        // Search by course, sponsor, or employee name
+        if ($request->filled('search')) {
+            $search = $request->input('search');
+            $query->where(function($q) use ($search) {
+                $q->where('course', 'like', "%$search%")
+                  ->orWhere('sponsored_by', 'like', "%$search%")
+                  ->orWhereHas('employee', function($q2) use ($search) {
+                      $q2->where('first_name', 'like', "%$search%")
+                         ->orWhere('last_name', 'like', "%$search%")
+                         ->orWhereRaw("CONCAT(first_name, ' ', last_name) like ?", ["%$search%"]);
+                  });
+            });
+        }
+
+        $trainings = $query->get();
+
+        return view('trainings.index', compact('trainings', 'divisions', 'departments'));
+    }
+
+    // Export filtered trainings as PDF
+    public function exportPdf(Request $request)
+    {
+        // Repeat the same filtering logic as index()
+        $divisions = \App\Models\Division::all();
+        $departments = \App\Models\Department::all();
+        $query = training::with(['employee.department.division']);
+        if ($request->filled('division')) {
+            $divisionId = $request->input('division');
+            $query->whereHas('employee.department', function($q) use ($divisionId) {
+                $q->where('division_id', $divisionId);
+            });
+        }
+        if ($request->filled('department')) {
+            $departmentId = $request->input('department');
+            $query->whereHas('employee', function($q) use ($departmentId) {
+                $q->where('department_id', $departmentId);
+            });
+        }
+        if ($request->filled('status')) {
+            $query->where('status', $request->input('status'));
+        }
+        if ($request->filled('search')) {
+            $search = $request->input('search');
+            $query->where(function($q) use ($search) {
+                $q->where('course', 'like', "%$search%")
+                  ->orWhere('sponsored_by', 'like', "%$search%")
+                  ->orWhereHas('employee', function($q2) use ($search) {
+                      $q2->where('first_name', 'like', "%$search%")
+                         ->orWhere('last_name', 'like', "%$search%")
+                         ->orWhereRaw("CONCAT(first_name, ' ', last_name) like ?", ["%$search%"]);
+                  });
+            });
+        }
+        $trainings = $query->get();
+        $pdf = Pdf::loadView('trainings.pdf', compact('trainings', 'divisions', 'departments'));
+        return $pdf->download('trainings.pdf');
+    }
+
+    // Export filtered trainings as Excel
+    public function exportExcel(Request $request)
+    {
+        // Repeat the same filtering logic as index()
+        $query = training::with(['employee.department.division']);
+        if ($request->filled('division')) {
+            $divisionId = $request->input('division');
+            $query->whereHas('employee.department', function($q) use ($divisionId) {
+                $q->where('division_id', $divisionId);
+            });
+        }
+        if ($request->filled('department')) {
+            $departmentId = $request->input('department');
+            $query->whereHas('employee', function($q) use ($departmentId) {
+                $q->where('department_id', $departmentId);
+            });
+        }
+        if ($request->filled('status')) {
+            $query->where('status', $request->input('status'));
+        }
+        if ($request->filled('search')) {
+            $search = $request->input('search');
+            $query->where(function($q) use ($search) {
+                $q->where('course', 'like', "%$search%")
+                  ->orWhere('sponsored_by', 'like', "%$search%")
+                  ->orWhereHas('employee', function($q2) use ($search) {
+                      $q2->where('first_name', 'like', "%$search%")
+                         ->orWhere('last_name', 'like', "%$search%")
+                         ->orWhereRaw("CONCAT(first_name, ' ', last_name) like ?", ["%$search%"]);
+                  });
+            });
+        }
+        $trainings = $query->get();
+        // If you have a TrainingExport class, use it. Otherwise, create export inline:
+        return Excel::download(new \App\Exports\TrainingExport($trainings), 'trainings.xlsx');
     }
 
     // Show the form for creating a new training
     public function create()
     {
-        $employees = Employee::all();
-        return view('trainings.create', compact('employees'));
+        $divisions = \App\Models\Division::all();
+        $departments = \App\Models\Department::all();
+        $employees = Employee::with('department.division')->get();
+        return view('trainings.create', compact('divisions', 'departments', 'employees'));
     }
 
     // Store a newly created training in storage
@@ -90,12 +213,13 @@ class TrainingController extends Controller
     // Show the form for editing the specified training
     public function edit($id)
     {
-        $training = training::findOrFail($id);
-        $employees = Employee::all();
+        $divisions = \App\Models\Division::all();
+        $departments = \App\Models\Department::all();
+        $employees = Employee::with('department.division')->get();
         $training = training::with('employee')->findOrFail($id);
         $selectedEmployees = $training->employee->pluck('id')->toArray();
         $availableEmployees = Employee::whereNotIn('id', $selectedEmployees)->get();
-        return view('trainings.edit', compact('training', 'employees', 'selectedEmployees', 'availableEmployees'));
+        return view('trainings.edit', compact('training', 'employees', 'selectedEmployees', 'availableEmployees','departments','divisions'));
     }
 
     // Update the specified training in storage

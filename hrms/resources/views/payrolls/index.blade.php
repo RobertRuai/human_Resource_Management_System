@@ -5,118 +5,82 @@
 <div class="col-md-12">
     <div class="card">
         <div class="card-header bg-white text-dark">
-            <i class="fas fa-file-invoice-dollar"></i> All Payrolls
+            <i class="fas fa-invoice-dollar"></i> All Payrolls
         </div>
-       <!-- Search Area -->
         <div class="card-body">
-            <!-- Search and Filters Section -->
-            <div class="row mb-4">
-                <div class="col-12">
-                    <form action="{{ route('payrolls.index') }}" method="GET" class="card">
-                    <div class="card-body">
-                            <div class="row g-3">
-                                <!-- Search Field -->
-                                <div class="col-md-3">
-                                    <div class="form-group">
-                                        <label for="search" class="form-label">Search Employee</label>
-                                        <div class="input-group">
-                                            <span class="input-group-text">
-                                                <i class="fas fa-search"></i>
-                                            </span>
-                                            <input type="text" name="search" id="search" class="form-control" 
-                                                   placeholder="Search by name..." 
-                                                   value="{{ request('search') }}">
-                                        </div>
-                                    </div>
-                                </div>
-                                
-
-                                <!-- Division Filter -->
-                                <div class="col-md-3">
-                                <div class="form-group">
-                                        <label for="division_id" class="form-label">Division</label>
-                                        <select name="division_id" id="division_id" class="form-select">
-                                            <option value="">All Divisions</option>
-                                            @foreach($divisions as $division)
-                                                <option value="{{ $division->id }}" 
-                                                    {{ request('division_id') == $division->id ? 'selected' : '' }}>
-                                                    {{ $division->name }}
-                                                </option>
-                                            @endforeach
-                                            </select>
-                                    </div>
-                                </div>
-                                
-                                 <!-- Search Button -->
-                                <div class="col-md-3 d-flex align-items-end gap-2">
-                                    <button type="submit" class="btn btn-primary flex-grow-1">
-                                        <i class="fas fa-search"></i> Search
-                                    </button>
-                                    <a href="{{ route('payrolls.index') }}" class="btn btn-secondary">
-                                        <i class="fas fa-undo"></i> Reset
-                                    </a>
-                                </div>
-
-                                <!-- Department Filter 
-                                <div class="col-md-3">
-                                    <div class="form-group">
-                                        <label for="department_id" class="form-label">Department</label>
-                                        <select name="department_id" id="department_id" class="form-select">
-                                            <option value="">All Departments</option>
-                                            @foreach($departments as $department)
-                                                <option value="{{ $department->id }}"
-                                                    {{ request('department_id') == $department->id ? 'selected' : '' }}>
-                                                    {{ $department->name }}
-                                                </option>
-                                            @endforeach
-                                        </select>
-                                    </div>
-                                </div>
-                                -->
-                                <!-- Search Button -->
-    
-                                
-                            </div>
-                        </div>
-                    </form>
-                </div>
+            <div class="d-flex justify-content-between align-items-center">
+                <a href="{{ route('payrolls.create') }}" class="btn btn-primary add-btn" id="openPopupBtn"><i class="fas fa-plus"></i> Add New Payroll</a>
             </div>
+        <form action="{{ route('payrolls.index') }}" method="GET" style="margin-bottom: 5px;">
+    <div class="row col-md-12 align-items-center justify-content-between">
+        <!-- Left Control: Filter + Search -->
+        <div class="left-control d-flex align-items-center flex-wrap col-md-4">
+            <!-- Division Filter -->
+            <div class="filter-btn">
+                <select name="division_id" id="division_id" class="form-select">
+                    <option value="">Filter by Division</option>
+                    @foreach($divisions as $division)
+                    <option value="{{ $division->id }}" 
+                        {{ request('division_id') == $division->id ? 'selected' : '' }}>
+                        {{ $division->name }}
+                    </option>
+                @endforeach
+                </select>
+            </div>
+            <!-- Search Input -->
+            <div class="search-area  flex-grow-1">
+                <input type="text" name="search" id="search" class="form-control" 
+                placeholder="Search by name..." 
+                value="{{ request('search') }}">
+            </div>
+            <!-- Search Button -->
+            <div class="search-icon">
+                <button type="submit" class="btn btn-outline-primary">
+                    <i class="fas fa-search"></i>
+                </button>
+            </div>
+            <!-- Reset Button -->
+            <div class="search-icon">
+            <a href="{{ route('payrolls.index') }}" class="btn-secondary text-success">
+                <i class="fas fa-sync-alt"></i> Reset
+            </a>
+            </div>
+        </div>
 
-            <!-- Action Buttons -->
-            <div class="row mb-4">
-                <div class="col-12 d-flex justify-content-between">
-                    <div class="d-flex gap-2">
-                        <a href="{{ route('payrolls.create') }}" class="btn btn-primary">
-                            <i class="fas fa-plus"></i> Add New Payroll
-                        </a>
-                        <a href="{{ route('payrolls.bulkGenerateForm') }}" class="btn btn-success">
-                            <i class="fas fa-calculator"></i> Bulk Generate
-                        </a>
-                    </div>
-
-                    <div class="d-flex gap-2">
-                        <a href="{{ route('payrolls.downloadTemplate') }}" class="btn btn-info">
-                            <i class="fas fa-file-download"></i> Download Excel Template
-                        </a>
-                        <form action="{{ route('payrolls.uploadExcel') }}" method="POST" enctype="multipart/form-data" class="d-inline">
+        <!-- Right Control: Downloads + Print -->
+        <div class="col-md-8">
+            <div class="download-btn d-flex justify-content-end align-items-center">
+            <div class="download-form">
+            <i class="fas fa-file-excel text-success"></i> Upload Excel
+            <form action="{{ route('payrolls.uploadExcel') }}" method="POST" enctype="multipart/form-data" class="d-inline">
                             @csrf
                             <input type="file" name="payroll_excel" accept=".xlsx" required>
-                            <button type="submit" class="btn btn-warning">
-                                <i class="fas fa-file-upload"></i> Upload Excel
-                            </button>
                         </form>
-                    </div>
-                    
-                    <div class="d-flex gap-2">
-                        <a href="{{ route('payrolls.export') }}" class="btn btn-success">
-                            <i class="fas fa-file-excel"></i> Export Excel
-                        </a>
-                        <button class="btn btn-secondary" onclick="window.print()">
-                            <i class="fas fa-print"></i> Print
-                        </button>
-                    </div>
+                </div>
+                <div class="download-form">
+                    <a href="{{ route('payrolls.downloadTemplate') }}" class="list-group-item list-group-item-action">
+                    <i class="fas fa-file-download text-success"></i> Excel Template
+                    </a>
+                </div>
+            <div class="download-form">
+                <a href="{{ route('payrolls.bulkGenerateForm') }}" class="list-group-item list-group-item-action">
+                    <i class="fas fa-calculator text-success"></i> Bulk Generate
+                </a>
+                </div>
+                <div class="download-form">
+                    <a href="{{ route('departments.export.excel', request()->query()) }}" class="list-group-item list-group-item-action">
+                        <i class="fas fa-file-excel text-success"></i> Download Excel
+                    </a>
+                </div>
+                <div class="print">
+                    <button type="button" class="btn btn-secondary" onclick="window.print(); return false;">
+                        <i class="fas fa-print"></i> Print
+                    </button>
                 </div>
             </div>
+        </div>
+    </div>
+</form>
 
             @if (session('success'))
                 <div class="alert alert-success alert-dismissible fade show" role="alert">
@@ -187,27 +151,15 @@
                                     </span>
                                 </td>
                                 <td>
-                                    <div class="btn-group" role="group">
-                                        <a href="{{ route('payrolls.show', $payroll->id) }}" 
-                                           class="btn btn-info btn-sm" title="View">
-                                            <i class="fas fa-eye"></i>
-                                        </a>
-                                        <a href="{{ route('payrolls.edit', $payroll->id) }}" 
-                                           class="btn btn-warning btn-sm" title="Edit">
-                                            <i class="fas fa-edit"></i>
-                                        </a>
-                                        <form action="{{ route('payrolls.destroy', $payroll->id) }}" 
-                                              method="POST" 
-                                              style="display:inline-block;"
-                                              onsubmit="return confirm('Are you sure you want to delete this payroll?');">
-                                            @csrf
-                                            @method('DELETE')
-                                            <button type="submit" class="btn btn-danger btn-sm" title="Delete">
-                                                <i class="fas fa-trash"></i>
-                                            </button>
-                                        </form>
-                                    </div>
-                                </td>
+                                <a href="{{ route('payrolls.show', $payroll->id) }}" class="btn btn-info btn-sm"><i class="fas fa-eye"></i> View</a>
+                                <a href="{{ route('payrolls.edit', $payroll->id) }}" class="btn btn-warning btn-sm"><i class="fas fa-edit"></i> Edit</a>
+                                <form action="{{ route('payrolls.destroy', $payroll->id) }}" method="POST" style="display:inline-block;"
+                                onsubmit="return confirm('Are you sure you want to delete this payrolls?');">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button  type="submit" class="btn btn-danger btn-sm"><i class="fas fa-trash"></i> Delete</button>
+                                </form>
+                            </td>
                             </tr>
                         @empty
                             <tr>
@@ -231,6 +183,8 @@
                 {{ $payrolls->links() }}
             </div>
         </div>
+        <p class="copyright">&copy; {{ date('Y') }} HRMS Portal South Sudan Revenue Authority. All Rights Reserved.</p>
+            </div>
     </div>
 </div>
 @endcan

@@ -95,7 +95,6 @@
             <tbody>
                 @foreach($notifications as $notification)
                     <tr>
-                        <td>{{ $notification->user->username }}</td>
                         <td>{{ $notification->message }}</td>
                         <td>{{ $notification->is_read ? 'Read' : 'Unread' }}</td>
                         <td>

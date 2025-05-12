@@ -9,54 +9,61 @@
         <div class="card-header bg-white text-dark">
             <i class="fas fa-user-alt"></i> All Users
                 </div>
-                <!-- Search Area -->
-                <div class="container mt-1 search-area">
-                    <div class="row justify-content-center">
-                        <div class="col-md-8">
-                            <div class="input-group">
-                                <input type="text" class="form-control" placeholder="Search users.." aria-label="Search" aria-describedby="button-search">
-                                <div class="input-group-append">
-                                    <button class="btn btn-white" type="button" id="button-search">
-                                        <i class="fas fa-search"></i> Search
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                
                 <div class="card-body">
-                    <!-- Add New employee Button -->
+                    <!-- Add New User Button -->
                     <div class="d-flex justify-content-between align-items-center mb-3">
                     <a href="{{ route('users.create') }}" class="btn btn-primary add-btn" id="openPopupBtn"><i class="fas fa-user-plus"></i> Add New User</a>
                     </div>
-                    <div class="col-md-5 download-btn">
-                        <div class="download-form">
-                            <a href="#" class="list-group-item list-group-item-action">
-                                <i class="fas fa-file-pdf text-danger"></i> PDF
-                            </a>
-                        </div>
-                        <div class="download-form">
-                            <a href="#" class="list-group-item list-group-item-action">
-                                <i class="fas fa-file-excel text-success"></i> Excel
-                            </a>
-                        </div>
-                        <div>
-                            <button class="btn btn-secondary" onclick="window.print()">
-                                <i class="fas fa-print"></i> Print Page
-                            </button>
-                        </div>
-                    </div>
-                    <div class="">
-                        <select class="form-control select-option" id="monthSelector">
-                            <option selected>Filter Users by Division</option>
-                            <option>Corporate Service Division (CSD)</option>
-                            <option>Domestic Tax Revenue Division (DTRD)</option>
-                            <option>Customs Revenue Division (CRD)</option>
-                            <option>Internal Audit Division (IAD)</option>
-                            <option>Internal Affairs Division (INAD)</option>
-                            <option>Information and Communication Technology Division (ICTD)</option>
-                        </select>
-                    </div>
+                    <form action="{{ route('users.index') }}" method="GET" style="margin-bottom: 5px;">
+                <div class="row col-md-12 align-items-center justify-content-between">
+
+                <!-- Left Control: Filter + Search -->
+                <div class="left-control d-flex align-items-center flex-wrap col-md-4">
+
+
+            <!-- Search Input -->
+            <div class="search-area  flex-grow-1">
+                <input type="text" name="search" class="form-control" placeholder="Search users..." value="{{ request('search') }}">
+            </div>
+
+            <!-- Search Button -->
+            <div class="search-icon">
+                <button type="submit" class="btn btn-outline-primary">
+                    <i class="fas fa-search"></i>
+                </button>
+            </div>
+
+            <!-- Reset Button -->
+            <div class="search-icon">
+                <a href="{{ route('users.index') }}" class=" btn-outline-success text-success">
+                    <i class="fas fa-sync-alt"></i> Reset
+                </a>
+            </div>
+        </div>
+
+        <!-- Right Control: Downloads + Print -->
+        <div class="col-md-8">
+            <div class="download-btn d-flex justify-content-end align-items-center">
+                <div class="download-form">
+                    <a href="{{ route('departments.export.pdf', request()->query()) }}" class="list-group-item list-group-item-action">
+                        <i class="fas fa-file-pdf text-danger"></i> PDF
+                    </a>
+                </div>
+                <div class="download-form">
+                    <a href="{{ route('departments.export.excel', request()->query()) }}" class="list-group-item list-group-item-action">
+                        <i class="fas fa-file-excel text-success"></i> Excel
+                    </a>
+                </div>
+                <div class="print">
+                    <button type="button" class="btn btn-secondary" onclick="window.print(); return false;">
+                        <i class="fas fa-print"></i> Print
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
                                     @if($users->isEmpty())
                                         <p>No users found.</p>
                                     @else
@@ -74,7 +81,13 @@
                                                     <tr>
                         <td>{{ $user->username }}</td>
                         <td>{{ $user->email }}</td>
-                        <td>{{ $user->role_id }}</td>
+                        <td>
+                            @if($user->roles && $user->roles->count())
+                                {{ $user->roles->pluck('name')->join(', ') }}
+                            @else
+                                -
+                            @endif
+                        </td>
                         <td>
                             <a href="{{ route('users.show', $user->id) }}" class="btn btn-info btn-sm"><i class="fas fa-eye"></i> View</a>
                             <a href="{{ route('users.edit', $user->id) }}" class="btn btn-warning btn-sm"><i class="fas fa-edit"></i> Edit</a>
@@ -94,3 +107,4 @@
     @endif
     @endcan
 @endsection
+
