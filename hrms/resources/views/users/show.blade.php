@@ -18,7 +18,7 @@
                             <div class="form-group">
                                             <p class="card-title"><strong>User Name:</strong> {{ $user->username }}</p>
                                             <p class="card-text"><strong>Email:</strong> {{ $user->email }}</p>
-                                            <p class="card-text"><strong>Role:</strong> {{ $user->role_id }}</p>
+                                            <p class="card-text"><strong>Role:</strong> {{ $user->roles->pluck('name')->join(', ') }}</p>
                                             <a href="{{ route('users.edit', $user->id) }}" class="btn btn-warning"><i class="fas fa fa-edit"></i> Edit User</a>
                                             <a href="{{ route('users.index') }}" class="btn btn-secondary"><i class="fas fa fa-arrow-alt-circle-left"></i> Back to Users</a>
                                             <p class="copyright">&copy; {{ date('Y')}} HRMS Portal South Sudan Revenue Authority. All Rights Reserved.</p>

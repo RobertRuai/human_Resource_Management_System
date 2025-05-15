@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
-use App\Models\notification;
+use Illuminate\Notifications\DatabaseNotification;
 use App\Models\audit_log;
 use Illuminate\Http\Request;
 
@@ -12,9 +12,8 @@ class NotificationController extends Controller
     // Display a listing of the notifications
     public function index()
     {
-        $users = User::all();
-        $notifications = notification::all();
-        return view('notifications.index', compact('notifications', 'users'));
+        $notifications = DatabaseNotification::all();
+        return view('notifications.index', compact('notifications'));
     }
 
     // Show the form for creating a new notification
@@ -51,14 +50,13 @@ class NotificationController extends Controller
     }
 
     // Display the specified notification
-    public function show(notification $notification)
+    public function show(DatabaseNotification $notification)
     {
-        $user = User::all();
         return view('notifications.show', compact('notification'));
     }
 
     // Show the form for editing the specified notification
-    public function edit(notification $notification)
+    public function edit(DatabaseNotification $notification)
     {
         $users = User::all();
         return view('notifications.edit', compact('notification', 'users'));
@@ -75,7 +73,7 @@ class NotificationController extends Controller
     }
 
     // Update the specified notification in storage
-    public function update(Request $request, notification $notification)
+    public function update(Request $request, DatabaseNotification $notification)
     {
         $validatedData = $request->validate([
             'user_id' => 'required|exists:users,id',
@@ -97,7 +95,7 @@ class NotificationController extends Controller
     }
 
     // Remove the specified notification from storage
-    public function destroy(notification $notification)
+    public function destroy(DatabaseNotification $notification)
     {
         $notification->delete();
 

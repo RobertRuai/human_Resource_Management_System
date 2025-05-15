@@ -15,8 +15,8 @@
                         <div class="card">
                             <div class="card-body">
                                         <p class="card-title"><strong>Role ID:</strong> {{ $role->id }}</p>
-                                        <p class="card-text"><strong>Email:</strong> {{ $role->name }}</p>
-                                        <p class="card-text"><strong>Role:</strong> {{ $role->guard_name }}</p>
+                                        <p class="card-text"><strong>Name:</strong> {{ $role->name }}</p>
+                                        <p class="card-text"><strong>Guard Name:</strong> {{ $role->guard_name }}</p>
                                         <a href="{{ route('roles.edit', $role->id) }}" class="btn btn-warning"><i class="fas fa fa-edit"></i> Edit Role</a>
                                         <a href="{{ route('roles.index') }}" class="btn btn-secondary"><i class="fas fa fa-arrow-alt-circle-left"></i> Back to Roles</a>
                                     </div>

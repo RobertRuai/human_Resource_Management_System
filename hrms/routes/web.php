@@ -114,6 +114,10 @@ Route::middleware(['auth', 'role:Employee'])->group(function () {
     Route::get('/get-employee-details/{employeeId}', [EmployeeController::class, 'getEmployeeDetails']);
 });
 
+Route::middleware(['auth', 'role:Admin|HR Manager|Supervisor|Employee'])->group(function () {
+    Route::post('/permissions', [App\Http\Controllers\PermissionController::class, 'store'])->name('permissions.store');
+});
+
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::post('/profile', [ProfileController::class, 'update'])->name('profile.update');

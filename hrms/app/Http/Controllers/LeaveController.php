@@ -15,31 +15,6 @@ use Carbon\Carbon;
 
 class LeaveController extends Controller
 {
-    // Export leaves as PDF
-    public function exportPdf(Request $request)
-    {
-        $query = Leave::with('employee');
-        if ($request->filled('status')) {
-            $query->where('status', $request->input('status'));
-        }
-        if ($request->filled('search')) {
-            $search = $request->input('search');
-            $query->whereHas('employee', function ($q) use ($search) {
-                $q->where('first_name', 'like', "%{$search}%")
-                  ->orWhere('last_name', 'like', "%{$search}%");
-            });
-        }
-        $leaves = $query->get();
-        $pdf = \PDF::loadView('leaves.pdf', compact('leaves'));
-        return $pdf->download('leaves.pdf');
-    }
-
-    // Export leaves as Excel (stub, requires LeavesExport class)
-    public function exportExcel(Request $request)
-    {
-        return \Excel::download(new \App\Exports\LeavesExport($request->input('status'), $request->input('search')), 'leaves.xlsx');
-    }
-
     // Display a listing of the leaves
     public function index(Request $request)
     {
@@ -125,6 +100,9 @@ class LeaveController extends Controller
             'supervisor_id' => $supervisor ? $supervisor->id : null,
         ]);
 
+        // Notify employee (confirmation of submission)
+        $employee->user->notify(new \App\Notifications\UserMessage($employee->user, 'Your leave request has been submitted and is pending supervisor review.'));
+
         // Notify supervisor
         if ($supervisor) {
             $supervisor->notify(new LeaveRequestSubmitted($leave));
@@ -202,11 +180,14 @@ class LeaveController extends Controller
         ]);
 
         // Notify employee about supervisor's decision
-        $leave->employee->notify(
-            $validatedData['status'] == 'approved' 
-                ? new LeaveRequestApproved($leave) 
-                : new LeaveRequestRejected($leave)
-        );
+        $employeeUser = $leave->employee->user;
+        if ($employeeUser) {
+            $employeeUser->notify(
+                $validatedData['status'] == 'approved' 
+                    ? new LeaveRequestApproved($leave) 
+                    : new LeaveRequestRejected($leave)
+            );
+        }
 
         return redirect()->route('leaves.index')
             ->with('success', 'Leave request reviewed successfully.');
@@ -232,11 +213,14 @@ class LeaveController extends Controller
         ]);
 
         // Notify employee about final decision
-        $leave->employee->notify(
-            $validatedData['status'] == 'approved' 
-                ? new LeaveRequestApproved($leave) 
-                : new LeaveRequestRejected($leave)
-        );
+        $employeeUser = $leave->employee->user;
+        if ($employeeUser) {
+            $employeeUser->notify(
+                $validatedData['status'] == 'approved' 
+                    ? new LeaveRequestApproved($leave) 
+                    : new LeaveRequestRejected($leave)
+            );
+        }
 
         return redirect()->route('leaves.index')
             ->with('success', 'Leave request finalized successfully.');
@@ -249,4 +233,29 @@ class LeaveController extends Controller
             $query->where('name', 'Supervisor');
         })->where('department_id', $employee->department_id)->first();
     }
+
+     // Export leaves as PDF
+     public function exportPdf(Request $request)
+     {
+         $query = Leave::with('employee');
+         if ($request->filled('status')) {
+             $query->where('status', $request->input('status'));
+         }
+         if ($request->filled('search')) {
+             $search = $request->input('search');
+             $query->whereHas('employee', function ($q) use ($search) {
+                 $q->where('first_name', 'like', "%{$search}%")
+                   ->orWhere('last_name', 'like', "%{$search}%");
+             });
+         }
+         $leaves = $query->get();
+         $pdf = \PDF::loadView('leaves.pdf', compact('leaves'));
+         return $pdf->download('leaves.pdf');
+     }
+ 
+     // Export leaves as Excel (stub, requires LeavesExport class)
+     public function exportExcel(Request $request)
+     {
+         return \Excel::download(new \App\Exports\LeavesExport($request->input('status'), $request->input('search')), 'leaves.xlsx');
+     }
 }

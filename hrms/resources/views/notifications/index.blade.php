@@ -2,116 +2,78 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="container">
-    <h2>Notifications</h2>
-    <h4>Unread Notifications</h4>
-    <ul class="list-group mb-4">
-        @forelse(auth()->user()->unreadNotifications as $notification)
-            <li class="list-group-item d-flex justify-content-between align-items-center">
-                @if(isset($notification->data['from_user_name']))
-                    <strong>{{ $notification->data['from_user_name'] }}:</strong>
-                @endif
-                {{ $notification->data['message'] ?? ($notification->data['title'] ?? '') }}
-                <span>
-                    <a href="{{ route('notifications.markAsRead', $notification->id) }}" class="btn btn-sm btn-success">Mark as read</a>
-                </span>
-            </li>
-        @empty
-            <li class="list-group-item">No unread notifications.</li>
-        @endforelse
-    </ul>
-    <h4>Read Notifications</h4>
-    <ul class="list-group">
-        @forelse(auth()->user()->readNotifications as $notification)
-            <li class="list-group-item">
-                @if(isset($notification->data['from_user_name']))
-                    <strong>{{ $notification->data['from_user_name'] }}:</strong>
-                @endif
-                {{ $notification->data['message'] ?? ($notification->data['title'] ?? '') }}
-            </li>
-        @empty
-            <li class="list-group-item">No read notifications.</li>
-        @endforelse
-    </ul>
-</div>
-            <div class="row justify-content-center">
-                <div class="col-md-8">
-                    <div class="input-group">
-                        <input type="text" class="form-control" placeholder="Search notifications.." aria-label="Search" aria-describedby="button-search">
-                        <div class="input-group-append">
-                            <button class="btn btn-white" type="button" id="button-search">
-                                <i class="fas fa-search"></i> Search
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            </div>
+<div class="container py-4" style="background: #f8fafc; border-radius: 12px;">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2 class="mb-0"><i class="fas fa-bell"></i> Notifications</h2>
+        <a href="{{ route('notifications.create') }}" class="btn btn-primary"><i class="fas fa-plus"></i> New Notification</a>
+    </div>
+    <div class="card mb-4 shadow-sm">
+        <div class="card-header bg-white">
+            <strong>All Notifications</strong>
         </div>
-        <div class="card-body">
-            <!-- Add New employee Button -->
-            <div class="d-flex justify-content-between align-items-center mb-3">
-            <a href="{{ route('notifications.create') }}" class="btn btn-primary add-btn" id="openPopupBtn"><i class="fas fa-bell"></i> Add New Notification</a>
-            </div>
-            <div class="col-md-5 download-btn">
-                <div class="download-form">
-                    <a href="#" class="list-group-item list-group-item-action">
-                        <i class="fas fa-file-pdf text-danger"></i> PDF
-                    </a>
-                </div>
-                <div class="download-form">
-                    <a href="#" class="list-group-item list-group-item-action">
-                        <i class="fas fa-file-excel text-success"></i> Excel
-                    </a>
-                </div>
-                    <button class="btn btn-secondary" onclick="window.print()">
-                        <i class="fas fa-print"></i> Print Page
-                    </button>
-                </div>
-            </div>
-            <div class="">
-                <select class="form-control select-option" id="monthSelector">
-                    <option selected>Filter Notifications by Users</option>
-                    <option>Corporate Service Division (CSD)</option>
-                    <option>Domestic Tax Revenue Division (DTRD)</option>
-                    <option>Customs Revenue Division (CRD)</option>
-                    <option>Internal Audit Division (IAD)</option>
-                    <option>Internal Affairs Division (INAD)</option>
-                    <option>Information and Communication Technology Division (ICTD)</option>
-                </select>
-            </div>
-
-    @if($notifications->isEmpty())
-        <p>No Notifications found.</p>
+        <div class="card-body p-0">
+            @if($notifications->isEmpty())
+                <p class="m-4">No Notifications found.</p>
+            @else
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle mb-0">
+                        <thead class="table-light">
+                            <tr>
+                                <th style="width: 18%;">User</th>
+                                <th>Message</th>
+                                <th style="width: 12%;">Status</th>
+                                <th style="width: 18%;">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach($notifications as $notification)
+    <tr>
+        <td>
+            @if(isset($notification->data['from_user_name']))
+    <span class="fw-bold">{{ $notification->data['from_user_name'] }}</span>
+@elseif(isset($notification->notifiable) && (isset($notification->notifiable->username) || isset($notification->notifiable->name)))
+    <span class="fw-bold">{{ $notification->notifiable->username ?? $notification->notifiable->name }}</span>
+@else
+    <span class="text-muted">-</span>
+@endif
+        </td>
+        <td>
+    @if(isset($notification->data['leave_type']))
+        Leave Request: {{ $notification->data['leave_type'] }} from {{ $notification->data['start_date'] }} to {{ $notification->data['end_date'] }}
+    @elseif(isset($notification->data['message']))
+        {{ $notification->data['message'] }}
+    @elseif(isset($notification->message))
+        {{ $notification->message }}
     @else
-        <table class="table table-bordered table-striped">
-            <thead class="table-light">
-                <tr>
-                    <th>User</th>
-                    <th>Message</th>
-                    <th>Read Status</th>
-                    <th>Actions</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach($notifications as $notification)
-                    <tr>
-                        <td>{{ $notification->message }}</td>
-                        <td>{{ $notification->is_read ? 'Read' : 'Unread' }}</td>
-                        <td>
-                            <a href="{{ route('notifications.show', $notification->id) }}" class="btn btn-info btn-sm"><i class="fas fa-eye"></i> View</a>
-                            <a href="{{ route('notifications.edit', $notification->id) }}" class="btn btn-warning btn-sm"><i class="fas fa-edit"></i> Edit</a>
-                            <!-- Delete Button with Confirmation -->
-                            <form action="{{ route('notifications.destroy', $notification->id) }}" method="POST" style="display:inline-block;" 
-                                  onsubmit="return confirm('Are you sure you want to delete this notification?');">
-                                @csrf
-                                @method('DELETE')
-                                <button type="submit" class="btn btn-danger btn-sm"><i class="fas fa-trash"></i> Delete</button>
-                            </form>
-                        </td>
-                    </tr>
-                @endforeach
-            </tbody>
-        </table>
-        <p class="copyright">&copy; {{ date('Y')}} HRMS Portal South Sudan Revenue Authority. All Rights Reserved.</p>
+        <span class="text-muted">-</span>
     @endif
+</td>
+                                    <td>
+                                        @if($notification->is_read)
+                                            <span class="badge bg-success">Read</span>
+                                        @else
+                                            <span class="badge bg-warning text-dark">Unread</span>
+                                        @endif
+                                    </td>
+                                    <td>
+                                        <div class="btn-group" role="group">
+                                            <a href="{{ route('notifications.show', $notification->id) }}" class="btn btn-info btn-sm"><i class="fas fa-eye"></i></a>
+                                            <a href="{{ route('notifications.edit', $notification->id) }}" class="btn btn-warning btn-sm"><i class="fas fa-edit"></i></a>
+                                            <form action="{{ route('notifications.destroy', $notification->id) }}" method="POST" style="display:inline-block;" onsubmit="return confirm('Are you sure you want to delete this notification?');">
+                                                @csrf
+                                                @method('DELETE')
+                                                <button type="submit" class="btn btn-danger btn-sm"><i class="fas fa-trash"></i></button>
+                                            </form>
+                                        </div>
+                                    </td>
+                                </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
+                </div>
+            @endif
+        </div>
+    </div>
+    <p class="copyright text-center text-muted mt-3">&copy; {{ date('Y')}} HRMS Portal South Sudan Revenue Authority. All Rights Reserved.</p>
+</div>
 @endsection

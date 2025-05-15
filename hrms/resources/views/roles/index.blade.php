@@ -2,9 +2,6 @@
 @extends('layouts.app')
 
 @section('content')
-@if(session('success'))
-    <div class="alert alert-success">{{ session('success') }}</div>
-@endif
 <div class="col-md-12">
     <div class="card">
         <div class="card-header bg-white text-dark">
@@ -15,9 +12,8 @@
                     <!-- Add New Role Button -->
                     <div class="d-flex justify-content-between align-items-center mb-3">
                     <a href="{{ route('roles.create') }}" class="btn btn-primary add-btn" id="openPopupBtn"><i class="fas fa-user-tag"></i> Add New Role</a>
+                    <button class="btn btn-success ms-2" data-bs-toggle="modal" data-bs-target="#createPermissionModal"><i class="fas fa-key"></i> Add New Permission</button>
                     </div>
-                    
-                   
 
     @if($roles->isEmpty())
         <p>No Roles found.</p>
@@ -52,7 +48,6 @@
                 @endforeach
             </tbody>
         </table>
-        <p class="copyright">&copy; 2024 HRMS Portal South Sudan Revenue Authority. All Rights Reserved.</p>
     @endif
     <style>
         .section-header {
@@ -92,7 +87,7 @@
         <div class="row">
             <div class="col-md-6">
                 <div class="card-section">
-                    <div class="section-header"><i class="fas fa-user-tag"></i> All Roles</div>
+                    <div class="section-header"><i class="fas fa-user-tag"></i> All Roles & Attached Permissions</div>
                     <ul class="list-group mb-2">
                         @foreach($roles as $role)
                             <li class="list-group-item d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center">
@@ -135,13 +130,15 @@
         </div>
         <div class="row">
             <div class="col-md-8 mx-auto">
-                <div class="assign-card">
-                    <div class="section-header"><i class="fas fa-edit"></i> Assign Permissions to Role</div>
+                <div class="assign-card bg-white shadow-sm rounded p-4 border border-2 border-light">
+                    <div class="section-header mb-2"><i class="fas fa-edit"></i> Assign Permissions to Role</div>
+                    <hr class="mb-4" style="border-top: 1.5px solid #f0f0f0;">
                     <form method="POST" action="{{ route('roles.assignPermissions') }}">
                         @csrf
                         <div class="form-group mb-3">
                             <label for="role">Role</label>
                             <select name="role_id" id="role" class="form-control" required>
+
                                 <option value="">Select Role</option>
                                 @foreach($roles as $role)
                                     <option value="{{ $role->id }}">{{ $role->name }}</option>
@@ -163,6 +160,61 @@
         </div>
     </div>
 </div>
+<!-- Create Permission Modal -->
+<div class="modal fade" id="createPermissionModal" tabindex="-1" aria-labelledby="createPermissionModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="createPermissionModalLabel">Add New Permission</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <form method="POST" action="{{ route('permissions.store') }}">
+        @csrf
+        <div class="modal-body">
+          <div class="mb-3">
+            <label for="permissionName" class="form-label">Permission Name</label>
+            <input type="text" class="form-control" id="permissionName" name="name" required>
+          </div>
+          <div class="mb-3">
+            <label for="guardName" class="form-label">Guard Name</label>
+            <input type="text" class="form-control" id="guardName" name="guard_name" value="web">
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+          <button type="submit" class="btn btn-success">Create Permission</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+<p class="copyright">&copy; 2024 HRMS Portal South Sudan Revenue Authority. All Rights Reserved.</p>
+</div>
+<style>
+    .selected-role {
+        background-color: #e9ecef !important;
+        transition: background 0.2s;
+    }
+</style>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        var roleSelect = document.getElementById('role');
+        if (roleSelect) {
+            function toggleRoleBg() {
+                if (roleSelect.value) {
+                    roleSelect.classList.add('selected-role');
+                } else {
+                    roleSelect.classList.remove('selected-role');
+                }
+            }
+            roleSelect.addEventListener('change', toggleRoleBg);
+            // Initial check
+            toggleRoleBg();
+        }
+    });
+</script>
+
 @endsection
 <script>
     // Build a mapping of role IDs to their assigned permissions
