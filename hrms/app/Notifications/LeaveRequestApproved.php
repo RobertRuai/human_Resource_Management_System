@@ -58,6 +58,7 @@ class LeaveRequestApproved extends Notification
             'leave_type' => $this->leave->type_of_leave,
             'start_date' => $this->leave->start_date,
             'end_date' => $this->leave->end_date,
+            'message' => 'Your leave request has been approved. Enjoy your time off!'
         ];
     }
 }

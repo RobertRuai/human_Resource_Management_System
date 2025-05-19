@@ -19,10 +19,11 @@
                     <table class="table table-hover align-middle mb-0">
                         <thead class="table-light">
                             <tr>
-                                <th style="width: 18%;">User</th>
+                                <th style="width: 15%;">User</th>
+                                <th style="width: 15%;">Leave Type</th>
                                 <th>Message</th>
-                                <th style="width: 12%;">Status</th>
-                                <th style="width: 18%;">Actions</th>
+                                <th style="width: 10%;">Status</th>
+                                <th style="width: 15%;">Actions</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -30,24 +31,27 @@
     <tr>
         <td>
             @if(isset($notification->data['from_user_name']))
-    <span class="fw-bold">{{ $notification->data['from_user_name'] }}</span>
-@elseif(isset($notification->notifiable) && (isset($notification->notifiable->username) || isset($notification->notifiable->name)))
-    <span class="fw-bold">{{ $notification->notifiable->username ?? $notification->notifiable->name }}</span>
-@else
-    <span class="text-muted">-</span>
-@endif
+                <span class="fw-bold">{{ $notification->data['from_user_name'] }}</span>
+            @elseif(isset($notification->notifiable) && (isset($notification->notifiable->username) || isset($notification->notifiable->name)))
+                <span class="fw-bold">{{ $notification->notifiable->username ?? $notification->notifiable->name }}</span>
+            @else
+                <span class="text-muted">-</span>
+            @endif
         </td>
         <td>
-    @if(isset($notification->data['leave_type']))
-        Leave Request: {{ $notification->data['leave_type'] }} from {{ $notification->data['start_date'] }} to {{ $notification->data['end_date'] }}
-    @elseif(isset($notification->data['message']))
-        {{ $notification->data['message'] }}
-    @elseif(isset($notification->message))
-        {{ $notification->message }}
-    @else
-        <span class="text-muted">-</span>
-    @endif
-</td>
+            {{ $notification->data['leave_type'] ?? '-' }}
+        </td>
+        <td>
+            @if(isset($notification->data['message']))
+                {{ $notification->data['message'] }}
+            @elseif(isset($notification->data['leave_type']))
+                Leave Request: {{ $notification->data['leave_type'] }}
+            @elseif(isset($notification->message))
+                {{ $notification->message }}
+            @else
+                <span class="text-muted">-</span>
+            @endif
+        </td>
                                     <td>
                                         @if($notification->is_read)
                                             <span class="badge bg-success">Read</span>

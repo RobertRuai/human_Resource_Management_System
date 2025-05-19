@@ -29,11 +29,23 @@
         <span class="text-muted">-</span>
     @endif
 </p>
+<p class="card-text"><strong>Leave Type:</strong>
+    {{ $notification->data['leave_type'] ?? '-' }}
+</p>
+<p class="card-text"><strong>Dates:</strong>
+    @if(isset($notification->data['start_date']) && isset($notification->data['end_date']))
+        {{ $notification->data['start_date'] }} to {{ $notification->data['end_date'] }}
+    @else
+        <span class="text-muted">-</span>
+    @endif
+</p>
 <p class="card-text"><strong>Message:</strong>
-    @if(isset($notification->data['leave_type']))
-        Leave Request: {{ $notification->data['leave_type'] }} from {{ $notification->data['start_date'] }} to {{ $notification->data['end_date'] }}
-    @elseif(isset($notification->data['message']))
+    @if(isset($notification->data['message']))
         {{ $notification->data['message'] }}
+    @elseif(isset($notification->data['leave_type']))
+        Leave Request: {{ $notification->data['leave_type'] }}
+    @elseif(isset($notification->message))
+        {{ $notification->message }}
     @else
         <span class="text-muted">-</span>
     @endif

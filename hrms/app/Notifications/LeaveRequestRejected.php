@@ -51,13 +51,14 @@ class LeaveRequestRejected extends Notification
      *
      * @return array<string, mixed>
      */
-    public function toArray(object $notifiable): array
+    public function toArray($notifiable)
     {
         return [
             'leave_id' => $this->leave->id,
             'leave_type' => $this->leave->type_of_leave,
             'start_date' => $this->leave->start_date,
             'end_date' => $this->leave->end_date,
+            'message' => 'Unfortunately, your leave request has been rejected.'
         ];
     }
 }

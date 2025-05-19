@@ -9,6 +9,8 @@ use App\Models\Leave;
 use App\Notifications\LeaveRequestSubmitted;
 use App\Notifications\LeaveRequestApproved;
 use App\Notifications\LeaveRequestRejected;
+use App\Notifications\LeaveSupervisorDecisionHr;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Carbon\Carbon;
@@ -105,7 +107,14 @@ class LeaveController extends Controller
 
         // Notify supervisor
         if ($supervisor) {
+            \Log::info('Attempting to notify supervisor', [
+                'supervisor_id' => $supervisor->id,
+                'supervisor_user_id' => $supervisor->user ? $supervisor->user->id : null,
+                'supervisor_user' => $supervisor->user ? $supervisor->user->toArray() : null,
+            ]);
             $supervisor->notify(new LeaveRequestSubmitted($leave));
+        } else {
+            \Log::warning('No supervisor found for employee', ['employee_id' => $employee->id]);
         }
 
         return redirect()->route('leaves.index')
@@ -180,13 +189,35 @@ class LeaveController extends Controller
         ]);
 
         // Notify employee about supervisor's decision
-        $employeeUser = $leave->employee->user;
+        $employeeUser = $leave->employee ? $leave->employee->user : null;
+        $supervisorUser = $leave->supervisor ? $leave->supervisor->user : null;
+        \Log::info('Supervisor Review Notification Debug', [
+            'employeeUser' => $employeeUser ? $employeeUser->id : null,
+            'supervisorUser' => $supervisorUser ? $supervisorUser->id : null,
+            'status' => $validatedData['status'],
+        ]);
         if ($employeeUser) {
-            $employeeUser->notify(
-                $validatedData['status'] == 'approved' 
-                    ? new LeaveRequestApproved($leave) 
-                    : new LeaveRequestRejected($leave)
-            );
+            if ($validatedData['status'] == 'approved') {
+                $employeeUser->notify(new \App\Notifications\LeavePendingHrReview($leave));
+                \Log::info('Notified employee of pending HR review', ['employee_id' => $employeeUser->id]);
+            } else {
+                $employeeUser->notify(new LeaveRequestRejected($leave));
+                \Log::info('Notified employee of rejection', ['employee_id' => $employeeUser->id]);
+                if ($supervisorUser) {
+                    $supervisorUser->notify(new LeaveRequestRejected($leave));
+                    \Log::info('Notified supervisor of rejection', ['supervisor_id' => $supervisorUser->id]);
+                }
+            }
+        } else {
+            \Log::warning('No employee user found for leave', ['leave_id' => $leave->id]);
+        }
+
+        // Notify all HR managers of supervisor's decision
+        $hrManagers = User::whereHas('roles', function($q) {
+            $q->where('name', 'HR Manager');
+        })->get();
+        foreach ($hrManagers as $hrUser) {
+            $hrUser->notify(new LeaveSupervisorDecisionHr($leave, $validatedData['status']));
         }
 
         return redirect()->route('leaves.index')
@@ -213,13 +244,27 @@ class LeaveController extends Controller
         ]);
 
         // Notify employee about final decision
-        $employeeUser = $leave->employee->user;
+        $employeeUser = $leave->employee ? $leave->employee->user : null;
+        $supervisorUser = $leave->supervisor ? $leave->supervisor->user : null;
+        \Log::info('HR Review Notification Debug', [
+            'employeeUser' => $employeeUser ? $employeeUser->id : null,
+            'supervisorUser' => $supervisorUser ? $supervisorUser->id : null,
+            'status' => $validatedData['status'],
+        ]);
         if ($employeeUser) {
-            $employeeUser->notify(
-                $validatedData['status'] == 'approved' 
-                    ? new LeaveRequestApproved($leave) 
-                    : new LeaveRequestRejected($leave)
-            );
+            if ($validatedData['status'] == 'approved') {
+                $employeeUser->notify(new LeaveRequestApproved($leave));
+                \Log::info('Notified employee of approval', ['employee_id' => $employeeUser->id]);
+            } else {
+                $employeeUser->notify(new LeaveRequestRejected($leave));
+                \Log::info('Notified employee of rejection', ['employee_id' => $employeeUser->id]);
+                if ($supervisorUser) {
+                    $supervisorUser->notify(new LeaveRequestRejected($leave));
+                    \Log::info('Notified supervisor of rejection', ['supervisor_id' => $supervisorUser->id]);
+                }
+            }
+        } else {
+            \Log::warning('No employee user found for leave', ['leave_id' => $leave->id]);
         }
 
         return redirect()->route('leaves.index')
