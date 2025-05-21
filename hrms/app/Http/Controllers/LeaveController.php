@@ -10,6 +10,7 @@ use App\Notifications\LeaveRequestSubmitted;
 use App\Notifications\LeaveRequestApproved;
 use App\Notifications\LeaveRequestRejected;
 use App\Notifications\LeaveSupervisorDecisionHr;
+use App\Notifications\LeaveFinalizedByHr;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -262,6 +263,11 @@ class LeaveController extends Controller
                     $supervisorUser->notify(new LeaveRequestRejected($leave));
                     \Log::info('Notified supervisor of rejection', ['supervisor_id' => $supervisorUser->id]);
                 }
+            }
+            // Notify both employee and supervisor of HR's final decision
+            $employeeUser->notify(new \App\Notifications\LeaveFinalizedByHr($leave, $validatedData['status']));
+            if ($supervisorUser) {
+                $supervisorUser->notify(new \App\Notifications\LeaveFinalizedByHr($leave, $validatedData['status']));
             }
         } else {
             \Log::warning('No employee user found for leave', ['leave_id' => $leave->id]);

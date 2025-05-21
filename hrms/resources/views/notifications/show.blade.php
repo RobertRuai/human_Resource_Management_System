@@ -29,6 +29,15 @@
         <span class="text-muted">-</span>
     @endif
 </p>
+@if(isset($notification->data['employee_department']))
+<p class="card-text"><strong>Employee Department:</strong> {{ $notification->data['employee_department'] }}</p>
+@endif
+@if(isset($notification->data['supervisor_name']))
+<p class="card-text"><strong>Supervisor:</strong> {{ $notification->data['supervisor_name'] }}</p>
+@endif
+@if(isset($notification->data['supervisor_department']))
+<p class="card-text"><strong>Supervisor Department:</strong> {{ $notification->data['supervisor_department'] }}</p>
+@endif
 <p class="card-text"><strong>Leave Type:</strong>
     {{ $notification->data['leave_type'] ?? '-' }}
 </p>
