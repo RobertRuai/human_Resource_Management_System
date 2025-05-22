@@ -107,13 +107,13 @@ class LeaveController extends Controller
         $employee->user->notify(new \App\Notifications\UserMessage($employee->user, 'Your leave request has been submitted and is pending supervisor review.'));
 
         // Notify supervisor
-        if ($supervisor) {
+        if ($supervisor && $supervisor->user) {
             \Log::info('Attempting to notify supervisor', [
                 'supervisor_id' => $supervisor->id,
                 'supervisor_user_id' => $supervisor->user ? $supervisor->user->id : null,
                 'supervisor_user' => $supervisor->user ? $supervisor->user->toArray() : null,
             ]);
-            $supervisor->notify(new LeaveRequestSubmitted($leave));
+            $supervisor->user->notify(new LeaveRequestSubmitted($leave));
         } else {
             \Log::warning('No supervisor found for employee', ['employee_id' => $employee->id]);
         }
@@ -204,10 +204,6 @@ class LeaveController extends Controller
             } else {
                 $employeeUser->notify(new LeaveRequestRejected($leave));
                 \Log::info('Notified employee of rejection', ['employee_id' => $employeeUser->id]);
-                if ($supervisorUser) {
-                    $supervisorUser->notify(new LeaveRequestRejected($leave));
-                    \Log::info('Notified supervisor of rejection', ['supervisor_id' => $supervisorUser->id]);
-                }
             }
         } else {
             \Log::warning('No employee user found for leave', ['leave_id' => $leave->id]);

@@ -35,6 +35,16 @@
                                         @endif
                                         <a href="{{ route('leaves.edit', $leaf->id) }}" class="btn btn-warning"><i class='fas fa-edit'></i> Edit Leave</a>
                                         <a href="{{ route('leaves.index') }}" class="btn btn-secondary"><i class='fas fa-arrow-alt-circle-left'></i> Back to Leaves</a>
+
+                                        @php
+                                            $user = Auth::user();
+                                        @endphp
+                                        @if($user && $user->hasRole('Supervisor') && $leaf->status == 'pending')
+                                            <a href="{{ route('leaves.supervisor-review', $leaf->id) }}" class="btn btn-primary"><i class='fas fa-user-check'></i> Supervisor Review</a>
+                                        @endif
+                                        @if($user && $user->hasRole('HR Manager') && $leaf->status == 'hr_review')
+                                            <a href="{{ route('leaves.hr-review', $leaf->id) }}" class="btn btn-success"><i class='fas fa-user-tie'></i> HR Review</a>
+                                        @endif
                                         </div>
                                 <p class="copyright">&copy; {{ date('Y')}} HRMS Portal South Sudan Revenue Authority. All Rights Reserved.</p>
                             </div>

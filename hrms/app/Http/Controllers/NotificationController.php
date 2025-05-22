@@ -12,7 +12,7 @@ class NotificationController extends Controller
     // Display a listing of the notifications
     public function index()
     {
-        $notifications = DatabaseNotification::all();
+        $notifications = auth()->user()->notifications;
         return view('notifications.index', compact('notifications'));
     }
 

@@ -38,6 +38,7 @@ class LeaveSupervisorDecisionHr extends Notification
             'employee_department' => $this->leave->employee && $this->leave->employee->department ? $this->leave->employee->department->name : null,
             'decision' => $this->decision,
             'message' => 'Supervisor has ' . $this->decision . ' a leave request for ' . ($this->leave->employee->full_name ?? 'an employee') . '.',
+            'url' => url('/leaves/' . $this->leave->id),
         ];
     }
 

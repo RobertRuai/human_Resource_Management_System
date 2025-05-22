@@ -61,7 +61,8 @@ class LeaveRequestSubmitted extends Notification
             'end_date' => $this->leave->end_date,
             'employee_name' => $this->leave->employee->full_name ?? null,
             'from_user_name' => $this->leave->employee->user->username ?? $this->leave->employee->user->name ?? null,
-            'message' => 'A new leave request has been submitted by ' . ($this->leave->employee->full_name ?? 'an employee') . ' and requires your review.'
+            'message' => 'A new leave request has been submitted by ' . ($this->leave->employee->full_name ?? 'an employee') . ' and requires your review.',
+            'url' => url('/leaves/' . $this->leave->id)
         ];
     }
 }

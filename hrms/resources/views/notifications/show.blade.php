@@ -59,6 +59,13 @@
         <span class="text-muted">-</span>
     @endif
 </p>
+@if(isset($notification->data['url']))
+    <p class="card-text">
+        <a href="{{ $notification->data['url'] }}" class="btn btn-primary" target="_blank">
+            View Leave Request
+        </a>
+    </p>
+@endif
 <p class="card-text"><strong>Read Status:</strong> {{ $notification->is_read ? 'Read' : 'Unread' }}</p>
                                             <a href="{{ route('notifications.edit', $notification->id) }}" class="btn btn-warning"><i class='fas fa fa-edit'></i> Edit Notification</a>
                                             <a href="{{ route('notifications.index') }}" class="btn btn-secondary"><i class='fas fa-arrow-alt-circle-left'></i> Back to Notifications</a>
