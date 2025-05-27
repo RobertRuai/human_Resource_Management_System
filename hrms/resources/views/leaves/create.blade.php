@@ -14,17 +14,30 @@
         @csrf
 
     <div class="form-display">
-        <div class="col-2 form-group">
-            <label for="employee_id" class="form-label">Employee <span class="text-danger">*</span></label>
-            <select name="employee_id" id="employee_id" class="form-select" required>
-                <option value="">Select Employee</option>
-                @foreach($employees as $employee)
-                    <option value="{{ $employee->id }}" {{ old('employee_id') == $employee->id ? 'selected' : '' }}>
-                    {{ $employee->first_name }} {{ $employee->last_name }} ({{ $employee->department->name }})
-                    </option>
-                @endforeach
-            </select>
-        </div>
+        @php
+            $user = Auth::user();
+            $isPrivileged = $user->hasRole('Admin') || $user->hasRole('HR Manager') || $user->hasRole('Supervisor');
+            $employee = $employees->firstWhere('user_id', $user->id);
+        @endphp
+        @if($isPrivileged)
+            <div class="col-2 form-group">
+                <label for="employee_id" class="form-label">Employee <span class="text-danger">*</span></label>
+                <select name="employee_id" id="employee_id" class="form-select" required>
+                    <option value="">Select Employee</option>
+                    @foreach($employees as $employeeOption)
+                        <option value="{{ $employeeOption->id }}" {{ old('employee_id') == $employeeOption->id ? 'selected' : '' }}>
+                            {{ $employeeOption->first_name }} {{ $employeeOption->last_name }} ({{ $employeeOption->department->name }})
+                        </option>
+                    @endforeach
+                </select>
+            </div>
+        @else
+            <div class="col-2 form-group">
+                <label class="form-label">Employee</label>
+                <input type="text" class="form-control" value="{{ $employee ? $employee->first_name . ' ' . $employee->last_name . ' (' . ($employee->department->name ?? '-') . ')' : 'N/A' }}" readonly>
+                <input type="hidden" name="employee_id" value="{{ $employee ? $employee->id : '' }}">
+            </div>
+        @endif
 
         <div class="col-2 form-group">
             <label for="type_of_leave" class="form-label">Leave Type <span class="text-danger">*</span></label>

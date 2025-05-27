@@ -104,7 +104,7 @@ class LeaveController extends Controller
         ]);
 
         // Notify employee (confirmation of submission)
-        $employee->user->notify(new \App\Notifications\UserMessage($employee->user, 'Your leave request has been submitted and is pending supervisor review.'));
+        $employee->user->notify(new \App\Notifications\UserMessage($employee->user, "Your leave request {$leave->type_of_leave}, from {$leave->start_date} to {$leave->end_date} for {$leave->total_days} days has been submitted and is pending supervisor review."));
 
         // Notify supervisor
         if ($supervisor && $supervisor->user) {
@@ -260,8 +260,7 @@ class LeaveController extends Controller
                     \Log::info('Notified supervisor of rejection', ['supervisor_id' => $supervisorUser->id]);
                 }
             }
-            // Notify both employee and supervisor of HR's final decision
-            $employeeUser->notify(new \App\Notifications\LeaveFinalizedByHr($leave, $validatedData['status']));
+            // Notify supervisor of HR's final decision
             if ($supervisorUser) {
                 $supervisorUser->notify(new \App\Notifications\LeaveFinalizedByHr($leave, $validatedData['status']));
             }

@@ -124,13 +124,17 @@
                         <td>{{ $leave->start_date }}</td>
                         <td>{{ $leave->end_date }}</td>
                         <td>
-                            <span class="badge 
-                                @if($leave->status == 'pending') bg-warning
-                                @elseif($leave->status == 'approved') bg-success
-                                @elseif($leave->status == 'rejected') bg-danger
-                                @endif">
-                                {{ ucfirst($leave->status) }}
-                            </span>
+                            @if($leave->status == 'hr_review' || $leave->status == 'Hr_review')
+                                <span class="badge badge-info" style="background-color: #5bc0de; color: #fff; font-size: 1em;">HR Review</span>
+                            @else
+                                <span class="badge 
+                                    @if($leave->status == 'pending') bg-warning
+                                    @elseif($leave->status == 'approved') bg-success
+                                    @elseif($leave->status == 'rejected') bg-danger
+                                    @endif">
+                                        {{ ucfirst($leave->status) }}
+                                    </span>
+                            @endif
                         </td>
                         <td>
                             <a href="{{ route('leaves.show', $leave) }}" class="btn btn-sm btn-info"><i class="fas fa-eye"></i> View</a>
